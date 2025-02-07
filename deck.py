@@ -1,25 +1,109 @@
 from card import Card
+import progressbar
+import time
+from enum import Enum
+import requests
+import json
+import re
+import time
+
+# pylint: disable=missing-function-docstring, missing-class-docstring
+
+class Cost(Enum):
+    Normal = 1
+    Budget = 2
+    Expensive = 3
+
+class Chart:
+    def __init__(self, edhr_data):
+        self.creature = edhr_data["creature"] if "creature" in edhr_data else None
+        self.instant = edhr_data["instant"] if "instant" in edhr_data else None
+        self.sorcery = edhr_data["sorcery"] if "sorcery" in edhr_data else None
+        self.artifact = edhr_data["artifact"] if "artifact" in edhr_data else None
+        self.enchantment = edhr_data["enchantment"] if "enchantment" in edhr_data else None
+        self.battle = edhr_data["battle"] if "battle" in edhr_data else None
+        self.planeswalker = edhr_data["planeswalker"] if "planeswalker" in edhr_data else None
+        self.land = edhr_data["land"] if "land" in edhr_data else None
+        self.basic = edhr_data["basic"] if "basic" in edhr_data else None
+        self.nonbasic = edhr_data["nonbasic"] if "nonbasic" in edhr_data else None
 
 class Deck:
-    def __init__(self, commander_id: str, mainboard_ids):
+    def __init__(self, session):
         self.mainboard = []
-        self.commander = Card(commander_id, is_commander=True)
-        for card_id in mainboard_ids:
-            self.mainboard.append(Card(card_id))
+        self.commander = None
+        self.cost = None
+        self.chart = None
+        self.title = None
+        self.session = session
+
+    def __str__(self):
+        deck_info = f"Deck information for: {self.title}\n"
+        deck_info += f"Total Cost: {self.get_cost()}\n"
+        deck_info += f"Commander Info: \n"
+        deck_info += str(self.commander)
+        return deck_info
     
-    #TODO: This will make an API call for each card grabbing needed information.
+    def get_cost(self):
+        cost = 0.0
+        cost += self.commander.price
+        for card in self.mainboard:
+            cost += card.price
+        return cost
+
     def lookup_card_data(self):
-        pass
+        self.commander.get_data()
+        print(f"Getting mainboard for {self.title}")
+        with progressbar.ProgressBar(maxval=len(self.mainboard)) as bar:
+            for i, card in enumerate(self.mainboard):
+                card.get_data()
+                bar.update(i+1)
 
-    #TODO: This method will take in manabox sheet and filter out cards that are already owned.
-    def mark_cards_as_owned(self):
-        pass
+    def init_thin_deck(self, edhr_name: str, cost: Cost):
+        edhr_data = None
+        if cost == Cost.Normal:
+            edhr_data = self.lookup_normal(edhr_name)
+        elif cost == Cost.Budget:
+            edhr_data = self.lookup_budget(edhr_name)
+        elif cost == Cost.Expensive:
+            edhr_data = self.lookup_expensive(edhr_name)
+        return self.build_id_deck_from_edhr(edhr_data)
+    
+    def build_id_deck_from_edhr(self, edhr_data):
+        self.title = edhr_data["header"] if "header" in edhr_data else None
+        for card in edhr_data["archidekt"]:
+            if card["c"] == "c":
+                self.commander = Card(card["u"], self.session, True)
+            elif card["c"] == "m":
+                for _ in range(card["q"]):
+                    self.mainboard.append(Card(card["u"], self.session))
+            else:
+                print(f"found something weird: {card}")
+        if self.commander == None or len(self.mainboard) != 99:
+            raise ValueError("Did not find the correct number of cards")
+        return self
 
-    def generate_csv(self):
-        pass
+    def lookup_commander(self, url: str):
+        # 100ms delay per call to avoid abusing edhrec API and getting rate limited.
+        time.sleep(0.1)
+        try:
+            response = self.session.get(url, timeout=2)
+            response.raise_for_status()
+            if not response.from_cache:
+                time.sleep(0.1)
+            edhr_data = response.json()
+            return edhr_data
 
-    def write_to_file(self):
-        pass
-
-    def read_from_file(self):
-        pass
+        except requests.exceptions.RequestException as err:
+            print(f"Error looking up edhrec commander: {err}")
+    
+    def lookup_normal(self, commander_name: str):
+        url = f"https://json.edhrec.com/pages/commanders/{commander_name}.json"
+        return self.lookup_commander(url)
+    
+    def lookup_budget(self, commander_name: str):
+        url = f"https://json.edhrec.com/pages/commanders/{commander_name}/budget.json"
+        return self.lookup_commander(url)
+    
+    def lookup_expensive(self, commander_name: str):
+        url = f"https://json.edhrec.com/pages/commanders/{commander_name}/expensive.json"
+        return self.lookup_commander(url)
