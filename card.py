@@ -18,20 +18,21 @@ class Card:
         self.color_identity = None
         self.artist = None
         self.session = session
+        self.owned = False
+        self.error = False
 
     def __str__(self):
         card_info = f"{self.name} \n"
         card_info += f"Price: {self.price}\n"
+        if self.owned:
+            card_info += "Is in stock\n"
         if self.is_commander:
             card_info += f"Mana Cost: {self.mana_cost}\n"
             card_info += f"Type Line: {self.type_line}\n"
-            card_info += f"Rarity: {self.rarity}\n"
             card_info += f"Text: {self.oracle_text}\n"
-            card_info += f"Rarity: {self.rarity}\n"
-            card_info += f"CMC: {self.cmc}\n"
-            card_info += f"Card Art: {self.card_art}\n"
-            card_info += f"Card Picture: {self.card_pic}\n"
-            card_info += f"Colors: {self.colors}\n"
+            card_info += f"Rarity: {self.rarity} - "
+            card_info += f"CMC: {self.cmc} - "
+            card_info += f"Colors: {self.colors} - "
             card_info += f"Color Identity: {self.color_identity}\n"
             card_info += f"Artist: {self.artist}\n"
         return card_info
@@ -60,6 +61,9 @@ class Card:
             self.color_identity = data["color_identity"] if "color_identity" in data else None
             self.artist = data["artist"] if "artist" in data else None
             self.rarity = data["rarity"] if "rarity" in data else None
+        
+        if self.name is None or self.price is None or self.name == "":
+            self.error = True
 
     def get_price(self, data):
         if data["type_line"] is not None and "Basic Land" in str(data["type_line"]):
@@ -69,4 +73,4 @@ class Card:
                 return float(data["prices"]["usd"])
             elif "usd_foil" in data["prices"] and data["prices"]["usd_foil"] is not None:
                 return float(data["prices"]["usd_foil"])
-        return None
+        return 0.0

@@ -31,32 +31,60 @@ class Deck:
     def __init__(self, session):
         self.mainboard = []
         self.commander = None
-        self.cost = None
         self.chart = None
         self.title = None
         self.session = session
+        self.error = False
 
     def __str__(self):
         deck_info = f"Deck information for: {self.title}\n"
-        deck_info += f"Total Cost: {self.get_cost()}\n"
-        deck_info += f"Commander Info: \n"
-        deck_info += str(self.commander)
+        deck_info += f"Total Cost: {round(self.get_cost(), 2)}\n"
+        if self.error:
+            deck_info = f"Deck is malformed, card count: {len(self.mainboard)}\n"
+        owned_count = self.get_owned_count()
+        if owned_count > 0:
+            deck_info += f"Owned Count: {owned_count}\n"
+            deck_info += f"Not owned cost: {round(self.get_cost(only_not_owned=True), 2)}\n"
+        error_count = self.get_error_count()
+        if error_count > 0:
+            deck_info += f"Error count: {self.get_error_count()}\n"
         return deck_info
     
-    def get_cost(self):
+    def get_cost(self, only_not_owned=False):
         cost = 0.0
         cost += self.commander.price
         for card in self.mainboard:
-            cost += card.price
+            if only_not_owned:
+                if not card.owned:
+                    cost += card.price
+            else:
+                cost += card.price
         return cost
+    
+    def get_owned_count(self):
+        owned_count = 0
+        for card in self.mainboard:
+            if card.owned:
+                owned_count += 1
+        return owned_count
+    
+    def get_error_count(self):
+        error_count = 0
+        for card in self.mainboard:
+            if card.error:
+                error_count += 1
+        return error_count
 
-    def lookup_card_data(self):
+    def lookup_card_data(self, bar, card_count):
         self.commander.get_data()
-        print(f"Getting mainboard for {self.title}")
-        with progressbar.ProgressBar(maxval=len(self.mainboard)) as bar:
-            for i, card in enumerate(self.mainboard):
-                card.get_data()
-                bar.update(i+1)
+        card_count += 1
+        bar.update(card_count)
+        print(f"\nGetting mainboard for {self.title}")
+        for card in self.mainboard:
+            card.get_data()
+            card_count += 1
+            bar.update(card_count)
+        return card_count
 
     def init_thin_deck(self, edhr_name: str, cost: Cost):
         edhr_data = None
@@ -66,7 +94,8 @@ class Deck:
             edhr_data = self.lookup_budget(edhr_name)
         elif cost == Cost.Expensive:
             edhr_data = self.lookup_expensive(edhr_name)
-        return self.build_id_deck_from_edhr(edhr_data)
+        self.build_id_deck_from_edhr(edhr_data)
+        return self
     
     def build_id_deck_from_edhr(self, edhr_data):
         self.title = edhr_data["header"] if "header" in edhr_data else None
@@ -78,13 +107,10 @@ class Deck:
                     self.mainboard.append(Card(card["u"], self.session))
             else:
                 print(f"found something weird: {card}")
-        if self.commander == None or len(self.mainboard) != 99:
-            raise ValueError("Did not find the correct number of cards")
-        return self
+        if self.commander is None or len(self.mainboard) != 99:
+            self.error = True
 
     def lookup_commander(self, url: str):
-        # 100ms delay per call to avoid abusing edhrec API and getting rate limited.
-        time.sleep(0.1)
         try:
             response = self.session.get(url, timeout=2)
             response.raise_for_status()

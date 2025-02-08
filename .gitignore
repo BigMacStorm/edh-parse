@@ -1,3 +1,5 @@
 *.sqlite
 __pycache__/
 *.pyc
+*.csv
+input_list
