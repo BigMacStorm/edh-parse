@@ -73,6 +73,7 @@ class Deck:
         if self.args.show_owned:
             deck_info += f"\nOwned cards:\n"
             deck_info += "\n".join(str(item) for item in self.owned_set)
+            deck_info += "\n\n"
         return deck_info
     
     def get_card_count(self):
@@ -128,7 +129,7 @@ class Deck:
         return error_count
 
     def lookup_card_data(self, bar, card_count):
-        if not self.commander.thin:
+        if self.commander.thin:
             self.commander.get_data()
             card_count += 1
         bar.update(card_count)
@@ -188,10 +189,10 @@ class Deck:
         self.title = edhr_data["header"] if "header" in edhr_data else None
         for card in edhr_data["archidekt"]:
             if card["c"] == "c":
-                self.commander = Card(self.session, self.args, card_id=card["u"], is_commander=True)
+                self.commander = Card(self.session, self.args, card_id=card["u"], is_commander=True, is_thin=True)
             elif card["c"] == "m":
                 for _ in range(card["q"]):
-                    self.mainboard.append(Card(self.session, self.args, card_id=card["u"]))
+                    self.mainboard.append(Card(self.session, self.args, card_id=card["u"], is_thin=True))
             else:
                 print(f"found something weird: {card}")
         if self.commander is None or len(self.mainboard) != 99:
