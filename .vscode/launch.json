@@ -1,15 +1,13 @@
 {
     "configurations": [
+        
         {
             "name": "Python Debugger: Python File",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "args": [
-                "--commander",
-                "Korvold, Fae-Cursed King",
-                "--manabox",
-                "Stock.csv"
+                "--moxfield_deck_id=ZupfHu7aD0mMEntRnJe0Qw"
             ]
         }
     ]

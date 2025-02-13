@@ -1,8 +1,10 @@
 import requests
 import time
 
+# pylint: disable=missing-function-docstring, missing-class-docstring
+
 class Card:
-    def __init__(self, card_id: str, session, is_commander=False):
+    def __init__(self, session, args, card_id=None, is_commander=False, is_thin=False):
         self.is_commander = is_commander
         self.card_id = card_id
         self.name = None
@@ -20,6 +22,8 @@ class Card:
         self.session = session
         self.owned = False
         self.error = False
+        self.args = args
+        self.thin = is_thin
 
     def __str__(self):
         card_info = f"{self.name} \n"
@@ -36,8 +40,29 @@ class Card:
             card_info += f"Color Identity: {self.color_identity}\n"
             card_info += f"Artist: {self.artist}\n"
         return card_info
+    
+    def search_card(self, card):
+        url = "https://api.scryfall.com/cards/search"
+        query = {"q": card}
+        data = None
+        card = None
+        try:
+            response = self.session.get(url, timeout=2, params=query)
+            response.raise_for_status()
+            if not response.from_cache:
+                time.sleep(0.1)
+            data = response.json()
+
+        except requests.exceptions.RequestException as err:
+            print(f"Error looking up scryfall card by name: {err}")
+        card = data["data"][0]
+        self.parse_scryfall_card(card)
 
     def get_data(self):
+        if not self.thin:
+            return
+        if not self.card_id:
+            return
         url = f"https://api.scryfall.com/cards/{self.card_id}"
         data = None
         try:
@@ -48,8 +73,10 @@ class Card:
             data = response.json()
 
         except requests.exceptions.RequestException as err:
-            print(f"Error looking up scryfall card: {err}")
-        
+            print(f"Error looking up scryfall card by id: {err}")
+        self.parse_scryfall_card(data)
+
+    def parse_scryfall_card(self, data):
         self.name = data["name"] if "name" in data else None
         self.price = self.get_price(data)
         if self.is_commander:
@@ -64,6 +91,8 @@ class Card:
         
         if self.name is None or self.price is None or self.name == "":
             self.error = True
+        
+        self.thin = False
 
     def get_price(self, data):
         if data["type_line"] is not None and "Basic Land" in str(data["type_line"]):
