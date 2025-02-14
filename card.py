@@ -41,11 +41,11 @@ class Card:
             card_info += f"Artist: {self.artist}\n"
         return card_info
     
-    def search_card(self, card):
+    def search_card(self, card_name):
         url = "https://api.scryfall.com/cards/search"
-        query = {"q": card}
+        query = {"q": card_name}
         data = None
-        card = None
+        card_found = None
         try:
             response = self.session.get(url, timeout=2, params=query)
             response.raise_for_status()
@@ -55,8 +55,13 @@ class Card:
 
         except requests.exceptions.RequestException as err:
             print(f"Error looking up scryfall card by name: {err}")
-        card = data["data"][0]
-        self.parse_scryfall_card(card)
+        index = 0
+        for x in range(len(data["data"])):
+            if data["data"][x]["name"] == card_name:
+                index = x
+                break
+        card_found = data["data"][index]
+        self.parse_scryfall_card(card_found)
 
     def get_data(self):
         if not self.thin:
@@ -88,6 +93,7 @@ class Card:
             self.color_identity = data["color_identity"] if "color_identity" in data else None
             self.artist = data["artist"] if "artist" in data else None
             self.rarity = data["rarity"] if "rarity" in data else None
+            self.card_pic = data["image_uris"]["normal"] if "normal" in data["image_uris"] else None
         
         if self.name is None or self.price is None or self.name == "":
             self.error = True

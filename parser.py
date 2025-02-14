@@ -18,6 +18,8 @@ def build_args():
     parser.add_argument("-mb", "--manabox", help="An exported Manabox CSV file to indicate which cards are owned already.")
     parser.add_argument("-l", "--list", help="A list of cards in MTGO format")
     parser.add_argument("-o", "--show_owned", action="store_true", help="Output the list of owned cards found.")
+    parser.add_argument("-csv", "--csv", action="store_true", help="Output the collection to a CSV to be viewed")
+    parser.add_argument("-cf", "--csv_file", help="Where to write the CSV file. If not provided, default will be used.")
     return parser.parse_args()
 
 def main():
@@ -25,8 +27,8 @@ def main():
     commander_urls = []
     
     collection = Collection(args)
-    if(args.list):
-        commander_urls = load_urls_from_file(args.list)
+    if(args.commander_list):
+        commander_urls = load_urls_from_file(args.commander_list)
         for commander_url in commander_urls:
             collection.add_all_costs(commander_url)
     if(args.commander):
@@ -42,6 +44,8 @@ def main():
         collection.mark_cards_owned(load_manabox(args.manabox))
 
     collection.print_collection()
+    if(args.csv):
+        collection.write_to_file()
 
 def get_edhrec_name(commander_name: str):
     regex = r"[^\w\s\-]"

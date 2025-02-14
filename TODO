@@ -1,5 +1,3 @@
 Features needed:
-Add price to list of owned cards printed
--Potentially group this by rarity/color for easier lookup
-Output collection to csv
-Progress bar to include text of current action
+Potentially group list of owned cards by rarity/color for easier lookup
+Clean up output CSV

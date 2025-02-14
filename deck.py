@@ -11,22 +11,6 @@ from itertools import chain
 
 # pylint: disable=missing-function-docstring, missing-class-docstring
 
-
-
-user_agent_list = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36",
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1",
-    "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0",
-    "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; Trident/5.0)",
-    "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0; MDDCJS)",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14393",
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)",
-]
-
 class Cost(Enum):
     Normal = 1
     Budget = 2
@@ -50,11 +34,13 @@ class Deck:
         self.mainboard = []
         self.sideboard = []
         self.commander = None
+        self.commander_subtype = None
         self.chart = None
         self.title = None
         self.session = session
         self.error = False
         self.args = args
+        self.cost = None
         self.owned_set = set()
 
     def __str__(self):
@@ -71,8 +57,10 @@ class Deck:
         if error_count > 0:
             deck_info += f"Error count: {self.get_error_count()}\n"
         if self.args.show_owned:
-            deck_info += f"\nOwned cards:\n"
-            deck_info += "\n".join(str(item) for item in self.owned_set)
+            sorted_list = list(self.owned_set)
+            sorted_list.sort(reverse=True)
+            deck_info += "\nOwned cards:\n"
+            deck_info += "\n".join(f"${price:.2f} - {name}" for price, name in sorted_list)
             deck_info += "\n\n"
         return deck_info
     
@@ -132,18 +120,17 @@ class Deck:
         if self.commander.thin:
             self.commander.get_data()
             card_count += 1
-        bar.update(card_count)
         if self.get_thin_count() == 0:
             return
-        print(f"\nGetting mainboard for {self.title}")
         for card in chain(self.mainboard, self.sideboard):
             card.get_data()
             card_count += 1
-            bar.update(card_count)
+            bar.update(card_count, info=f"Getting {self.title}")
         return card_count
 
     def init_thin_edhr_deck(self, edhr_name: str, cost: Cost):
         edhr_data = None
+        self.cost = cost
         if cost == Cost.Normal:
             edhr_data = self.lookup_normal(edhr_name)
         elif cost == Cost.Budget:
@@ -158,8 +145,27 @@ class Deck:
         for name, data in list_cards.items():
             self.add_card_from_list(name, data)
             count += 1
-            bar.update(count)
+            bar.update(count, info="Gathering list information")
         return self
+    
+    def build_dict(self):
+        output = {}
+        output["card_pic"] = self.commander.card_pic
+        output["name"] = self.commander.name
+        output["budget"] = self.cost
+        output["color_identity"] = self.commander.color_identity
+        output["owned_percentage"] = f"{100 * (self.get_owned_count() / self.get_card_count()):.2f}"
+        output["total_cost"] = f"{self.get_cost():.2f}"
+        output["not_owned_cost"] = f"{self.get_cost(only_not_owned=True):.2f}"
+        output["type_line"] = self.commander.type_line.replace("Legendary Creature — ", "")
+        output["oracle_text"] = self.commander.oracle_text
+        output["colors"] = self.commander.colors
+        output["color_identity"] = self.commander.color_identity
+        output["mana_cost"] = self.commander.mana_cost
+        output["artist"] = self.commander.artist
+        output["card_count"] = self.get_card_count()
+        output["owned_count"] = self.get_owned_count()
+        return output
     
     def add_card_from_list(self, name, data):
         is_commander = data["header"] == "commander"

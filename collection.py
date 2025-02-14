@@ -8,6 +8,7 @@ import time
 from deck import Deck
 from deck import Cost
 from itertools import chain
+import csv
 
 # pylint: disable=missing-function-docstring, missing-class-docstring
 
@@ -26,8 +27,7 @@ class Collection:
     
     def add_list_deck(self, list_cards):
         card_count = len(list_cards)
-        print("\nGathering list information")
-        with progressbar.ProgressBar(maxval=card_count) as bar:
+        with progressbar.ProgressBar(prefix="{variables.info}", variables={'info': '--'}, maxval=card_count, initial_value=0) as bar:
             bar.update(0)
             self.decks.append(self.new_deck().generate_deck_from_list(list_cards, bar))
 
@@ -42,9 +42,7 @@ class Collection:
         not_thin_cards = self.lookup_total_card_count()
         if not_thin_cards == 0:
             return
-        print("\nGathering all deck information")
-        with progressbar.ProgressBar(maxval=not_thin_cards) as bar:
-            bar.update(0)
+        with progressbar.ProgressBar(prefix="{variables.info}", variables={'info': '--'}, maxval=not_thin_cards, initial_value=0) as bar:
             for deck in self.decks:
                 card_count = deck.lookup_card_data(bar, card_count)
     
@@ -65,9 +63,41 @@ class Collection:
             if deck.commander.name in names:
                 deck.commander.owned = True
             for card in chain(deck.mainboard, deck.sideboard):
-                if card.name in names:
+                 if card.name in names:
                     card.owned = True
-                    deck.owned_set.add(card.name)
+                    deck.owned_set.add((card.price, card.name))
     
     def new_deck(self):
         return Deck(self.session, self.args)
+    
+    def write_to_file(self):
+        fieldnames = [
+                        "card_pic",
+                        "name",
+                        "budget",
+                        "color_identity",
+                        "owned_percentage",
+                        "total_cost",
+                        "not_owned_cost",
+                        "type_line",
+                        "oracle_text",
+                        "colors",
+                        "color_identity",
+                        "mana_cost",
+                        "artist",
+                        "card_count",
+                        "owned_count"]
+
+        output = []
+        for deck in self.decks:
+            output.append(deck.build_dict())
+        
+        filename = self.args.csv_file if self.args.csv_file else "csv_out.csv"
+
+        try:
+            with open(filename, 'w', newline='', encoding='utf-8') as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(output)
+        except Exception as e:
+            print(f"Error writing to CSV: {e}")
