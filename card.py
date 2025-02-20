@@ -24,6 +24,8 @@ class Card:
         self.error = False
         self.args = args
         self.thin = is_thin
+        self.game_changer = False
+        self.edhrec_rank = None
 
     def __str__(self):
         card_info = f"{self.name} \n"
@@ -47,7 +49,7 @@ class Card:
         data = None
         card_found = None
         try:
-            response = self.session.get(url, timeout=2, params=query)
+            response = self.session.get(url, timeout=5, params=query)
             response.raise_for_status()
             if not response.from_cache:
                 time.sleep(0.1)
@@ -79,26 +81,45 @@ class Card:
 
         except requests.exceptions.RequestException as err:
             print(f"Error looking up scryfall card by id: {err}")
+
         self.parse_scryfall_card(data)
 
     def parse_scryfall_card(self, data):
         self.name = data["name"] if "name" in data else None
         self.price = self.get_price(data)
+        self.game_changer = data.get("game_changer")
         if self.is_commander:
+            self.edhrec_rank = data.get("edhrec_rank")
             self.cmc = data["cmc"] if "cmc" in data else None
             self.mana_cost = data["mana_cost"] if "mana_cost" in data else None
             self.type_line = data["type_line"] if "type_line" in data else None
             self.oracle_text = data["oracle_text"] if "oracle_text" in data else None
             self.colors = data["colors"] if "colors" in data else None
-            self.color_identity = data["color_identity"] if "color_identity" in data else None
+            self.color_identity = self.get_color_identity(data["color_identity"]) if "color_identity" in data else None
             self.artist = data["artist"] if "artist" in data else None
             self.rarity = data["rarity"] if "rarity" in data else None
-            self.card_pic = data["image_uris"]["normal"] if "normal" in data["image_uris"] else None
+            self.card_pic = data.get("image_uris", {}).get("small")
         
         if self.name is None or self.price is None or self.name == "":
             self.error = True
         
         self.thin = False
+    
+    def get_color_identity(self, color_string):
+        col_identity = ""
+        col_identity += self.check_color(color_string, "W", "🔲")
+        col_identity += self.check_color(color_string, "U", "🟦")
+        col_identity += self.check_color(color_string, "B", "⬛")
+        col_identity += self.check_color(color_string, "R", "🟥")
+        col_identity += self.check_color(color_string, "G", "🟩")
+        return col_identity
+    
+    def check_color(self, color_string: str, char, output):
+        if char in color_string:
+            return output
+        else:
+            return "X"
+
 
     def get_price(self, data):
         if data["type_line"] is not None and "Basic Land" in str(data["type_line"]):

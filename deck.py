@@ -8,6 +8,7 @@ import re
 import time
 import random
 from itertools import chain
+from typing import Dict, Any
 
 # pylint: disable=missing-function-docstring, missing-class-docstring
 
@@ -17,17 +18,19 @@ class Cost(Enum):
     Expensive = 3
 
 class Chart:
-    def __init__(self, edhr_data):
-        self.creature = edhr_data["creature"] if "creature" in edhr_data else None
-        self.instant = edhr_data["instant"] if "instant" in edhr_data else None
-        self.sorcery = edhr_data["sorcery"] if "sorcery" in edhr_data else None
-        self.artifact = edhr_data["artifact"] if "artifact" in edhr_data else None
-        self.enchantment = edhr_data["enchantment"] if "enchantment" in edhr_data else None
-        self.battle = edhr_data["battle"] if "battle" in edhr_data else None
-        self.planeswalker = edhr_data["planeswalker"] if "planeswalker" in edhr_data else None
-        self.land = edhr_data["land"] if "land" in edhr_data else None
-        self.basic = edhr_data["basic"] if "basic" in edhr_data else None
-        self.nonbasic = edhr_data["nonbasic"] if "nonbasic" in edhr_data else None
+    def __init__(self, piechart_data: Dict[str, Any]):
+        if piechart_data:
+            for section in piechart_data:
+                setattr(self, section["label"], int(section["value"]))
+    
+    def __str__(self):
+        return f"Piechart: {self.__dict__}"
+    
+    def output_string(self):
+        out_string = ""
+        for key, value in self.__dict__.items():
+            out_string += f"{key}: {value}\n"
+        return out_string
 
 class Deck:
     def __init__(self, session, args):
@@ -42,13 +45,19 @@ class Deck:
         self.args = args
         self.cost = None
         self.owned_set = set()
+        self.deck_type = None
+        self.popular_tag = None
 
     def __str__(self):
         deck_info = f"Deck information for: {self.title}\n"
         deck_info += f"Total Cost: {round(self.get_cost(), 2)}\n"
         deck_info += f"Total Cards: {self.get_card_count()}\n"
+        if self.popular_tag:
+            deck_info += f"Most popular tag: {self.popular_tag}\n"
+        if self.deck_type:
+            deck_info += f"Deck type: {self.deck_type}\n"
         if self.error:
-            deck_info = f"Deck is malformed, card count: {len(self.mainboard)}\n"
+            deck_info += f"Deck is malformed, card count: {len(self.mainboard)}\n"
         owned_count = self.get_owned_count()
         if owned_count > 0:
             deck_info += f"Owned Count: {owned_count}\n"
@@ -56,12 +65,24 @@ class Deck:
         error_count = self.get_error_count()
         if error_count > 0:
             deck_info += f"Error count: {self.get_error_count()}\n"
+        if self.chart:
+            deck_info += str(self.chart)
+            deck_info += "\n"
         if self.args.show_owned:
             sorted_list = list(self.owned_set)
             sorted_list.sort(reverse=True)
             deck_info += "\nOwned cards:\n"
             deck_info += "\n".join(f"${price:.2f} - {name}" for price, name in sorted_list)
             deck_info += "\n\n"
+        if self.args.all:
+            sorted_list = sorted(list(self.mainboard), key=lambda card: card.price, reverse=True)
+            deck_info += "\nMainboard Cards:\n"
+            deck_info += "\n".join(f"${card.price:.2f} - {card.name}" for card in sorted_list)
+            if len(self.sideboard) > 0:
+                sorted_list = sorted(list(self.sideboard), key=lambda card: card.price, reverse=True)
+                deck_info += "\nSideboard Cards:"
+                deck_info += "\n".join(f"${card.price:.2f} - {card.name}" for card in sorted_list)
+            deck_info += "\n"
         return deck_info
     
     def get_card_count(self):
@@ -128,8 +149,9 @@ class Deck:
             bar.update(card_count, info=f"Getting {self.title}")
         return card_count
 
-    def init_thin_edhr_deck(self, edhr_name: str, cost: Cost):
+    def init_thin_edhr_deck(self, edhr_name: str, cost: Cost, deck_type: str):
         edhr_data = None
+        self.deck_type = deck_type
         self.cost = cost
         if cost == Cost.Normal:
             edhr_data = self.lookup_normal(edhr_name)
@@ -159,14 +181,31 @@ class Deck:
         output["not_owned_cost"] = f"{self.get_cost(only_not_owned=True):.2f}"
         output["type_line"] = self.commander.type_line.replace("Legendary Creature — ", "")
         output["oracle_text"] = self.commander.oracle_text
-        output["colors"] = self.commander.colors
         output["color_identity"] = self.commander.color_identity
-        output["mana_cost"] = self.commander.mana_cost
         output["artist"] = self.commander.artist
-        output["card_count"] = self.get_card_count()
-        output["owned_count"] = self.get_owned_count()
+        output["deck_type"] = self.deck_type
+        output["popular_tag"] = self.popular_tag
+        output["cmc"] = self.commander.cmc
+        output["game_changer_count"] = self.get_game_changer_count()
+        output["Lands"] = getattr(self.chart, "Land", 0)
+        output["Enchantments"] = getattr(self.chart, "Enchantment", 0)
+        output["Planeswalkers"] = getattr(self.chart, "Planeswalker", 0)
+        output["Artifacts"] = getattr(self.chart, "Artifact", 0)
+        output["Sorceries"] = getattr(self.chart, "Sorcery", 0)
+        output["Instants"] = getattr(self.chart, "Instant", 0)
+        output["Creatures"] = getattr(self.chart, "Creature", 0)
+        output["Battles"] = getattr(self.chart, "Battle", 0)
         return output
     
+    def get_game_changer_count(self):
+        gc_count = 0
+        if self.commander.game_changer:
+            gc_count += 1
+        for card in chain(self.mainboard, self.sideboard):
+            if card.game_changer:
+                gc_count += 1
+        return gc_count
+
     def add_card_from_list(self, name, data):
         is_commander = data["header"] == "commander"
         is_mainboard = data["header"] == "mainboard"
@@ -201,6 +240,10 @@ class Deck:
                     self.mainboard.append(Card(self.session, self.args, card_id=card["u"], is_thin=True))
             else:
                 print(f"found something weird: {card}")
+        if edhr_data.get("panels", {}).get("piechart", {}).get("content"):
+            self.chart = Chart(edhr_data.get("panels", {}).get("piechart", {}).get("content"))
+        if edhr_data.get("panels", {}).get("taglinks"):
+            self.popular_tag = edhr_data.get("panels", {}).get("taglinks")[0].get("slug")
         if self.commander is None or len(self.mainboard) != 99:
             self.error = True
 

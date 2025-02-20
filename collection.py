@@ -16,14 +16,27 @@ class Collection:
     def __init__(self, args):
         self.decks = []
         self.args = args
-        # Be sure to cache our responses to make sure that we arent making extra calls for no reason. Expire after 24 hours for safety.
-        self.session = requests_cache.CachedSession('card_cache', expire_after=3600*24*7)
-        #self.session.cache.clear()
+        # Be sure to cache our responses to make sure that we arent making extra calls for no reason. Expire after 31 days for safety.
+        self.session = requests_cache.CachedSession('card_cache', expire_after=3600*24*31)
+        if self.args.fresh_cache:
+            self.session.cache.clear()
 
-    def add_all_costs(self, edhr_name: str):
-        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Normal))
-        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Budget))
-        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Expensive))
+    def add_all_costs(self, just_name: str=None, name_with_type=None):
+        edhr_name = None
+        deck_type = None
+        if just_name:
+            edhr_name = just_name
+        elif name_with_type:
+            if name_with_type[1]:
+                edhr_name = f"{str(name_with_type[0])}/{str(name_with_type[1])}"
+                deck_type = name_with_type[1]
+            else:
+                edhr_name = name_with_type[0]
+        else:
+            return
+        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Normal, deck_type=deck_type))
+        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Budget, deck_type=deck_type))
+        self.decks.append(self.new_deck().init_thin_edhr_deck(edhr_name, Cost.Expensive, deck_type=deck_type))
     
     def add_list_deck(self, list_cards):
         card_count = len(list_cards)
@@ -75,18 +88,25 @@ class Collection:
                         "card_pic",
                         "name",
                         "budget",
+                        "deck_type",
+                        "popular_tag",
                         "color_identity",
                         "owned_percentage",
+                        "game_changer_count",
                         "total_cost",
                         "not_owned_cost",
                         "type_line",
                         "oracle_text",
-                        "colors",
-                        "color_identity",
-                        "mana_cost",
+                        "cmc",
                         "artist",
-                        "card_count",
-                        "owned_count"]
+                        "Lands",
+                        "Enchantments",
+                        "Planeswalkers",
+                        "Artifacts",
+                        "Sorceries",
+                        "Instants",
+                        "Creatures",
+                        "Battles"]
 
         output = []
         for deck in self.decks:

@@ -6,6 +6,7 @@ import re
 import time
 from deck import Deck
 from collection import Collection
+import progressbar
 import csv
 
 # pylint: disable=missing-function-docstring, missing-class-docstring
@@ -20,19 +21,27 @@ def build_args():
     parser.add_argument("-o", "--show_owned", action="store_true", help="Output the list of owned cards found.")
     parser.add_argument("-csv", "--csv", action="store_true", help="Output the collection to a CSV to be viewed")
     parser.add_argument("-cf", "--csv_file", help="Where to write the CSV file. If not provided, default will be used.")
+    parser.add_argument("-all", "--all", action="store_true", help="Show all cards when printing deck.")
+    parser.add_argument("-fc", "--fresh_cache", action="store_true", help="To force a cache clear on lookups.")
     return parser.parse_args()
 
 def main():
     args = build_args()
-    commander_urls = []
     
     collection = Collection(args)
     if(args.commander_list):
-        commander_urls = load_urls_from_file(args.commander_list)
-        for commander_url in commander_urls:
-            collection.add_all_costs(commander_url)
+        names_and_types = load_urls_from_file(args.commander_list)
+        with progressbar.ProgressBar(prefix="{variables.info}", variables={'info': '--'}, maxval=len(names_and_types), initial_value=0) as bar:
+            count = 0
+            for name_and_type in names_and_types:
+                info = name_and_type[0]
+                if name_and_type[1]:
+                    info += f" - {name_and_type[1]}"
+                bar.update(count, info=f"Loading thin deck for {info}")
+                collection.add_all_costs(name_with_type=name_and_type)
+                count += 1
     if(args.commander):
-        collection.add_all_costs(get_edhrec_name(args.commander))
+        collection.add_all_costs(just_name=get_edhrec_name(args.commander))
 
     if(args.list):
         list_cards = parse_card_list(args.list)
@@ -89,11 +98,9 @@ def load_urls_from_file(filepath):
                     if match:
                         commander = match.group(1)
                         deck_type = match.group(2) if match.group(2) else None  # Handle optional deck_type
-                        commander_url = commander
-                        if deck_type:
-                            commander_url += f"/{deck_type}"
-                        names.append(commander_url)
-            return sorted(list(set(names)))
+                        names.append((commander, deck_type))
+
+            return names
 
     except FileNotFoundError:
         print(f"Error: File not found at {filepath}")
