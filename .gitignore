@@ -1,6 +1,5 @@
 *.sqlite
 __pycache__/
+scryfall_bulk_cache/
 *.pyc
-*.csv
-input_list
-moxfield
+diff/
