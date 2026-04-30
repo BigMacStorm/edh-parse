@@ -1,5 +1,7 @@
 *.sqlite
 __pycache__/
 scryfall_bulk_cache/
+cache/scryfall_bulk_cache/
+cache/card_cache.sqlite
 *.pyc
 diff/

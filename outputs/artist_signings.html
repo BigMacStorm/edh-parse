@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artist Signings Report</title>
+<style>
+:root {
+  --bg: #0f1115;
+  --surface: #171b22;
+  --card: #1f2530;
+  --text: #e7edf6;
+  --muted: #9eabc2;
+  --accent: #6aa9ff;
+  --green: #3ddc97;
+  --border: #2b3443;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  line-height: 1.45;
+  padding: 1.25rem;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+h1 { margin: 0; font-size: 1.8rem; }
+.sub { color: var(--muted); margin-top: 0.4rem; }
+.meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+.pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+.artist {
+  margin-top: 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.artist-head {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.artist-name { font-size: 1.05rem; font-weight: 600; }
+.artist-total { color: var(--green); font-weight: 600; }
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.art-col { width: 352px; }
+.art-thumb {
+  width: 336px;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: block;
+}
+th {
+  color: var(--muted);
+  font-weight: 600;
+  background: var(--card);
+}
+tr:hover td { background: rgba(255,255,255,0.02); }
+.right { text-align: right; }
+.money { color: var(--green); font-variant-numeric: tabular-nums; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+@media print {
+  body { background: #fff; color: #111; }
+  .artist, .pill { border-color: #ccc; }
+  th { background: #f1f1f1; color: #222; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Artist Signings Report</h1>
+  <div class="sub">Cards in selected binders with artists from your convention list.</div>
+  <div class="meta">
+    <div class="pill">Binders: Binder, Secret Binder, Ur Treasures R Dragon, TeamEdwardForLife, SwingSwing, My Angel Is The Centerfold, My Angel Is The Centerfold, Hope, I Royal For Initiative</div>
+    <div class="pill">Matched artists: 37</div>
+    <div class="pill">Matched cards: 135</div>
+    <div class="pill">Total value: $2613.40</div>
+  </div>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Steve Ellis</div>
+    <div class="artist-total">$538.53</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/2/c2c9065c-54e5-473b-b2cd-f2826d92bc17.jpg?1682485136" alt="Lurrus of the Dream-Den"></td><td><a href="https://scryfall.com/card/mul/181z/lurrus-of-the-dream-den" target="_blank" rel="noopener">Lurrus of the Dream-Den</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$537.50</td><td class='right money'>$537.50</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/1/d16f8670-f038-400a-83e7-a53a7f8c47ac.jpg?1717012013" alt="Marionette Apprentice"></td><td><a href="https://scryfall.com/card/mh3/100/marionette-apprentice" target="_blank" rel="noopener">Marionette Apprentice</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$1.03</td><td class='right money'>$1.03</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Kieran Yanner</div>
+    <div class="artist-total">$274.12</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/a/9ab384fe-1935-4e6e-a3a2-aed932ed6643.jpg?1759412253" alt="Demonic Tutor"></td><td><a href="https://scryfall.com/card/sld/1856/demonic-tutor" target="_blank" rel="noopener">Demonic Tutor</a></td><td>secret binder</td><td class='right'>2</td><td class='right money'>$92.31</td><td class='right money'>$184.62</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/6/8/68785426-6868-4184-8d52-75a6a920848b.jpg?1759412224" alt="Armageddon"></td><td><a href="https://scryfall.com/card/sld/1854/armageddon" target="_blank" rel="noopener">Armageddon</a></td><td>secret binder</td><td class='right'>2</td><td class='right money'>$23.04</td><td class='right money'>$46.08</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/b/8/b8a8df5d-9582-4797-ae26-f64668972a1b.jpg?1723251608" alt="Cabal Ritual"></td><td><a href="https://scryfall.com/card/mb2/177/cabal-ritual" target="_blank" rel="noopener">Cabal Ritual</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$14.75</td><td class='right money'>$14.75</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/a/ea007a18-b31a-4881-92c4-86120dc5729b.jpg?1732306359" alt="Starnheim Aspirant"></td><td><a href="https://scryfall.com/card/khm/380/starnheim-aspirant" target="_blank" rel="noopener">Starnheim Aspirant</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$9.37</td><td class='right money'>$9.37</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/c/0c7cc34b-8dee-4732-b6a1-db901b9389e1.jpg?1759412231" alt="Baral, Chief of Compliance"></td><td><a href="https://scryfall.com/card/sld/2168/baral%2C-chief-of-compliance" target="_blank" rel="noopener">Baral, Chief of Compliance</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$7.03</td><td class='right money'>$7.03</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/6/2668ac91-6cda-4f81-a08d-4fc5f9cb35b2.jpg?1669839416" alt="Riverglide Pathway // Lavaglide Pathway"></td><td><a href="https://scryfall.com/card/znr/264/riverglide-pathway-%2F%2F-lavaglide-pathway" target="_blank" rel="noopener">Riverglide Pathway // Lavaglide Pathway</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$5.34</td><td class='right money'>$5.34</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/8/18a52dd6-f2f6-4031-80de-739f446e34db.jpg?1774088758" alt="Lord of the Pit"></td><td><a href="https://scryfall.com/card/sld/1857/lord-of-the-pit" target="_blank" rel="noopener">Lord of the Pit</a></td><td>secret binder</td><td class='right'>2</td><td class='right money'>$1.16</td><td class='right money'>$2.32</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/4/245ed6a8-9ff3-4e48-b33c-13024958ab91.jpg?1774088777" alt="Lord of the Pit"></td><td><a href="https://scryfall.com/card/sld/893/lord-of-the-pit" target="_blank" rel="noopener">Lord of the Pit</a></td><td>secret binder</td><td class='right'>2</td><td class='right money'>$0.91</td><td class='right money'>$1.82</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/8/4817067e-e778-4688-9f13-a327e8bc3700.jpg?1759412288" alt="Northern Paladin"></td><td><a href="https://scryfall.com/card/sld/1855/northern-paladin" target="_blank" rel="noopener">Northern Paladin</a></td><td>secret binder</td><td class='right'>2</td><td class='right money'>$0.73</td><td class='right money'>$1.46</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/9/494a6f50-9cd3-4bfc-9382-dce4f7047a81.jpg?1743206641" alt="Curse of Opulence"></td><td><a href="https://scryfall.com/card/tdc/209/curse-of-opulence" target="_blank" rel="noopener">Curse of Opulence</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$1.33</td><td class='right money'>$1.33</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Eric Deschamps</div>
+    <div class="artist-total">$231.09</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/3/f3537373-ef54-4578-9d05-6216420ee349.jpg?1626093502" alt="Esper Sentinel"></td><td><a href="https://scryfall.com/card/mh2/12/esper-sentinel" target="_blank" rel="noopener">Esper Sentinel</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$58.03</td><td class='right money'>$58.03</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/b/8b5a916f-a6f2-4e89-b38f-7e5bc0c2e032.jpg?1716313838" alt="Esper Sentinel"></td><td><a href="https://scryfall.com/card/h2r/2/esper-sentinel" target="_blank" rel="noopener">Esper Sentinel</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$52.81</td><td class='right money'>$52.81</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/b/8b5a916f-a6f2-4e89-b38f-7e5bc0c2e032.jpg?1716313838" alt="Esper Sentinel"></td><td><a href="https://scryfall.com/card/h2r/2/esper-sentinel" target="_blank" rel="noopener">Esper Sentinel</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$52.81</td><td class='right money'>$52.81</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/9/79b0e035-8716-469d-99ae-a530cd96ef09.jpg?1562558471" alt="Revel in Riches"></td><td><a href="https://scryfall.com/card/xln/117/revel-in-riches" target="_blank" rel="noopener">Revel in Riches</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$18.70</td><td class='right money'>$18.70</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/6/86e30ca4-1769-4686-aa18-31610246cd80.jpg?1689995706" alt="Grand Abolisher"></td><td><a href="https://scryfall.com/card/cmm/27/grand-abolisher" target="_blank" rel="noopener">Grand Abolisher</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$15.94</td><td class='right money'>$15.94</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/d/8d40ae44-df41-4a1e-b3c9-3b000335ac26.jpg?1753711323" alt="Phyrexian Crusader"></td><td><a href="https://scryfall.com/card/sld/847/phyrexian-crusader" target="_blank" rel="noopener">Phyrexian Crusader</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$14.17</td><td class='right money'>$14.17</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/4/74b769c1-48a0-448b-98d9-0d86526ef51e.jpg?1562850156" alt="Auriok Champion"></td><td><a href="https://scryfall.com/card/ima/9/auriok-champion" target="_blank" rel="noopener">Auriok Champion</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$10.72</td><td class='right money'>$10.72</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/3/43e757f4-cd0c-45f8-8574-cdacc309fe54.jpg?1717190434" alt="Chandra&#x27;s Ignition"></td><td><a href="https://scryfall.com/card/m3c/209/chandra%27s-ignition" target="_blank" rel="noopener">Chandra&#x27;s Ignition</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$4.19</td><td class='right money'>$4.19</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/8/18f7c44c-a21f-4b61-8f08-122a75accb00.jpg?1637629203" alt="Herald of War"></td><td><a href="https://scryfall.com/card/mic/86/herald-of-war" target="_blank" rel="noopener">Herald of War</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$3.72</td><td class='right money'>$3.72</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Chris Rahn</div>
+    <div class="artist-total">$205.44</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/6/d67be074-cdd4-41d9-ac89-0a0456c4e4b2.jpg?1674057568" alt="Sheoldred, the Apocalypse"></td><td><a href="https://scryfall.com/card/dmu/107/sheoldred%2C-the-apocalypse" target="_blank" rel="noopener">Sheoldred, the Apocalypse</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$93.19</td><td class='right money'>$93.19</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/7/c7710eb5-c56a-437b-8847-2a829c404d47.jpg?1599710042" alt="Sword of Feast and Famine"></td><td><a href="https://scryfall.com/card/2xm/296/sword-of-feast-and-famine" target="_blank" rel="noopener">Sword of Feast and Famine</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$39.29</td><td class='right money'>$39.29</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/6/f67b3e48-98e8-404b-93b0-c3cbbd764d1c.jpg?1734109154" alt="Exemplar of Light"></td><td><a href="https://scryfall.com/card/fdn/366/exemplar-of-light" target="_blank" rel="noopener">Exemplar of Light</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$36.26</td><td class='right money'>$36.26</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/1/7127164d-f2a3-4d79-b6db-93507ff5ab47.jpg?1759144841" alt="Bitterbloom Bearer"></td><td><a href="https://scryfall.com/card/ecl/88/bitterbloom-bearer" target="_blank" rel="noopener">Bitterbloom Bearer</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$15.07</td><td class='right money'>$15.07</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/8/089b28fe-f10f-4e3e-8c19-ed012349faf4.jpg?1730489707" alt="Exemplar of Light"></td><td><a href="https://scryfall.com/card/fdn/297/exemplar-of-light" target="_blank" rel="noopener">Exemplar of Light</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$7.01</td><td class='right money'>$7.01</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/6/868856b7-8875-43c1-8249-0f8fb2c8319b.jpg?1699044523" alt="Anim Pakal, Thousandth Moon"></td><td><a href="https://scryfall.com/card/lci/223/anim-pakal%2C-thousandth-moon" target="_blank" rel="noopener">Anim Pakal, Thousandth Moon</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$6.04</td><td class='right money'>$6.04</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/2/02fb5f9f-8750-4eb5-a03a-6dacc60e0b90.jpg?1631046105" alt="Righteous Valkyrie"></td><td><a href="https://scryfall.com/card/khm/24/righteous-valkyrie" target="_blank" rel="noopener">Righteous Valkyrie</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$4.78</td><td class='right money'>$4.78</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/2/a2e0c8c5-ea0e-4347-b5cb-b7b1801a523b.jpg?1675198875" alt="Lyra Dawnbringer"></td><td><a href="https://scryfall.com/card/dmr/13/lyra-dawnbringer" target="_blank" rel="noopener">Lyra Dawnbringer</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$3.80</td><td class='right money'>$3.80</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Bruce Brenneise</div>
+    <div class="artist-total">$183.64</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/f/0f1296cc-59aa-412d-9115-99fdc9ada754.jpg?1676121768" alt="Godless Shrine"></td><td><a href="https://scryfall.com/card/unf/533/godless-shrine" target="_blank" rel="noopener">Godless Shrine</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$164.47</td><td class='right money'>$164.47</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/a/faadf72f-b2d5-4271-8d5c-a586acf63453.jpg?1674136498" alt="Descent into Avernus"></td><td><a href="https://scryfall.com/card/clb/169/descent-into-avernus" target="_blank" rel="noopener">Descent into Avernus</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$12.31</td><td class='right money'>$12.31</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/6/b/6b26c05b-f166-40ab-9693-2129b4bf75e9.jpg?1764628496" alt="Ascend from Avernus"></td><td><a href="https://scryfall.com/card/clb/5/ascend-from-avernus" target="_blank" rel="noopener">Ascend from Avernus</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$2.14</td><td class='right money'>$2.14</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/9/49496ac4-347e-4edc-8faa-c5417e7543fb.jpg?1726285500" alt="Sulfurous Springs"></td><td><a href="https://scryfall.com/card/dsc/301/sulfurous-springs" target="_blank" rel="noopener">Sulfurous Springs</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$1.90</td><td class='right money'>$1.90</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/e/eedb9df2-20d3-4cfd-8aed-336edc37d5a9.jpg?1752945541" alt="Sulfurous Springs"></td><td><a href="https://scryfall.com/card/eoc/185/sulfurous-springs" target="_blank" rel="noopener">Sulfurous Springs</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$1.41</td><td class='right money'>$1.41</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/e/eedb9df2-20d3-4cfd-8aed-336edc37d5a9.jpg?1752945541" alt="Sulfurous Springs"></td><td><a href="https://scryfall.com/card/eoc/185/sulfurous-springs" target="_blank" rel="noopener">Sulfurous Springs</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$1.41</td><td class='right money'>$1.41</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Scott M. Fischer</div>
+    <div class="artist-total">$112.41</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/6/f6929b98-e81c-48b9-87d8-11c8830974ce.jpg?1704147974" alt="Archangel of Thune"></td><td><a href="https://scryfall.com/card/sld/1337/archangel-of-thune" target="_blank" rel="noopener">Archangel of Thune</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$92.41</td><td class='right money'>$92.41</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/e/7e1fe101-f634-41e5-9aa4-e8d7474535dc.jpg?1752946614" alt="Exalted Sunborn"></td><td><a href="https://scryfall.com/card/eoe/15/exalted-sunborn" target="_blank" rel="noopener">Exalted Sunborn</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$16.94</td><td class='right money'>$16.94</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/b/0b235e9f-a8a6-45d7-b301-bc6db752dda8.jpg?1730489714" alt="Giada, Font of Hope"></td><td><a href="https://scryfall.com/card/fdn/298/giada%2C-font-of-hope" target="_blank" rel="noopener">Giada, Font of Hope</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$3.06</td><td class='right money'>$3.06</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Tyler Walpole</div>
+    <div class="artist-total">$87.04</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/5/053f724c-c88d-44c0-9902-6400c064640b.jpg?1741641585" alt="Counterspell"></td><td><a href="https://scryfall.com/card/sld/1933/counterspell" target="_blank" rel="noopener">Counterspell</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$27.99</td><td class='right money'>$27.99</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/5/4/54b65cca-7844-4d3e-9d7f-ed1f49f94425.jpg?1752535684" alt="Knuckles the Echidna"></td><td><a href="https://scryfall.com/card/sld/2082/knuckles-the-echidna" target="_blank" rel="noopener">Knuckles the Echidna</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$19.11</td><td class='right money'>$19.11</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/4/743cc48b-77b1-473b-9a81-506282494d96.jpg?1759412138" alt="Hammer of Nazahn"></td><td><a href="https://scryfall.com/card/sld/2098/hammer-of-nazahn" target="_blank" rel="noopener">Hammer of Nazahn</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$7.82</td><td class='right money'>$7.82</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/0/d080214c-f904-4840-bf4c-15ca4f76ecc5.jpg?1742216479" alt="Daze"></td><td><a href="https://scryfall.com/card/sld/1934/daze" target="_blank" rel="noopener">Daze</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$7.47</td><td class='right money'>$7.47</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/b/cbb2277d-ce6a-4c28-b868-c3d48beae7da.jpg?1741641619" alt="Force of Despair"></td><td><a href="https://scryfall.com/card/sld/1936/force-of-despair" target="_blank" rel="noopener">Force of Despair</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$6.35</td><td class='right money'>$6.35</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/e/fe549436-97d0-427c-bba9-b799c055bfbc.jpg?1741641630" alt="Night&#x27;s Whisper"></td><td><a href="https://scryfall.com/card/sld/1937/night%27s-whisper" target="_blank" rel="noopener">Night&#x27;s Whisper</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$6.32</td><td class='right money'>$6.32</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/e/9efc8ce5-d9b3-4808-8297-f9a0a4db79c1.jpg?1741641612" alt="Inevitable Betrayal"></td><td><a href="https://scryfall.com/card/sld/1935/inevitable-betrayal" target="_blank" rel="noopener">Inevitable Betrayal</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$6.15</td><td class='right money'>$6.15</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/e/fe954ed4-af64-4997-ae5d-089eaa439d1f.jpg?1741621105" alt="Food"></td><td><a href="https://scryfall.com/card/sld/1938/food" target="_blank" rel="noopener">Food</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$4.61</td><td class='right money'>$4.61</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/6/362850cd-d33c-4f61-9b3a-5de748adee7c.jpg?1608910178" alt="Emberwilde Captain"></td><td><a href="https://scryfall.com/card/cmr/175/emberwilde-captain" target="_blank" rel="noopener">Emberwilde Captain</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$1.22</td><td class='right money'>$1.22</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Ryan Pancoast</div>
+    <div class="artist-total">$85.90</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/5/95c14c4d-6c16-4826-8d93-d89ad04aee09.jpg?1739657577" alt="Etali, Primal Conqueror // Etali, Primal Sickness"></td><td><a href="https://scryfall.com/card/mom/137/etali%2C-primal-conqueror-%2F%2F-etali%2C-primal-sickness" target="_blank" rel="noopener">Etali, Primal Conqueror // Etali, Primal Sickness</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$37.46</td><td class='right money'>$37.46</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/6/e632ed57-bb00-4493-adef-7b4805edd7ea.jpg?1674420256" alt="Myrel, Shield of Argive"></td><td><a href="https://scryfall.com/card/bro/18/myrel%2C-shield-of-argive" target="_blank" rel="noopener">Myrel, Shield of Argive</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$19.33</td><td class='right money'>$19.33</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/8/9897074a-0ac4-4d1a-9aac-e77830cc5c78.jpg?1604195368" alt="Angel of Destiny"></td><td><a href="https://scryfall.com/card/znr/2/angel-of-destiny" target="_blank" rel="noopener">Angel of Destiny</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$10.42</td><td class='right money'>$10.42</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/8/9897074a-0ac4-4d1a-9aac-e77830cc5c78.jpg?1604195368" alt="Angel of Destiny"></td><td><a href="https://scryfall.com/card/znr/2/angel-of-destiny" target="_blank" rel="noopener">Angel of Destiny</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$10.42</td><td class='right money'>$10.42</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/0/a062a004-984e-4b62-960c-af7288f7a3e9.jpg?1768629410" alt="Isshin, Two Heavens as One"></td><td><a href="https://scryfall.com/card/neo/224/isshin%2C-two-heavens-as-one" target="_blank" rel="noopener">Isshin, Two Heavens as One</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$4.95</td><td class='right money'>$4.95</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/6/a61a3ba1-af6c-4ddc-aa82-34bfc30867d0.jpg?1684340467" alt="Metropolis Reformer"></td><td><a href="https://scryfall.com/card/mat/4/metropolis-reformer" target="_blank" rel="noopener">Metropolis Reformer</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$2.98</td><td class='right money'>$2.98</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/3/03415c42-086e-4a2e-9be8-5cdcde83f134.jpg?1712356168" alt="Obeka, Splitter of Seconds"></td><td><a href="https://scryfall.com/card/otj/222/obeka%2C-splitter-of-seconds" target="_blank" rel="noopener">Obeka, Splitter of Seconds</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.34</td><td class='right money'>$0.34</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">cynthia sheppard</div>
+    <div class="artist-total">$78.08</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/1/91190972-7c9d-4a16-b7b8-0fcf3dbcebd5.jpg?1682692445" alt="Meren of Clan Nel Toth"></td><td><a href="https://scryfall.com/card/sld/52/meren-of-clan-nel-toth" target="_blank" rel="noopener">Meren of Clan Nel Toth</a></td><td>Binder</td><td class='right'>2</td><td class='right money'>$33.36</td><td class='right money'>$66.72</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/a/1af50bf1-c51e-4592-86bf-4197ec85a45d.jpg?1562009225" alt="Archangel of Tithes"></td><td><a href="https://scryfall.com/card/ori/4/archangel-of-tithes" target="_blank" rel="noopener">Archangel of Tithes</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$6.86</td><td class='right money'>$6.86</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/9/a99dd58d-9fed-4d85-9bb5-f9c91834cab8.jpg?1604195687" alt="Emeria Shepherd"></td><td><a href="https://scryfall.com/card/znc/16/emeria-shepherd" target="_blank" rel="noopener">Emeria Shepherd</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$4.50</td><td class='right money'>$4.50</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Victor Adame Minguez</div>
+    <div class="artist-total">$75.10</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/a/9a52c265-6920-4929-ba0a-70da08df01f1.jpg?1543674565" alt="Anointed Procession"></td><td><a href="https://scryfall.com/card/akh/2/anointed-procession" target="_blank" rel="noopener">Anointed Procession</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$58.37</td><td class='right money'>$58.37</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/7/e77a8ac1-f40d-423e-a0b3-0a8e236a6c1e.jpg?1689999589" alt="Hammer of Nazahn"></td><td><a href="https://scryfall.com/card/cmm/388/hammer-of-nazahn" target="_blank" rel="noopener">Hammer of Nazahn</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$15.04</td><td class='right money'>$15.04</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/f/dfe7b8bf-c150-4be0-aef4-e8bb6f09787a.jpg?1765451570" alt="High Perfect Morcant"></td><td><a href="https://scryfall.com/card/ecl/229/high-perfect-morcant" target="_blank" rel="noopener">High Perfect Morcant</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$1.69</td><td class='right money'>$1.69</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Steven Belledin</div>
+    <div class="artist-total">$73.98</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/6/6/66024e69-ad60-4c9a-a0ca-da138d33ad80.jpg?1685554120" alt="Mox Amber"></td><td><a href="https://scryfall.com/card/dom/224/mox-amber" target="_blank" rel="noopener">Mox Amber</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$71.83</td><td class='right money'>$71.83</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/e/ee6e5a35-fe21-4dee-b0ef-a8f2841511ad.jpg?1764180059" alt="Sol Ring"></td><td><a href="https://scryfall.com/card/eoc/57/sol-ring" target="_blank" rel="noopener">Sol Ring</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$1.62</td><td class='right money'>$1.62</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/8/e86174cd-0291-4fca-8e22-2d2b6f921460.jpg?1752945319" alt="Exotic Orchard"></td><td><a href="https://scryfall.com/card/eoc/159/exotic-orchard" target="_blank" rel="noopener">Exotic Orchard</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.30</td><td class='right money'>$0.30</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/f/0f31cb4c-c0f4-42fc-9661-723f78ee4d56.jpg?1738356027" alt="Exotic Orchard"></td><td><a href="https://scryfall.com/card/drc/155/exotic-orchard" target="_blank" rel="noopener">Exotic Orchard</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.23</td><td class='right money'>$0.23</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Chris Seaman</div>
+    <div class="artist-total">$70.93</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/9/89cf6f57-230f-497e-a14e-ad1e8737fd42.jpg?1717011506" alt="Ocelot Pride"></td><td><a href="https://scryfall.com/card/mh3/38/ocelot-pride" target="_blank" rel="noopener">Ocelot Pride</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$36.16</td><td class='right money'>$36.16</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/0/70d0540f-93c6-4af5-ab2d-65e6c03001c7.jpg?1762704818" alt="The Meathook Massacre"></td><td><a href="https://scryfall.com/card/inr/122/the-meathook-massacre" target="_blank" rel="noopener">The Meathook Massacre</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$25.00</td><td class='right money'>$25.00</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/9/19a9b8b0-c1ba-48c3-8f90-6af6948274ee.jpg?1730489920" alt="Banner of Kinship"></td><td><a href="https://scryfall.com/card/fdn/352/banner-of-kinship" target="_blank" rel="noopener">Banner of Kinship</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$9.77</td><td class='right money'>$9.77</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Alayna Danner</div>
+    <div class="artist-total">$68.88</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/7/d7183700-6941-4a3d-a581-4f33bea795e9.jpg?1727093687" alt="Jeweled Lotus"></td><td><a href="https://scryfall.com/card/cmm/396/jeweled-lotus" target="_blank" rel="noopener">Jeweled Lotus</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$48.14</td><td class='right money'>$48.14</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/8/18a1b3f5-473d-45ca-be0d-e67e77ba30ce.jpg?1674138220" alt="Reflecting Pool"></td><td><a href="https://scryfall.com/card/clb/358/reflecting-pool" target="_blank" rel="noopener">Reflecting Pool</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$14.92</td><td class='right money'>$14.92</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/7/47ce8b7e-d8e1-489a-a69e-99089eeb8739.jpg?1663214150" alt="Cleric Class"></td><td><a href="https://scryfall.com/card/afr/6/cleric-class" target="_blank" rel="noopener">Cleric Class</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$3.03</td><td class='right money'>$3.03</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/b/3b96a40e-828a-4cec-99cd-130dbcbdc67c.jpg?1726285394" alt="Dragonskull Summit"></td><td><a href="https://scryfall.com/card/dsc/271/dragonskull-summit" target="_blank" rel="noopener">Dragonskull Summit</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$1.56</td><td class='right money'>$1.56</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/6/c6eeab6f-a738-4005-91c2-a5f81df5c569.jpg?1726285507" alt="Tainted Field"></td><td><a href="https://scryfall.com/card/dsc/302/tainted-field" target="_blank" rel="noopener">Tainted Field</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$0.34</td><td class='right money'>$0.34</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/e/ce3a0ad9-6b7a-470c-8e49-4121fea72c89.jpg?1748705650" alt="Prairie Stream"></td><td><a href="https://scryfall.com/card/fic/413/prairie-stream" target="_blank" rel="noopener">Prairie Stream</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$0.34</td><td class='right money'>$0.34</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/2/821cb722-146d-447e-907d-dc97baa5bc4f.jpg?1721429803" alt="Path of Ancestry"></td><td><a href="https://scryfall.com/card/blc/322/path-of-ancestry" target="_blank" rel="noopener">Path of Ancestry</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$0.29</td><td class='right money'>$0.29</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/8/e80fe230-745d-42ae-a1f5-a8cc950783d0.jpg?1643594919" alt="Evolving Wilds"></td><td><a href="https://scryfall.com/card/vow/263/evolving-wilds" target="_blank" rel="noopener">Evolving Wilds</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.26</td><td class='right money'>$0.26</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/f/df31f72c-076e-4d8e-9975-6d6281ab71f6.jpg?1752947640" alt="Plains"></td><td><a href="https://scryfall.com/card/eoe/267/plains" target="_blank" rel="noopener">Plains</a></td><td>My Angel Is The Centerfold</td><td class='right'>30</td><td class='right money'>$0.00</td><td class='right money'>$0.00</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Randy Gallegos</div>
+    <div class="artist-total">$68.15</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/1/c103c4d8-5a3c-443b-9caf-f41f8b61e73f.jpg?1690002751" alt="Fierce Guardianship"></td><td><a href="https://scryfall.com/card/cmm/694/fierce-guardianship" target="_blank" rel="noopener">Fierce Guardianship</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$64.49</td><td class='right money'>$64.49</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/9/d96266b3-a7cb-40ce-a328-ac13719fe5f0.jpg?1616182277" alt="Soul Warden"></td><td><a href="https://scryfall.com/card/mm3/24/soul-warden" target="_blank" rel="noopener">Soul Warden</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$3.35</td><td class='right money'>$3.35</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/d/ad96343b-baac-428c-8270-fcffbbbe9fb8.jpg?1757376751" alt="Aunt May"></td><td><a href="https://scryfall.com/card/spm/3/aunt-may" target="_blank" rel="noopener">Aunt May</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$0.31</td><td class='right money'>$0.31</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Jason A. Engle</div>
+    <div class="artist-total">$66.10</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/2/8296a455-21d5-498e-9029-2bdf0da855a8.jpg?1675956918" alt="Mondrak, Glory Dominus"></td><td><a href="https://scryfall.com/card/one/23/mondrak%2C-glory-dominus" target="_blank" rel="noopener">Mondrak, Glory Dominus</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$41.33</td><td class='right money'>$41.33</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/1/e11cf760-da35-41f2-8cf5-a5141103eeb3.jpg?1682720692" alt="Heliod, Sun-Crowned"></td><td><a href="https://scryfall.com/card/thb/259/heliod%2C-sun-crowned" target="_blank" rel="noopener">Heliod, Sun-Crowned</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$21.58</td><td class='right money'>$21.58</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/2/72ab0422-eba0-4e1e-9626-ef31b836dcd2.jpg?1721429223" alt="Chatterfang, Squirrel General"></td><td><a href="https://scryfall.com/card/blc/209/chatterfang%2C-squirrel-general" target="_blank" rel="noopener">Chatterfang, Squirrel General</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$3.04</td><td class='right money'>$3.04</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/2/42496543-db8c-4053-aaf5-8e96948bafb9.jpg?1682347253" alt="Daxos, Blessed by the Sun"></td><td><a href="https://scryfall.com/card/mul/2/daxos%2C-blessed-by-the-sun" target="_blank" rel="noopener">Daxos, Blessed by the Sun</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$0.15</td><td class='right money'>$0.15</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/5/353a4398-5b8e-48bd-985b-62c8f33110e0.jpg?1682484728" alt="Daxos, Blessed by the Sun"></td><td><a href="https://scryfall.com/card/mul/132z/daxos%2C-blessed-by-the-sun" target="_blank" rel="noopener">Daxos, Blessed by the Sun</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$0.00</td><td class='right money'>$0.00</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Jeff Miracola</div>
+    <div class="artist-total">$63.51</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/a/da65d83c-67bd-4d54-9c9a-50d57ca115bb.jpg?1690002737" alt="Smothering Tithe"></td><td><a href="https://scryfall.com/card/cmm/693/smothering-tithe" target="_blank" rel="noopener">Smothering Tithe</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$59.02</td><td class='right money'>$59.02</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/8/a8c10535-c77e-4a40-b19f-23f7cb691230.jpg?1625979661" alt="Well of Lost Dreams"></td><td><a href="https://scryfall.com/card/c21/275/well-of-lost-dreams" target="_blank" rel="noopener">Well of Lost Dreams</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$4.49</td><td class='right money'>$4.49</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Svetlin Velinov</div>
+    <div class="artist-total">$58.82</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/5/f/5f608efc-0dbc-4cc3-aadd-ed473bfc29ab.jpg?1674422004" alt="Portal to Phyrexia"></td><td><a href="https://scryfall.com/card/bro/240/portal-to-phyrexia" target="_blank" rel="noopener">Portal to Phyrexia</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$28.79</td><td class='right money'>$28.79</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/4/24b23aef-6aca-4316-b904-76d4d1070e95.jpg?1738796134" alt="The First Sliver"></td><td><a href="https://scryfall.com/card/pf25/3/the-first-sliver" target="_blank" rel="noopener">The First Sliver</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$25.32</td><td class='right money'>$25.32</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/f/cf01af2c-68e5-4bb5-81de-f3a1b860fb2e.jpg?1730490945" alt="Bolt Bend"></td><td><a href="https://scryfall.com/card/fdn/619/bolt-bend" target="_blank" rel="noopener">Bolt Bend</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$2.44</td><td class='right money'>$2.44</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/1/41040541-b129-4cf4-9411-09b1d9d32c19.jpg?1742929284" alt="Swiftfoot Boots"></td><td><a href="https://scryfall.com/card/fdn/258/swiftfoot-boots" target="_blank" rel="noopener">Swiftfoot Boots</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$2.27</td><td class='right money'>$2.27</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Evyn Fong</div>
+    <div class="artist-total">$57.53</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/b/f/bf5666e6-e1bf-4f8e-acc0-d14df7362873.jpg?1747972052" alt="Toxic Deluge"></td><td><a href="https://scryfall.com/card/sld/1860/toxic-deluge" target="_blank" rel="noopener">Toxic Deluge</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$25.07</td><td class='right money'>$25.07</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg?1674140884" alt="Black Market Connections"></td><td><a href="https://scryfall.com/card/clb/669/black-market-connections" target="_blank" rel="noopener">Black Market Connections</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$16.62</td><td class='right money'>$16.62</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/5/159882aa-b596-4195-9b2e-983eee28d1bc.jpg?1758626132" alt="Silence"></td><td><a href="https://scryfall.com/card/sld/7003/silence" target="_blank" rel="noopener">Silence</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$6.76</td><td class='right money'>$6.76</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/5/a/5a763474-5ce9-48cc-aaf8-8ca363df4430.jpg?1759413286" alt="Lightning Bolt"></td><td><a href="https://scryfall.com/card/sld/1871/lightning-bolt" target="_blank" rel="noopener">Lightning Bolt</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$5.70</td><td class='right money'>$5.70</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/9/a905ed56-16cd-455f-8bba-8daef06a07da.jpg?1741618658" alt="Beloved Princess"></td><td><a href="https://scryfall.com/card/sld/804/beloved-princess" target="_blank" rel="noopener">Beloved Princess</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$2.20</td><td class='right money'>$2.20</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/9/299f81b5-20eb-465b-bd36-2acd80a4f37c.jpg?1721429174" alt="Rain of Riches"></td><td><a href="https://scryfall.com/card/blc/200/rain-of-riches" target="_blank" rel="noopener">Rain of Riches</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.50</td><td class='right money'>$0.50</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/9/299f81b5-20eb-465b-bd36-2acd80a4f37c.jpg?1721429174" alt="Rain of Riches"></td><td><a href="https://scryfall.com/card/blc/200/rain-of-riches" target="_blank" rel="noopener">Rain of Riches</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$0.50</td><td class='right money'>$0.50</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/c/0c9e944b-98fa-4aea-825d-b8b8a9d7ed47.jpg?1720310419" alt="Minthara, Merciless Soul"></td><td><a href="https://scryfall.com/card/clb/286/minthara%2C-merciless-soul" target="_blank" rel="noopener">Minthara, Merciless Soul</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$0.18</td><td class='right money'>$0.18</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Dan Frazier</div>
+    <div class="artist-total">$32.49</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/8/e869da95-2c47-4796-aadc-50652ebb4d03.jpg?1562824125" alt="Enlightened Tutor"></td><td><a href="https://scryfall.com/card/6ed/19/enlightened-tutor" target="_blank" rel="noopener">Enlightened Tutor</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$31.34</td><td class='right money'>$31.34</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/6/061d765e-df27-406a-9ba0-b51b0cbb65da.jpg?1767658634" alt="Mirrormind Crown"></td><td><a href="https://scryfall.com/card/ecl/258/mirrormind-crown" target="_blank" rel="noopener">Mirrormind Crown</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$1.15</td><td class='right money'>$1.15</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Andrew Mar</div>
+    <div class="artist-total">$28.99</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/9/39fc364b-f867-4965-98f8-6a7328fea2bc.jpg?1717190449" alt="Goldspan Dragon"></td><td><a href="https://scryfall.com/card/m3c/212/goldspan-dragon" target="_blank" rel="noopener">Goldspan Dragon</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$9.65</td><td class='right money'>$9.65</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/9/39fc364b-f867-4965-98f8-6a7328fea2bc.jpg?1717190449" alt="Goldspan Dragon"></td><td><a href="https://scryfall.com/card/m3c/212/goldspan-dragon" target="_blank" rel="noopener">Goldspan Dragon</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$9.65</td><td class='right money'>$9.65</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/2/426a50de-13bb-4481-8643-ad492d3fc84a.jpg?1682207628" alt="Firemane Commando"></td><td><a href="https://scryfall.com/card/moc/73/firemane-commando" target="_blank" rel="noopener">Firemane Commando</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$9.34</td><td class='right money'>$9.34</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/2/c/2c6275ea-0565-436b-ab9a-ac17c465e14b.jpg?1738356062" alt="Shivan Reef"></td><td><a href="https://scryfall.com/card/drc/170/shivan-reef" target="_blank" rel="noopener">Shivan Reef</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.35</td><td class='right money'>$0.35</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Alessandra Pisano</div>
+    <div class="artist-total">$25.34</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/f/cf3320ec-c4e8-405a-982d-e009c58c9e21.jpg?1721426449" alt="Maha, Its Feathers Night"></td><td><a href="https://scryfall.com/card/blb/100/maha%2C-its-feathers-night" target="_blank" rel="noopener">Maha, Its Feathers Night</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$25.34</td><td class='right money'>$25.34</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Lucas Graciano</div>
+    <div class="artist-total">$18.20</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/4/e419cd0b-2449-4cc5-9ead-b9e45e271700.jpg?1717012789" alt="Phlage, Titan of Fire&#x27;s Fury"></td><td><a href="https://scryfall.com/card/mh3/197/phlage%2C-titan-of-fire%27s-fury" target="_blank" rel="noopener">Phlage, Titan of Fire&#x27;s Fury</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$16.23</td><td class='right money'>$16.23</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/5/d/5d6178ed-6353-4733-81e1-7b3dc592c3bd.jpg?1562302252" alt="Aether Tunnel"></td><td><a href="https://scryfall.com/card/m19/43/aether-tunnel" target="_blank" rel="noopener">Aether Tunnel</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.89</td><td class='right money'>$0.89</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/9/d9f0d724-3b77-4cf6-a745-a04aca743312.jpg?1752945365" alt="Llanowar Wastes"></td><td><a href="https://scryfall.com/card/eoc/165/llanowar-wastes" target="_blank" rel="noopener">Llanowar Wastes</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.63</td><td class='right money'>$0.63</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/e/4e080dc5-361e-4e0b-b0d6-9ca060edceed.jpg?1690017016" alt="Skyline Despot"></td><td><a href="https://scryfall.com/card/cmm/254/skyline-despot" target="_blank" rel="noopener">Skyline Despot</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.45</td><td class='right money'>$0.45</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Justine Jones</div>
+    <div class="artist-total">$17.29</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/3/a3b123fa-c232-4bb4-ba9d-2cde4a0eef99.jpg?1674138553" alt="Karlach, Fury of Avernus"></td><td><a href="https://scryfall.com/card/clb/400/karlach%2C-fury-of-avernus" target="_blank" rel="noopener">Karlach, Fury of Avernus</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$17.29</td><td class='right money'>$17.29</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Sam Burley</div>
+    <div class="artist-total">$13.93</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/0/2/025152a1-4fdf-4e4e-a792-c540dd43fccd.jpg?1737649068" alt="Floodfarm Verge"></td><td><a href="https://scryfall.com/card/dsk/330/floodfarm-verge" target="_blank" rel="noopener">Floodfarm Verge</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$13.28</td><td class='right money'>$13.28</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/6/7/67198b97-bac2-480f-aea8-12841e8884de.jpg?1752945357" alt="Karplusan Forest"></td><td><a href="https://scryfall.com/card/eoc/164/karplusan-forest" target="_blank" rel="noopener">Karplusan Forest</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.38</td><td class='right money'>$0.38</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/b/3/b379c8f1-817c-4f18-8f58-45c40504433e.jpg?1726286878" alt="Terramorphic Expanse"></td><td><a href="https://scryfall.com/card/dsk/269/terramorphic-expanse" target="_blank" rel="noopener">Terramorphic Expanse</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.27</td><td class='right money'>$0.27</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Vincent Proce</div>
+    <div class="artist-total">$13.66</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/b/3/b3e47d49-e5b5-487b-a1ec-373dbf89b2ec.jpg?1673148829" alt="Kambal, Consul of Allocation"></td><td><a href="https://scryfall.com/card/2x2/237/kambal%2C-consul-of-allocation" target="_blank" rel="noopener">Kambal, Consul of Allocation</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$8.56</td><td class='right money'>$8.56</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/a/caaa7dd5-4fc2-40be-94a5-39d7c7187072.jpg?1740414266" alt="Diregraf Colossus"></td><td><a href="https://scryfall.com/card/sld/840/diregraf-colossus" target="_blank" rel="noopener">Diregraf Colossus</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$4.80</td><td class='right money'>$4.80</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/c/0/c0a4450c-8dfd-4d05-adb9-e84ec6066c7d.jpg?1730491081" alt="Drogskol Reaver"></td><td><a href="https://scryfall.com/card/fdn/655/drogskol-reaver" target="_blank" rel="noopener">Drogskol Reaver</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$0.30</td><td class='right money'>$0.30</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Tyler Jacobson</div>
+    <div class="artist-total">$10.03</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/b/3baa1dea-e74f-44c4-bfed-7dfaa3ecd332.jpg?1686972318" alt="Minas Tirith"></td><td><a href="https://scryfall.com/card/ltr/420/minas-tirith" target="_blank" rel="noopener">Minas Tirith</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$6.40</td><td class='right money'>$6.40</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/f/dfa94402-1613-4e65-8470-a05bf4bbb8a8.jpg?1562422747" alt="Brutal Hordechief"></td><td><a href="https://scryfall.com/card/c16/108/brutal-hordechief" target="_blank" rel="noopener">Brutal Hordechief</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$2.21</td><td class='right money'>$2.21</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/8/882747f9-b4fe-42be-8fe9-f871cd0779bd.jpg?1686972331" alt="Mirkwood Bats"></td><td><a href="https://scryfall.com/card/ltr/421/mirkwood-bats" target="_blank" rel="noopener">Mirkwood Bats</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$0.96</td><td class='right money'>$0.96</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/a/7a06a653-eca1-4fee-add5-45d2594885c3.jpg?1686972408" alt="Rising of the Day"></td><td><a href="https://scryfall.com/card/ltr/427/rising-of-the-day" target="_blank" rel="noopener">Rising of the Day</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$0.46</td><td class='right money'>$0.46</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Lindsey Look</div>
+    <div class="artist-total">$8.65</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/2/324c8712-0cfa-465c-a712-2bd1385d8049.jpg?1595127258" alt="Sublime Epiphany"></td><td><a href="https://scryfall.com/card/m21/355/sublime-epiphany" target="_blank" rel="noopener">Sublime Epiphany</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$3.72</td><td class='right money'>$3.72</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/d/9d8b61ab-9cc9-4eed-8241-67a834a1786d.jpg?1717190826" alt="Talisman of Creativity"></td><td><a href="https://scryfall.com/card/m3c/308/talisman-of-creativity" target="_blank" rel="noopener">Talisman of Creativity</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$3.25</td><td class='right money'>$3.25</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/a/7a283444-2cb5-4dd2-8d20-e8cb90ac0ffe.jpg?1743207385" alt="Talisman of Hierarchy"></td><td><a href="https://scryfall.com/card/tdc/331/talisman-of-hierarchy" target="_blank" rel="noopener">Talisman of Hierarchy</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$0.84</td><td class='right money'>$0.84</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/7/a/7a283444-2cb5-4dd2-8d20-e8cb90ac0ffe.jpg?1743207385" alt="Talisman of Hierarchy"></td><td><a href="https://scryfall.com/card/tdc/331/talisman-of-hierarchy" target="_blank" rel="noopener">Talisman of Hierarchy</a></td><td>SwingSwing</td><td class='right'>1</td><td class='right money'>$0.84</td><td class='right money'>$0.84</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Crystal Sully</div>
+    <div class="artist-total">$8.40</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/2/8288607d-57a0-4dce-a333-6ae1c86a6cdf.jpg?1742732258" alt="Dragonlord Ojutai"></td><td><a href="https://scryfall.com/card/sld/1973/dragonlord-ojutai" target="_blank" rel="noopener">Dragonlord Ojutai</a></td><td>secret binder</td><td class='right'>1</td><td class='right money'>$5.04</td><td class='right money'>$5.04</td></tr>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/f/1/f1c414b4-3374-44e4-98b4-03193e701eb1.jpg?1762598103" alt="Sunspine Lynx"></td><td><a href="https://scryfall.com/card/blb/292/sunspine-lynx" target="_blank" rel="noopener">Sunspine Lynx</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$3.36</td><td class='right money'>$3.36</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Steve Prescott</div>
+    <div class="artist-total">$7.72</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/3/2/3223c0ac-cc22-4886-8919-11273b477cc7.jpg?1562702613" alt="Soul&#x27;s Attendant"></td><td><a href="https://scryfall.com/card/roe/44/soul%27s-attendant" target="_blank" rel="noopener">Soul&#x27;s Attendant</a></td><td>TeamEdwardForLife</td><td class='right'>1</td><td class='right money'>$7.72</td><td class='right money'>$7.72</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Rebecca Guay</div>
+    <div class="artist-total">$7.68</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/e/6/e6748788-496c-42b4-9f68-e0bd5692b511.jpg?1682341671" alt="Serra the Benevolent"></td><td><a href="https://scryfall.com/card/sld/1252/serra-the-benevolent" target="_blank" rel="noopener">Serra the Benevolent</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$7.68</td><td class='right money'>$7.68</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Kai Carpenter</div>
+    <div class="artist-total">$6.92</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/a/8/a8b3aae8-fc36-45ed-84ed-efb8f543cada.jpg?1674140702" alt="Folk Hero"></td><td><a href="https://scryfall.com/card/clb/650/folk-hero" target="_blank" rel="noopener">Folk Hero</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$6.92</td><td class='right money'>$6.92</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Jarel Threat</div>
+    <div class="artist-total">$3.99</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/3/939b0bd0-24ea-45de-a2d3-37bbf6a3e6f9.jpg?1689938360" alt="There and Back Again"></td><td><a href="https://scryfall.com/card/ltr/151/there-and-back-again" target="_blank" rel="noopener">There and Back Again</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$3.99</td><td class='right money'>$3.99</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Pindurski</div>
+    <div class="artist-total">$3.79</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/d/d/dddeb5cc-b535-4484-8a0e-ce32c4c09000.jpg?1651655501" alt="Ruthless Technomancer"></td><td><a href="https://scryfall.com/card/nec/35/ruthless-technomancer" target="_blank" rel="noopener">Ruthless Technomancer</a></td><td>Ur Treasures R Dragon</td><td class='right'>1</td><td class='right money'>$3.79</td><td class='right money'>$3.79</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Drew Tucker</div>
+    <div class="artist-total">$3.61</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/8/1/81875876-c1a0-4f64-8dfc-39217b5e4020.jpg?1674141348" alt="Fractured Sanity"></td><td><a href="https://scryfall.com/card/clb/722/fractured-sanity" target="_blank" rel="noopener">Fractured Sanity</a></td><td>Hope</td><td class='right'>1</td><td class='right money'>$3.61</td><td class='right money'>$3.61</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Scott Murphy</div>
+    <div class="artist-total">$1.98</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/4/9/496e9fe2-843c-4dfe-b94a-b542a2ddaae4.jpg?1689995543" alt="Angelic Field Marshal"></td><td><a href="https://scryfall.com/card/cmm/13/angelic-field-marshal" target="_blank" rel="noopener">Angelic Field Marshal</a></td><td>My Angel Is The Centerfold</td><td class='right'>1</td><td class='right money'>$1.98</td><td class='right money'>$1.98</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Mark Poole</div>
+    <div class="artist-total">$1.33</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/9/2/926916ed-2f22-4ba9-9427-194886ad6c1e.jpg?1717013094" alt="Urza&#x27;s Cave"></td><td><a href="https://scryfall.com/card/mh3/234/urza%27s-cave" target="_blank" rel="noopener">Urza&#x27;s Cave</a></td><td>Binder</td><td class='right'>1</td><td class='right money'>$1.33</td><td class='right money'>$1.33</td></tr>
+    </tbody>
+  </table>
+</section>
+<section class="artist">
+  <div class="artist-head">
+    <div class="artist-name">Steve Argyle</div>
+    <div class="artist-total">$0.15</div>
+  </div>
+  <table>
+    <thead><tr><th class='art-col'>Art</th><th>Card</th><th>Binder</th><th class='right'>Qty</th><th class='right'>Cost</th><th class='right'>Value</th></tr></thead>
+    <tbody>
+      <tr><td><img class="art-thumb" src="https://cards.scryfall.io/large/front/1/7/1754a8db-060e-470f-94c0-37f12d82978a.jpg?1562201950" alt="Reckless Charge"></td><td><a href="https://scryfall.com/card/mh1/144/reckless-charge" target="_blank" rel="noopener">Reckless Charge</a></td><td>I Royal For Initiative</td><td class='right'>1</td><td class='right money'>$0.15</td><td class='right money'>$0.15</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+</body>
+</html>
