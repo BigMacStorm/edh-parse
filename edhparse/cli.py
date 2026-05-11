@@ -1169,7 +1169,7 @@ def _load_owned_names_from_stock_csv(filename, binder_names):
 def run_safe_shopping_html(args):
     """
     Build a commander-grouped shopping page from average/budget/expensive EDHREC lists.
-    Includes cards at or above inclusion cutoff and marks ownership from selected binders.
+    All qualifying cards are loaded once; threshold filtering happens client-side in HTML.
     """
     names_and_types = load_urls_from_file(args.commander_list)
     if not names_and_types:
@@ -1240,9 +1240,7 @@ def run_safe_shopping_html(args):
                         except (TypeError, ValueError):
                             syn_pct = None
 
-                        if inc_pct is None or inc_pct < inclusion_cutoff:
-                            continue
-                        if syn_pct is None or syn_pct < synergy_cutoff:
+                        if inc_pct is None:
                             continue
                         cur = merged.get(name)
                         if cur is None or inc_pct > cur["inclusion_pct"]:
@@ -1251,7 +1249,7 @@ def run_safe_shopping_html(args):
                                 "inclusion_pct": inc_pct,
                                 "inclusion_label": f"{inc_pct:.1f}%",
                                 "synergy_pct": syn_pct,
-                                "synergy_label": f"{syn_pct:.1f}%",
+                                "synergy_label": f"{syn_pct:.1f}%" if syn_pct is not None else "—",
                                 "tiers": {tier_label},
                             }
                         else:
@@ -1302,9 +1300,6 @@ def run_safe_shopping_html(args):
 
                 price_val = cached.get("price")
                 price_num = float(price_val) if isinstance(price_val, (int, float)) and price_val is not None else -1.0
-                if price_num < min_price:
-                    continue
-
                 owned = key in owned_names if owned_names else False
                 cards.append(
                     {
