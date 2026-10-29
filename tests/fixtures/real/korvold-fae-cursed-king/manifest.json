@@ -1,0 +1,302 @@
+{
+ "recorded_at": "2026-10-29T08:43:28+00:00",
+ "commander": "Korvold, Fae-Cursed King",
+ "slug": "korvold-fae-cursed-king",
+ "routes": {
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dacademy-manufactor%3Bin%3Dawakening-zone%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_60c3ff59a9.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dacademy-manufactor%3Bin%3Dawakening-zone%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_323f3ebb53.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dacademy-manufactor%3Bin%3Dbootleggers-stash%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_31785cd4d4.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dacademy-manufactor%3Bin%3Dbootleggers-stash%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_45c79feb72.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dashnods-altar%3Bin%3Dpitiless-plunderer%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_0dbdef6131.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dashnods-altar%3Bin%3Dtireless-provisioner%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_a9cd1b0535.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dawakening-zone%3Bin%3Dtireless-provisioner%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_9fd9bc4568.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dawakening-zone%3Bin%3Dtireless-provisioner%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_5afd2151f5.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dawakening-zone%3Bin%3Dwarren-soultrader%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_d194f47c60.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dbootleggers-stash%3Bin%3Dchatterfang-squirrel-general%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_762f956909.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dbootleggers-stash%3Bin%3Dchatterfang-squirrel-general%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_c09f41f760.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dbootleggers-stash%3Bin%3Dwarren-soultrader%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_59d9306767.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dchatterfang-squirrel-general%3Bin%3Ddeadly-dispute%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_c6370933c4.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dchatterfang-squirrel-general%3Bin%3Ddeadly-dispute%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_9c5292b758.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dchatterfang-squirrel-general%3Bin%3Ddeadly-dispute%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_acda2af9bb.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Ddeadly-dispute%3Bin%3Dimpulsive-pilferer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_6ea1a13da8.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Ddiabolic-intent%3Bin%3Dimpulsive-pilferer%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_aae81cacc6.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Ddiabolic-intent%3Bin%3Dimpulsive-pilferer%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_27d8075bc0.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Ddiabolic-intent%3Bin%3Dimpulsive-pilferer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_92bd26f480.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Ddiabolic-intent%3Bin%3Dimpulsive-pilferer%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_879a345c1a.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dgoldspan-dragon%3Bin%3Dreassembling-skeleton%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_16e10853a1.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dgoldspan-dragon%3Bin%3Dreassembling-skeleton%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_89fc592d3d.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dgoldspan-dragon%3Bin%3Druthless-technomancer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_865b9a6c5d.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dgoldspan-dragon%3Bin%3Druthless-technomancer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_53d179f1a4.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmayhem-devil%3Bin%3Dpitiless-plunderer%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_6886ce5814.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmayhem-devil%3Bin%3Dpitiless-plunderer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_acacf9c7d5.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmayhem-devil%3Bin%3Dpitiless-plunderer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_5648622004.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmayhem-devil%3Bin%3Druthless-technomancer%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_9a85fb73ad.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmayhem-devil%3Bin%3Druthless-technomancer%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_18d7c99f6e.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmirkwood-bats%3Bin%3Dprofessional-face-breaker%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_2421aa0169.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmirkwood-bats%3Bin%3Dprofessional-face-breaker%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_e66eb0c277.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmirkwood-bats%3Bin%3Dragavan-nimble-pilferer%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_7c0c4d52d2.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmirkwood-bats%3Bin%3Dragavan-nimble-pilferer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_9e4cc8153a.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dmirkwood-bats%3Bin%3Dragavan-nimble-pilferer%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_03ead83578.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dpitiless-plunderer%3Bin%3Dtireless-provisioner%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_ddcd837a36.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dprofessional-face-breaker%3Bin%3Dragavan-nimble-pilferer%3Bout%3Dputrefy%3Bout%3Droiling-regrowth": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_ad6be8230a.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dprofessional-face-breaker%3Bin%3Dreassembling-skeleton%3Bout%3Dcultivate%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_980909c441.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dprofessional-face-breaker%3Bin%3Dreassembling-skeleton%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_d916066884.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dprofessional-face-breaker%3Bin%3Dreassembling-skeleton%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_943101c646.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dragavan-nimble-pilferer%3Bin%3Dxorn%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_dcd4c3be28.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dragavan-nimble-pilferer%3Bin%3Dxorn%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dspringbloom-druid": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_e2a203f124.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dreassembling-skeleton%3Bin%3Druthless-technomancer%3Bout%3Ddeadly-dispute%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_49d8d8a933.html.gz"
+  },
+  "https://edhrec.com/commanders/korvold-fae-cursed-king?f=in%3Dtireless-provisioner%3Bin%3Dwarren-soultrader%3Bout%3Dmazirek-kraul-death-priest%3Bout%3Dputrefy": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_e49398260e.html.gz"
+  },
+  "https://json.edhrec.com/pages/average-decks/korvold-fae-cursed-king/expensive.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_a04a1e15d3.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/academy-manufactor.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_45d41b273e.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/chatterfang-squirrel-general.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_7cb1198f27.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/goldspan-dragon.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_4ef2cd7f35.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/impulsive-pilferer.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_425ddc7c1f.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/pitiless-plunderer.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_7974feb9dc.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/professional-face-breaker.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_bc5bee3312.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/ragavan-nimble-pilferer.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_a056ce5a8b.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/tireless-provisioner.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_75a9e07406.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/warren-soultrader.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_03fc53cd48.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/xorn.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_bef20045df.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/korvold-fae-cursed-king.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_2377dab4c4.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/korvold-fae-cursed-king/budget.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_cbed4ca6ba.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/korvold-fae-cursed-king/expensive.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_39dfa86842.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/korvold-fae-cursed-king/sacrifice.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_6fbe2b3703.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/korvold-fae-cursed-king/treasure.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_8a1c14a79e.json.gz"
+  }
+ }
+}

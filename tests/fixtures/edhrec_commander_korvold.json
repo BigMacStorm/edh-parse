@@ -1,0 +1,689 @@
+{
+"creature": 29,
+"instant": 10,
+"sorcery": 10,
+"artifact": 9,
+"enchantment": 6,
+"planeswalker": 0,
+"land": 35,
+"header": "Korvold, Fae-Cursed King (Commander)",
+"panels": {
+"mana_curve": {
+"0": 1,
+"1": 15,
+"2": 17,
+"3": 19,
+"4": 6,
+"5": 3,
+"6": 2,
+"7": 1,
+"9": 1
+},
+"taglinks": [
+{
+"count": 1269,
+"slug": "treasure",
+"value": "Treasure"
+},
+{
+"count": 1245,
+"slug": "sacrifice",
+"value": "Sacrifice"
+},
+{
+"count": 891,
+"slug": "aristocrats",
+"value": "Aristocrats"
+},
+{
+"count": 802,
+"slug": "tokens",
+"value": "Tokens"
+}
+]
+},
+"container": {
+"breadcrumb": [
+{
+"/commanders": "Commanders"
+},
+{
+"/commanders/korvold-fae-cursed-king": "Korvold, Fae-Cursed King"
+}
+],
+"description": "Popular decks and cards for Korvold, Fae-Cursed King",
+"json_dict": {
+"cardlists": [
+{
+"header": "New Cards",
+"tag": "newcards",
+"cardviews": [
+{
+"id": "19cc91f0-e724-41ac-b6d8-9a293bd63b42",
+"name": "Smaug, Wicked Worm",
+"sanitized": "smaug-wicked-worm",
+"slug": "smaug-wicked-worm",
+"url": "/cards/smaug-wicked-worm",
+"synergy": 0.13869113807198272,
+"num_decks": 651,
+"potential_decks": 3453,
+"trend_zscore": 13.865573366490873
+},
+{
+"id": "6a5d8fad-2ffd-4645-8c49-907999b6cecf",
+"name": "Smaug the Magnificent",
+"sanitized": "smaug-the-magnificent",
+"slug": "smaug-the-magnificent",
+"url": "/cards/smaug-the-magnificent",
+"synergy": 0.08270172010302211,
+"num_decks": 704,
+"potential_decks": 6646,
+"trend_zscore": 5.455013020038706
+},
+{
+"id": "ed87b471-79f9-45ec-9188-69e970f6121e",
+"name": "The Sackville-Bagginses",
+"sanitized": "the-sackville-bagginses",
+"slug": "the-sackville-bagginses",
+"url": "/cards/the-sackville-bagginses",
+"synergy": 0.075480159876441,
+"num_decks": 335,
+"potential_decks": 3716,
+"trend_zscore": 8.417516982765049
+},
+{
+"id": "55872bce-08ce-4d4f-8951-9fa230f3e160",
+"name": "Smaug the Impenetrable",
+"sanitized": "smaug-the-impenetrable",
+"slug": "smaug-the-impenetrable",
+"url": "/cards/smaug-the-impenetrable",
+"synergy": 0.035479820224256636,
+"num_decks": 208,
+"potential_decks": 3897,
+"trend_zscore": 2.8111978496876646
+}
+]
+},
+{
+"header": "High Synergy Cards",
+"tag": "highsynergycards",
+"cardviews": [
+{
+"id": "674f3a8a-4552-4289-b92a-06ce158f115c",
+"name": "Mayhem Devil",
+"sanitized": "mayhem-devil",
+"slug": "mayhem-devil",
+"url": "/cards/mayhem-devil",
+"synergy": 0.4772897697092966,
+"num_decks": 15767,
+"potential_decks": 21053,
+"trend_zscore": 0.25739485795221545
+},
+{
+"id": "a1e048e0-19d2-4076-892d-f8b3104dee37",
+"name": "Tireless Provisioner",
+"sanitized": "tireless-provisioner",
+"slug": "tireless-provisioner",
+"url": "/cards/tireless-provisioner",
+"synergy": 0.4670842001117777,
+"num_decks": 13408,
+"potential_decks": 21053,
+"trend_zscore": -0.2028423713480502
+},
+{
+"id": "5b5cd187-857a-44dd-8595-a52857a0b753",
+"name": "Pitiless Plunderer",
+"sanitized": "pitiless-plunderer",
+"slug": "pitiless-plunderer",
+"url": "/cards/pitiless-plunderer",
+"synergy": 0.4176254601951992,
+"num_decks": 11457,
+"potential_decks": 21053,
+"trend_zscore": -0.538258231537894
+},
+{
+"id": "1785cf85-1ac0-4246-9b89-1a8221a8e1b2",
+"name": "Chatterfang, Squirrel General",
+"sanitized": "chatterfang-squirrel-general",
+"slug": "chatterfang-squirrel-general",
+"url": "/cards/chatterfang-squirrel-general",
+"synergy": 0.41330433634912955,
+"num_decks": 10477,
+"potential_decks": 21053,
+"trend_zscore": -0.3093094063409495
+}
+]
+},
+{
+"header": "Top Cards",
+"tag": "topcards",
+"cardviews": [
+{
+"id": "e802cfe1-45e0-47cd-8745-363ccc0f2af8",
+"name": "Ignoble Hierarch",
+"sanitized": "ignoble-hierarch",
+"slug": "ignoble-hierarch",
+"url": "/cards/ignoble-hierarch",
+"synergy": 0.07283202578711623,
+"num_decks": 13331,
+"potential_decks": 21053,
+"trend_zscore": 0.43893392464403813
+},
+{
+"id": "aaf258fc-3ba4-4b83-bdbf-10a07e0b6c03",
+"name": "Assassin's Trophy",
+"sanitized": "assassins-trophy",
+"slug": "assassins-trophy",
+"url": "/cards/assassins-trophy",
+"synergy": 0.041403268063977705,
+"num_decks": 10400,
+"potential_decks": 21053,
+"trend_zscore": 0.27454795031965107
+},
+{
+"id": "7a8b1c49-8594-426d-b585-41140235bb0e",
+"name": "Sakura-Tribe Elder",
+"sanitized": "sakura-tribe-elder",
+"slug": "sakura-tribe-elder",
+"url": "/cards/sakura-tribe-elder",
+"synergy": 0.19084150347570755,
+"num_decks": 10180,
+"potential_decks": 21053,
+"trend_zscore": -0.26649029019203624
+},
+{
+"id": "492c2f9a-51e7-4e0f-9899-23bf43ea988b",
+"name": "Birds of Paradise",
+"sanitized": "birds-of-paradise",
+"slug": "birds-of-paradise",
+"url": "/cards/birds-of-paradise",
+"synergy": 0.1742884120483842,
+"num_decks": 10171,
+"potential_decks": 21053,
+"trend_zscore": 0.14565221090916441
+}
+]
+},
+{
+"header": "Game Changers",
+"tag": "gamechangers",
+"cardviews": [
+{
+"id": "523414cb-f8db-407a-808a-01454e03d8b9",
+"name": "Crop Rotation",
+"sanitized": "crop-rotation",
+"slug": "crop-rotation",
+"url": "/cards/crop-rotation",
+"synergy": 0.2327159826937616,
+"num_decks": 7944,
+"potential_decks": 21053,
+"trend_zscore": 0.16826988063328133
+},
+{
+"id": "a24b4cb6-cebb-428b-8654-74347a6a8d63",
+"name": "Demonic Tutor",
+"sanitized": "demonic-tutor",
+"slug": "demonic-tutor",
+"url": "/cards/demonic-tutor",
+"synergy": 0.1770220476144581,
+"num_decks": 6986,
+"potential_decks": 21053,
+"trend_zscore": -0.36446868012710926
+},
+{
+"id": "34a0203f-9cce-43a4-9cb7-8ce6647895cd",
+"name": "Vampiric Tutor",
+"sanitized": "vampiric-tutor",
+"slug": "vampiric-tutor",
+"url": "/cards/vampiric-tutor",
+"synergy": 0.16545117514913188,
+"num_decks": 5840,
+"potential_decks": 21053,
+"trend_zscore": 0.20310229169056832
+},
+{
+"id": "f39aa2e9-e294-4ce6-bf5e-e1f579101a7a",
+"name": "Worldly Tutor",
+"sanitized": "worldly-tutor",
+"slug": "worldly-tutor",
+"url": "/cards/worldly-tutor",
+"synergy": 0.15099923592230763,
+"num_decks": 5128,
+"potential_decks": 21053,
+"trend_zscore": -0.37363168313950035
+}
+]
+},
+{
+"header": "Creatures",
+"tag": "creatures",
+"cardviews": [
+{
+"id": "39704000-65d3-4d39-849e-a3b617376bbc",
+"name": "Eternal Witness",
+"sanitized": "eternal-witness",
+"slug": "eternal-witness",
+"url": "/cards/eternal-witness",
+"synergy": 0.14008536111632205,
+"num_decks": 7639,
+"potential_decks": 21053,
+"trend_zscore": -1.354385412910751
+},
+{
+"id": "848c1951-90fa-4f01-9aed-76f1afcd9995",
+"name": "Goldspan Dragon",
+"sanitized": "goldspan-dragon",
+"slug": "goldspan-dragon",
+"url": "/cards/goldspan-dragon",
+"synergy": 0.27805487405324386,
+"num_decks": 7531,
+"potential_decks": 21053,
+"trend_zscore": 0.9466556581691032
+},
+{
+"id": "42acbf52-b137-44f0-a815-2817fe8d2da2",
+"name": "Professional Face-Breaker",
+"sanitized": "professional-face-breaker",
+"slug": "professional-face-breaker",
+"url": "/cards/professional-face-breaker",
+"synergy": 0.26535178167612106,
+"num_decks": 7354,
+"potential_decks": 21053,
+"trend_zscore": 1.0166526860194847
+},
+{
+"id": "f511830b-1c1f-4d30-aa5d-4314726d142e",
+"name": "Viscera Seer",
+"sanitized": "viscera-seer",
+"slug": "viscera-seer",
+"url": "/cards/viscera-seer",
+"synergy": 0.2339942144433465,
+"num_decks": 6996,
+"potential_decks": 21053,
+"trend_zscore": -0.08729472131095059
+}
+]
+},
+{
+"header": "Instants",
+"tag": "instants",
+"cardviews": [
+{
+"id": "b4b36435-55b3-4615-8812-af41d4fc64d9",
+"name": "Deflecting Swat",
+"sanitized": "deflecting-swat",
+"slug": "deflecting-swat",
+"url": "/cards/deflecting-swat",
+"synergy": 0.18986306382798793,
+"num_decks": 7365,
+"potential_decks": 21053,
+"trend_zscore": -0.4930311841648746
+},
+{
+"id": "e32c67d1-187f-40df-b3b3-6036f5c92834",
+"name": "Heroic Intervention",
+"sanitized": "heroic-intervention",
+"slug": "heroic-intervention",
+"url": "/cards/heroic-intervention",
+"synergy": 0.06244536452091726,
+"num_decks": 6861,
+"potential_decks": 21053,
+"trend_zscore": 1.0650642144423206
+},
+{
+"id": "a8e328c6-3a84-49cf-a1a3-1d1e5373d274",
+"name": "Abrupt Decay",
+"sanitized": "abrupt-decay",
+"slug": "abrupt-decay",
+"url": "/cards/abrupt-decay",
+"synergy": 0.16479570143865277,
+"num_decks": 5837,
+"potential_decks": 21053,
+"trend_zscore": -0.8730559214175664
+},
+{
+"id": "aa686c34-1c11-469f-93c2-f9891aea521f",
+"name": "Veil of Summer",
+"sanitized": "veil-of-summer",
+"slug": "veil-of-summer",
+"url": "/cards/veil-of-summer",
+"synergy": 0.1608848289688942,
+"num_decks": 4593,
+"potential_decks": 21053,
+"trend_zscore": -0.40255068626900226
+}
+]
+},
+{
+"header": "Sorceries",
+"tag": "sorceries",
+"cardviews": [
+{
+"id": "7d4b1d44-126e-4987-9a9f-f0f9627a09cb",
+"name": "Blasphemous Act",
+"sanitized": "blasphemous-act",
+"slug": "blasphemous-act",
+"url": "/cards/blasphemous-act",
+"synergy": -0.056124429913360585,
+"num_decks": 7442,
+"potential_decks": 21053,
+"trend_zscore": 0.038868296131504776
+},
+{
+"id": "c1aac0f5-1d01-4673-b8d3-878d9a1d423c",
+"name": "Farseek",
+"sanitized": "farseek",
+"slug": "farseek",
+"url": "/cards/farseek",
+"synergy": -0.14166293859032136,
+"num_decks": 7288,
+"potential_decks": 21053,
+"trend_zscore": -0.1526915539208083
+},
+{
+"id": "ee008d81-df28-49a8-917d-44f66527e469",
+"name": "Victimize",
+"sanitized": "victimize",
+"slug": "victimize",
+"url": "/cards/victimize",
+"synergy": 0.12171399166949187,
+"num_decks": 6652,
+"potential_decks": 21053,
+"trend_zscore": -0.5378157203577141
+},
+{
+"id": "e60deb92-f7dd-4f4e-9036-e47dd586f985",
+"name": "Cultivate",
+"sanitized": "cultivate",
+"slug": "cultivate",
+"url": "/cards/cultivate",
+"synergy": -0.11364664896137444,
+"num_decks": 6126,
+"potential_decks": 21053,
+"trend_zscore": -0.690480796137462
+}
+]
+},
+{
+"header": "Utility Artifacts",
+"tag": "utilityartifacts",
+"cardviews": [
+{
+"id": "3c0f7157-a375-499c-92c7-d47d2e95dbad",
+"name": "Ashnod's Altar",
+"sanitized": "ashnods-altar",
+"slug": "ashnods-altar",
+"url": "/cards/ashnods-altar",
+"synergy": 0.25165172855078966,
+"num_decks": 7395,
+"potential_decks": 21053,
+"trend_zscore": 0.42146305168831133
+},
+{
+"id": "03f7e9fc-8e59-45c1-90fc-1d04d929b292",
+"name": "Swiftfoot Boots",
+"sanitized": "swiftfoot-boots",
+"slug": "swiftfoot-boots",
+"url": "/cards/swiftfoot-boots",
+"synergy": 0.08852818041489349,
+"num_decks": 6389,
+"potential_decks": 21053,
+"trend_zscore": -0.5334109395681363
+},
+{
+"id": "80b5b7e1-52c2-4453-b3c0-efe2cebad6ce",
+"name": "Bootleggers' Stash",
+"sanitized": "bootleggers-stash",
+"slug": "bootleggers-stash",
+"url": "/cards/bootleggers-stash",
+"synergy": 0.23148134791541025,
+"num_decks": 6049,
+"potential_decks": 21053,
+"trend_zscore": -0.5933917804317509
+},
+{
+"id": "5bcd1591-b5b9-49fc-9f2a-45f31ed1871e",
+"name": "The Reaver Cleaver",
+"sanitized": "the-reaver-cleaver",
+"slug": "the-reaver-cleaver",
+"url": "/cards/the-reaver-cleaver",
+"synergy": 0.15476433822465405,
+"num_decks": 4549,
+"potential_decks": 21053,
+"trend_zscore": 0.9353451035539996
+}
+]
+},
+{
+"header": "Enchantments",
+"tag": "enchantments",
+"cardviews": [
+{
+"id": "9d9ca869-e68a-4f53-9f52-85c714dac6f3",
+"name": "Black Market Connections",
+"sanitized": "black-market-connections",
+"slug": "black-market-connections",
+"url": "/cards/black-market-connections",
+"synergy": 0.18080301430070084,
+"num_decks": 5394,
+"potential_decks": 21053,
+"trend_zscore": 0.697937981088328
+},
+{
+"id": "79b0e035-8716-469d-99ae-a530cd96ef09",
+"name": "Revel in Riches",
+"sanitized": "revel-in-riches",
+"slug": "revel-in-riches",
+"url": "/cards/revel-in-riches",
+"synergy": 0.20390971570074448,
+"num_decks": 5318,
+"potential_decks": 21053,
+"trend_zscore": -0.5236060372292307
+},
+{
+"id": "e262f55e-9239-4a97-a19e-9b08fb34502e",
+"name": "Goblin Bombardment",
+"sanitized": "goblin-bombardment",
+"slug": "goblin-bombardment",
+"url": "/cards/goblin-bombardment",
+"synergy": 0.15310556663165314,
+"num_decks": 5232,
+"potential_decks": 21053,
+"trend_zscore": 0.13121644487131529
+},
+{
+"id": "13724768-83d3-4da2-82d7-35787c4f9877",
+"name": "Awakening Zone",
+"sanitized": "awakening-zone",
+"slug": "awakening-zone",
+"url": "/cards/awakening-zone",
+"synergy": 0.20374118807380448,
+"num_decks": 5136,
+"potential_decks": 21053,
+"trend_zscore": 0.4395394835694355
+}
+]
+},
+{
+"header": "Planeswalkers",
+"tag": "planeswalkers",
+"cardviews": [
+{
+"id": "cb28d217-795e-4320-a032-cd713f7ecc8a",
+"name": "Liliana, Dreadhorde General",
+"sanitized": "liliana-dreadhorde-general",
+"slug": "liliana-dreadhorde-general",
+"url": "/cards/liliana-dreadhorde-general",
+"synergy": 0.05873898629672261,
+"num_decks": 1775,
+"potential_decks": 21053,
+"trend_zscore": -0.2411778791883056
+}
+]
+},
+{
+"header": "Utility Lands",
+"tag": "utilitylands",
+"cardviews": [
+{
+"id": "e2a27742-08c1-4153-af7f-25a7a98f585e",
+"name": "Reliquary Tower",
+"sanitized": "reliquary-tower",
+"slug": "reliquary-tower",
+"url": "/cards/reliquary-tower",
+"synergy": 0.16449497762952717,
+"num_decks": 7508,
+"potential_decks": 21053,
+"trend_zscore": -0.0853866271061938
+},
+{
+"id": "2135ac5a-187b-4dc9-8f82-34e8d1603416",
+"name": "Boseiju, Who Endures",
+"sanitized": "boseiju-who-endures",
+"slug": "boseiju-who-endures",
+"url": "/cards/boseiju-who-endures",
+"synergy": 0.10339894716704984,
+"num_decks": 6164,
+"potential_decks": 21053,
+"trend_zscore": -0.33780912976333816
+},
+{
+"id": "0b47f6d2-9f65-47a4-bfc4-15619befe53d",
+"name": "Phyrexian Tower",
+"sanitized": "phyrexian-tower",
+"slug": "phyrexian-tower",
+"url": "/cards/phyrexian-tower",
+"synergy": 0.18758315991813854,
+"num_decks": 5945,
+"potential_decks": 21053,
+"trend_zscore": -0.7844710122778376
+},
+{
+"id": "55b5b094-9d2d-4d96-b90c-78fecdae725a",
+"name": "Bojuka Bog",
+"sanitized": "bojuka-bog",
+"slug": "bojuka-bog",
+"url": "/cards/bojuka-bog",
+"synergy": -0.062498900476449126,
+"num_decks": 5835,
+"potential_decks": 21053,
+"trend_zscore": 0.6477695958491626
+}
+]
+},
+{
+"header": "Mana Artifacts",
+"tag": "manaartifacts",
+"cardviews": [
+{
+"id": "8ee443cc-e17a-493b-9c93-1f9e141a30e4",
+"name": "Sol Ring",
+"sanitized": "sol-ring",
+"slug": "sol-ring",
+"url": "/cards/sol-ring",
+"synergy": 0.08177917331270357,
+"num_decks": 18783,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "c6b6117c-faab-4bbb-b851-07bd8061ef03",
+"name": "Arcane Signet",
+"sanitized": "arcane-signet",
+"slug": "arcane-signet",
+"url": "/cards/arcane-signet",
+"synergy": 0.04564358499406307,
+"num_decks": 15504,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "57c4bd1f-757c-4b62-a87d-73da94f904f3",
+"name": "Lotus Petal",
+"sanitized": "lotus-petal",
+"slug": "lotus-petal",
+"url": "/cards/lotus-petal",
+"synergy": 0.184655706367777,
+"num_decks": 4928,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "3ef87948-0ad9-4757-a692-2262c8e24367",
+"name": "Fellwar Stone",
+"sanitized": "fellwar-stone",
+"slug": "fellwar-stone",
+"url": "/cards/fellwar-stone",
+"synergy": 0.05769830558728091,
+"num_decks": 3616,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+}
+]
+},
+{
+"header": "Lands",
+"tag": "lands",
+"cardviews": [
+{
+"id": "dce15387-4114-4b3e-91aa-5b42b45c44ac",
+"name": "Forest",
+"sanitized": "forest",
+"slug": "forest",
+"url": "/cards/forest",
+"synergy": -0.031179320578044845,
+"num_decks": 19624,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "b7387103-1df1-4fd0-9e91-1544509792c7",
+"name": "Swamp",
+"sanitized": "swamp",
+"slug": "swamp",
+"url": "/cards/swamp",
+"synergy": -0.030790010155325676,
+"num_decks": 19499,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "1ac6cb62-45da-4e9a-84c6-09e6eacf0664",
+"name": "Command Tower",
+"sanitized": "command-tower",
+"slug": "command-tower",
+"url": "/cards/command-tower",
+"synergy": 0.010085632965659674,
+"num_decks": 19364,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+},
+{
+"id": "2a844b96-6616-4c39-8f4f-5d14a3b2bd55",
+"name": "Mountain",
+"sanitized": "mountain",
+"slug": "mountain",
+"url": "/cards/mountain",
+"synergy": -0.06575150444545719,
+"num_decks": 18641,
+"potential_decks": 21053,
+"trend_zscore": 0.0
+}
+]
+}
+],
+"card": {
+"num_decks": 21053,
+"name": "Korvold, Fae-Cursed King",
+"color_identity": [
+"B",
+"R",
+"G"
+],
+"sanitized": "korvold-fae-cursed-king"
+}
+},
+"keywords": "Korvold,Fae-Cursed,King,Commander",
+"title": "Korvold, Fae-Cursed King (Commander)"
+}
+}

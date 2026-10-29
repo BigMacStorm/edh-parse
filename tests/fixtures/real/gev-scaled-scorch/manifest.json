@@ -1,0 +1,192 @@
+{
+ "recorded_at": "2026-10-29T08:46:37+00:00",
+ "commander": "Gev, Scaled Scorch",
+ "slug": "gev-scaled-scorch",
+ "routes": {
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-blade-assassin%3Bin%3Dcindering-cutthroat%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_f4d0e94e4c.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-blade-assassin%3Bin%3Dspitfire-lagac%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_81969cf189.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-blade-assassin%3Bin%3Dspitfire-lagac%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_a99bc2bc69.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-instigator%3Bin%3Dfireglass-mentor%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_5e1d15132e.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-instigator%3Bin%3Dflamecache-gecko%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_b4a4ac78ce.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dagate-instigator%3Bin%3Dflamecache-gecko%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_bbf99c7295.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dcindering-cutthroat%3Bin%3Dsteampath-charger%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_491571f3df.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dcindering-cutthroat%3Bin%3Dsteampath-charger%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_e5d92abbe5.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dfireglass-mentor%3Bin%3Dvalley-flamecaller%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_a367eb76ff.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dfireglass-mentor%3Bin%3Dvalley-flamecaller%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_74604dfdc6.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dfrilled-sparkshooter%3Bin%3Dkindlespark-duo%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_51e40e7ab3.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dfrilled-sparkshooter%3Bin%3Dreptilian-recruiter%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_dd9a0848a5.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dfrilled-sparkshooter%3Bin%3Dreptilian-recruiter%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_6b7bf63b63.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhearthborn-battler%3Bin%3Dhired-claw%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_0cfefef41a.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhearthborn-battler%3Bin%3Dhired-claw%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_6ef2e966f4.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhearthborn-battler%3Bin%3Dspitfire-lagac%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_1c5510bc44.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhired-claw%3Bin%3Dvalley-flamecaller%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_3d7d847084.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhissing-iguanar%3Bin%3Dkindlespark-duo%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_97de792822.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhissing-iguanar%3Bin%3Dthought-stalker-warlock%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_054ce61c94.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dhissing-iguanar%3Bin%3Dthought-stalker-warlock%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_b93ba7621c.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Diridescent-vinelasher%3Bin%3Dscales-of-shale%3Bout%3Dcommanders-sphere%3Bout%3Dwayfarers-bauble": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_9a3eb589ee.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Diridescent-vinelasher%3Bin%3Dscales-of-shale%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_07ac1c4bd5.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dkindlespark-duo%3Bin%3Dthought-stalker-warlock%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_a8cda238eb.html.gz"
+  },
+  "https://edhrec.com/commanders/gev-scaled-scorch?f=in%3Dsteampath-charger%3Bin%3Dthought-stalker-warlock%3Bout%3Dcommanders-sphere%3Bout%3Dwitty-roastmaster": {
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "file": "p_c978553dad.html.gz"
+  },
+  "https://json.edhrec.com/pages/average-decks/gev-scaled-scorch/expensive.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_59d1d299f8.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/agate-blade-assassin.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_fc2526a692.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/cindering-cutthroat.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_469983214d.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/hearthborn-battler.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_ff885c8699.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/reptilian-recruiter.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_0501e037e7.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/steampath-charger.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_9cc2a8c30e.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/thought-stalker-warlock.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_9adf32c682.json.gz"
+  },
+  "https://json.edhrec.com/pages/cards/valley-flamecaller.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_6c06360a89.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/gev-scaled-scorch.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_7a317bcab4.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/gev-scaled-scorch/budget.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_c6beb17309.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/gev-scaled-scorch/burn.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_9618f2a306.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/gev-scaled-scorch/expensive.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_704c81abb8.json.gz"
+  },
+  "https://json.edhrec.com/pages/commanders/gev-scaled-scorch/lizards.json": {
+   "status": 200,
+   "content_type": "application/json; charset=utf-8",
+   "file": "p_72ac6550ea.json.gz"
+  }
+ }
+}
