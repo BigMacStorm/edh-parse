@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <p class="hint" style="margin-bottom:1rem">
+    Removes basic lands, merges duplicates, subtracts Stock / Binder / secret binder ownership,
+    then gives you a plain text list to paste into ManaPool mass entry.
+  </p>
+  <div class="panel">
+    <form method="post" action="/run/shopping-list" data-run-label="Shopping list">
+      <div class="row">
+        <label for="shopping_list">Shopping list file (MTGO format)</label>
+        <input type="text" id="shopping_list" name="shopping_list" value="inputs/new" required>
+      </div>
+      <div class="row">
+        <label for="stock">Stock CSV</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}" required>
+      </div>
+      <div class="row">
+        <label for="binders">Binders (comma-separated)</label>
+        <input type="text" id="binders" name="binders" value="{{ defaults.default_binders | join(', ') }}">
+        <p class="hint">Known: {{ defaults.binders | join(', ') or 'none' }}</p>
+      </div>
+      <div class="row">
+        <label for="output">Output HTML</label>
+        <input type="text" id="output" name="output" value="outputs/shopping_list.html">
+        <p class="hint">Also writes <code>outputs/shopping_list_manapool.txt</code> beside it.</p>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh HTTP cache</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

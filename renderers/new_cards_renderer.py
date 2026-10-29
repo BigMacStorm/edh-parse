@@ -22,10 +22,72 @@ def write_new_cards_html(
         text = re.sub(r"-{2,}", "-", text).strip("-")
         return text
 
-    def _render_card_tile(card: Any) -> str:
+    def _inclusion_pct(card: Any) -> float:
+        val = getattr(card, "edh_inclusion", None)
+        if val is None:
+            return -1.0
+        try:
+            return float(str(val).replace("%", "").strip())
+        except ValueError:
+            return -1.0
+
+    def _theme_token(theme_slug: str) -> str:
+        return theme_slug if theme_slug else "hub"
+
+    def _build_commander_cards(panes, theme_options, tier_ids):
+        """Union cards across tiers/themes; inclusion stats from Average hub only."""
+        average_hub_by_name = {}
+        for card in panes.get("average::") or []:
+            name = getattr(card, "name", None) or ""
+            if name:
+                average_hub_by_name[name] = card
+
+        entries = {}
+        theme_slugs = [opt.get("slug") or "" for opt in theme_options]
+        for theme_slug in theme_slugs:
+            for tier_id in tier_ids:
+                pane_key = f"{tier_id}::{theme_slug}"
+                for card in panes.get(pane_key) or []:
+                    name = getattr(card, "name", None) or ""
+                    if not name:
+                        continue
+                    row = entries.get(name)
+                    if row is None:
+                        entries[name] = {
+                            "base": card,
+                            "themes": {_theme_token(theme_slug)},
+                        }
+                    else:
+                        row["themes"].add(_theme_token(theme_slug))
+
+        merged = []
+        for name, row in entries.items():
+            hub = average_hub_by_name.get(name)
+            if hub:
+                display = hub
+            else:
+                display = row["base"]
+                display.edh_inclusion = None
+                display.edh_synergy = None
+            merged.append({"card": display, "themes": row["themes"]})
+
+        merged.sort(
+            key=lambda row: (
+                -_inclusion_pct(row["card"]),
+                (getattr(row["card"], "name", "") or "").lower(),
+            )
+        )
+        return merged
+
+    def _render_card_tile(card: Any, theme_tokens: List[str]) -> str:
         parts: List[str] = []
         scode = (getattr(card, "set_code", None) or "").lower()
-        parts.append(f'<article class="card-tile" data-set-code="{html_module.escape(scode)}">\n')
+        inc_pct = _inclusion_pct(card)
+        themes_attr = html_module.escape(" ".join(sorted(theme_tokens)))
+        parts.append(
+            f'<article class="card-tile" data-set-code="{html_module.escape(scode)}" '
+            f'data-inclusion="{inc_pct:.4f}" data-themes="{themes_attr}">\n'
+        )
         parts.append(f'<div class="card-title">{card.name or ""}</div>\n')
 
         meta_bits: List[str] = []
@@ -96,20 +158,19 @@ h1 { font-size: 2rem; margin-bottom: 0.3rem; color: var(--text); font-weight: 60
 .commander-meta { flex: 1; min-width: 180px; }
 .commander-meta h2 { margin: 0 0 0.4rem; font-size: 1.35rem; }
 .commander-meta p { margin: 0.15rem 0; font-size: 0.95rem; color: var(--muted); }
-.commander-ctrls { display: flex; flex-wrap: wrap; gap: 1rem 1.25rem; align-items: center; margin: 0.75rem 0 0.5rem; }
-.commander-ctrls label { font-size: 0.92rem; color: var(--muted); display: flex; align-items: center; gap: 0.45rem; }
-.commander-ctrls select { font-size: 0.95rem; padding: 0.35rem 0.6rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: var(--card); color: var(--text); min-width: 10rem; }
 .pane-count-line { font-size: 0.95rem; color: var(--muted); margin: 0.25rem 0 0.75rem; }
 .pane-count-line .pane-card-count { color: var(--text); font-weight: 600; }
-.card-pane-stack { margin-top: 0.25rem; }
-.card-pane { display: none; }
-.card-pane.is-active { display: block; }
 .pane-empty { color: var(--muted); font-size: 0.95rem; padding: 0.5rem 0; }
+.theme-filter-wrap { margin: 0.5rem 0 0.75rem; }
+.theme-filter-title { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin-bottom: 0.45rem; }
+.theme-checkboxes { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; }
+.theme-option { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.92rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 0.2rem 0.55rem; }
+.theme-option input { accent-color: var(--accent); }
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; }
 .card-tile { background: var(--card); border-radius: 10px; padding: 0.6rem; display: flex; flex-direction: column; gap: 0.3rem; }
 .card-title { font-size: 1.02rem; font-weight: 600; }
 .card-meta { font-size: 0.88rem; color: var(--muted); }
-.card-price { font-size: 0.92rem; margin-top: 0.2rem; color: var(--green); }
+.card-price { font-size: 0.92rem; margin-top: 0.2rem; color: var(--green); white-space: nowrap; }
 .card-image { width: 100%; border-radius: 6px; border: 1px solid #111; object-fit: contain; margin-top: 0.25rem; }
 .card-image-link { display: block; margin-top: 0.25rem; }
 .card-image-link:hover .card-image { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(124,58,237,0.45); }
@@ -128,15 +189,13 @@ h1 { font-size: 2rem; margin-bottom: 0.3rem; color: var(--text); font-weight: 60
 @media print {
   body { background: #fff; color: #111; padding: 0.5rem; }
   :root { --bg: #fff; --surface: #f5f5f5; --card: #eee; --text: #111; --muted: #444; }
-  .set-filter-wrap, .commander-ctrls { display: none !important; }
-  .card-pane { display: none !important; }
-  .card-pane.is-active { display: block !important; }
+  .set-filter-wrap, .theme-filter-wrap { display: none !important; }
 }
 </style>
 </head>
 <body>
 <h1>Recent-Set Cards by Commander</h1>
-<p class="subtitle">EDHREC data: pick <strong>price tier</strong> and <strong>archetype</strong> per commander. Set checkboxes still filter by release. Showing sets: <strong>"""
+<p class="subtitle">EDHREC recommendations across all price tiers and archetypes. Inclusion and synergy are from each commander&apos;s <strong>Average</strong> deck (same as edhrec.com&apos;s main page). Sorted by that inclusion rate. Filter by set and archetype below. Showing sets: <strong>"""
         + html_module.escape(set_label)
         + """</strong>.</p>
 <div>
@@ -193,55 +252,39 @@ h1 { font-size: 2rem; margin-bottom: 0.3rem; color: var(--text); font-weight: 60
             html_parts.append(f"<p>Color identity: {commander_card.color_identity}</p>\n")
         html_parts.append("</div>\n</div>\n")
 
-        html_parts.append('<div class="commander-ctrls">\n')
-        html_parts.append('<label>Price tier <select class="edh-tier-select" aria-label="EDHREC price tier">\n')
-        for opt in tier_options:
-            oid = html_module.escape(str(opt.get("id", "")))
-            olab = html_module.escape(str(opt.get("label", oid)))
-            sel = " selected" if oid == "average" else ""
-            html_parts.append(f'<option value="{oid}"{sel}>{olab}</option>\n')
-        html_parts.append("</select></label>\n")
+        if len(theme_options) > 1:
+            html_parts.append('<div class="theme-filter-wrap">\n')
+            html_parts.append('<div class="theme-filter-title">Archetypes</div>\n')
+            html_parts.append('<div class="theme-checkboxes">\n')
+            for opt in theme_options:
+                slug = opt.get("slug") or ""
+                token = _theme_token(slug)
+                olab = html_module.escape(str(opt.get("label", slug or "Average")))
+                html_parts.append(
+                    f'<label class="theme-option">'
+                    f'<input type="checkbox" class="theme-cb" value="{html_module.escape(token)}" checked> '
+                    f"{olab}</label>\n"
+                )
+            html_parts.append("</div>\n</div>\n")
 
-        html_parts.append('<label>Archetype <select class="edh-theme-select" aria-label="EDHREC archetype or average deck">\n')
-        for opt in theme_options:
-            slug = opt.get("slug") or ""
-            slug_esc = html_module.escape(slug)
-            olab = html_module.escape(str(opt.get("label", slug or "Average")))
-            sel = " selected" if slug == "" else ""
-            html_parts.append(f'<option value="{slug_esc}"{sel}>{olab}</option>\n')
-        html_parts.append("</select></label>\n")
-        html_parts.append("</div>\n")
-
-        default_key = "average::"
-        default_cards = panes.get(default_key) or []
+        card_rows = _build_commander_cards(panes, theme_options, tier_ids_loop)
         html_parts.append(
-            '<p class="pane-count-line">Visible in this view (after set filter): '
-            f'<span class="pane-card-count">{len(default_cards)}</span></p>\n'
+            '<p class="pane-count-line">Visible in this view (after filters): '
+            f'<span class="pane-card-count">{len(card_rows)}</span></p>\n'
         )
 
-        html_parts.append('<div class="card-pane-stack">\n')
-        for tier_id in tier_ids_loop:
-            for topt in theme_options:
-                theme_slug = topt.get("slug") or ""
-                pane_key = f"{tier_id}::{theme_slug}"
-                cards = panes.get(pane_key) or []
-                active = " is-active" if pane_key == default_key else ""
-                tier_attr = html_module.escape(tier_id)
-                theme_attr = html_module.escape(theme_slug)
+        if not card_rows:
+            html_parts.append(
+                '<p class="pane-empty">No recommended cards from recent sets for this commander.</p>\n'
+            )
+        else:
+            html_parts.append('<div class="card-grid">\n')
+            for row in card_rows:
                 html_parts.append(
-                    f'<div class="card-pane{active}" data-tier="{tier_attr}" data-theme="{theme_attr}" data-pane-key="{html_module.escape(pane_key)}">\n'
+                    _render_card_tile(row["card"], sorted(row["themes"]))
                 )
-                if not cards:
-                    html_parts.append(
-                        '<p class="pane-empty">No recommended cards from recent sets for this EDHREC view.</p>\n'
-                    )
-                else:
-                    html_parts.append('<div class="card-grid">\n')
-                    for card in cards:
-                        html_parts.append(_render_card_tile(card))
-                    html_parts.append("</div>\n")
-                html_parts.append("</div>\n")
-        html_parts.append("</div>\n</section>\n")
+            html_parts.append("</div>\n")
+        html_parts.append("</section>\n")
 
     html_parts.append(
         """</div>
@@ -249,49 +292,56 @@ h1 { font-size: 2rem; margin-bottom: 0.3rem; color: var(--text); font-weight: 60
 (function() {
   var setCheckboxes = Array.prototype.slice.call(document.querySelectorAll('input.set-cb'));
 
-  function applySetFilter() {
-    var selected = new Set(setCheckboxes.filter(function(cb) { return cb.checked; }).map(function(cb) { return (cb.value || '').toLowerCase(); }));
-    document.querySelectorAll('.commander-section').forEach(function(sec) {
-      var active = sec.querySelector('.card-pane.is-active');
-      if (!active) {
-        var cntEl0 = sec.querySelector('.pane-card-count');
-        if (cntEl0) cntEl0.textContent = '0';
-        return;
+  function cardThemes(card) {
+    return (card.getAttribute('data-themes') || '').trim().split(/\\s+/).filter(Boolean);
+  }
+
+  function applyFilters(sec) {
+    var selectedSets = new Set(
+      setCheckboxes.filter(function(cb) { return cb.checked; }).map(function(cb) {
+        return (cb.value || '').toLowerCase();
+      })
+    );
+    var themeBoxes = sec.querySelectorAll('input.theme-cb');
+    var selectedThemes = new Set(
+      Array.prototype.slice.call(themeBoxes).filter(function(cb) { return cb.checked; }).map(function(cb) {
+        return cb.value || '';
+      })
+    );
+    var filterThemes = themeBoxes.length > 0;
+
+    sec.querySelectorAll('.card-tile').forEach(function(card) {
+      var scode = (card.getAttribute('data-set-code') || '').toLowerCase();
+      var setOk = selectedSets.has(scode);
+      var themeOk = true;
+      if (filterThemes) {
+        if (selectedThemes.size === 0) {
+          themeOk = false;
+        } else {
+          themeOk = cardThemes(card).some(function(t) { return selectedThemes.has(t); });
+        }
       }
-      var tiles = active.querySelectorAll('.card-tile');
-      tiles.forEach(function(card) {
-        var scode = (card.getAttribute('data-set-code') || '').toLowerCase();
-        card.classList.toggle('filtered-out', !selected.has(scode));
-      });
-      var visible = active.querySelectorAll('.card-tile:not(.filtered-out)').length;
-      var cntEl = sec.querySelector('.pane-card-count');
-      if (cntEl) cntEl.textContent = String(visible);
+      card.classList.toggle('filtered-out', !(setOk && themeOk));
     });
+
+    var visible = sec.querySelectorAll('.card-tile:not(.filtered-out)').length;
+    var cntEl = sec.querySelector('.pane-card-count');
+    if (cntEl) cntEl.textContent = String(visible);
   }
 
-  function syncCommander(sec) {
-    var tierSel = sec.querySelector('.edh-tier-select');
-    var themeSel = sec.querySelector('.edh-theme-select');
-    if (!tierSel || !themeSel) return;
-    var tier = tierSel.value || 'average';
-    var theme = themeSel.value || '';
-    sec.querySelectorAll('.card-pane').forEach(function(p) {
-      var match = (p.getAttribute('data-tier') || '') === tier && (p.getAttribute('data-theme') || '') === theme;
-      p.classList.toggle('is-active', match);
-    });
-    applySetFilter();
+  function applyAllFilters() {
+    document.querySelectorAll('.commander-section').forEach(applyFilters);
   }
 
-  document.querySelectorAll('.commander-section').forEach(function(sec) {
-    var tierSel = sec.querySelector('.edh-tier-select');
-    var themeSel = sec.querySelector('.edh-theme-select');
-    if (tierSel) tierSel.addEventListener('change', function() { syncCommander(sec); });
-    if (themeSel) themeSel.addEventListener('change', function() { syncCommander(sec); });
-    syncCommander(sec);
+  setCheckboxes.forEach(function(cb) {
+    cb.addEventListener('change', applyAllFilters);
   });
-
-  setCheckboxes.forEach(function(cb) { cb.addEventListener('change', applySetFilter); });
-  applySetFilter();
+  document.querySelectorAll('.commander-section').forEach(function(sec) {
+    sec.querySelectorAll('input.theme-cb').forEach(function(cb) {
+      cb.addEventListener('change', function() { applyFilters(sec); });
+    });
+    applyFilters(sec);
+  });
 })();
 </script>
 </body>

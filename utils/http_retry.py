@@ -12,6 +12,7 @@ def get_with_retry(
     max_retries: int = 5,
     rate_limited_status: int = 429,
     on_rate_limited: Optional[Callable[[int, int, int], None]] = None,
+    headers: Optional[dict] = None,
 ) -> Tuple[Optional[requests.Response], Optional[BaseException]]:
     """
     GET with exponential backoff on rate-limits (default: HTTP 429).
@@ -24,7 +25,7 @@ def get_with_retry(
     last_err: Optional[BaseException] = None
     for attempt in range(max_retries):
         try:
-            response = session.get(url, timeout=timeout, params=params)
+            response = session.get(url, timeout=timeout, params=params, headers=headers)
             if response.status_code == rate_limited_status:
                 wait = 2 ** (attempt + 1)
                 if on_rate_limited is not None:

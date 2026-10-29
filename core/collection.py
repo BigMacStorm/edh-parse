@@ -2,13 +2,8 @@ from pathlib import Path
 import math
 import sys
 from urllib.parse import quote
-import requests_cache
 from utils.progress_utils import progress_bar
-import requests
-import json
-import re
-import time
-from core.deck import Deck, Cost, _edhrec_get_with_retry, EDHREC_SLEEP
+from core.deck import Deck, Cost, EDHREC_SLEEP
 from itertools import chain
 from collections import defaultdict, Counter
 import csv
@@ -19,15 +14,40 @@ from utils.html_render_utils import _canonical_color_identity, _escape, _svg_pie
 # pylint: disable=missing-function-docstring, missing-class-docstring
 
 class Collection:
-    def __init__(self, args):
+    def __init__(self, config=None, session=None, args=None):
+        """
+        ``config`` should be a RunConfig. ``args`` is accepted for back-compat and
+        is converted via _ArgsShim when a RunConfig is provided.
+        """
+        from core.config import RunConfig, _ArgsShim
+        from clients.session import create_cached_session
+
+        # Allow Collection(legacy_namespace) where the first positional is not RunConfig
+        if config is not None and not isinstance(config, RunConfig) and args is None:
+            args = config
+            config = None
+
+        if config is None and args is not None:
+            # Legacy argparse Namespace / _ArgsShim
+            config = RunConfig(
+                fresh_cache=bool(getattr(args, "fresh_cache", False)),
+                show_owned=bool(getattr(args, "show_owned", False)),
+                need=bool(getattr(args, "need", False)),
+                show_all=bool(getattr(args, "all", False)),
+                csv_file=getattr(args, "csv_file", None),
+            )
+            self.args = args
+        elif config is not None:
+            self.args = args if args is not None else _ArgsShim(config)
+        else:
+            config = RunConfig()
+            self.args = _ArgsShim(config)
+
+        self.config = config if isinstance(config, RunConfig) else RunConfig()
         self.decks = []
-        self.args = args
         # Reuse Normal page + average-deck data for Budget/Expensive so we don't 2x requests and hit rate limits
         self._edhr_cache = {}
-        # Be sure to cache our responses to make sure that we arent making extra calls for no reason. Expire after 31 days for safety.
-        self.session = requests_cache.CachedSession('cache/card_cache', expire_after=3600*24*31)
-        if self.args.fresh_cache:
-            self.session.cache.clear()
+        self.session = session or create_cached_session(fresh_cache=self.config.fresh_cache)
         self.edhrec_client = EdhrecClient(self.session, sleep_seconds=EDHREC_SLEEP)
 
     def add_all_costs(self, just_name: str=None, name_with_type=None, bar=None, bar_value=None):
@@ -103,7 +123,7 @@ class Collection:
                     deck.owned_set.add((card.price, card.name))
     
     def new_deck(self):
-        return Deck(self.session, self.args, edhr_cache=self._edhr_cache)
+        return Deck(self.session, self.args, edhr_cache=self._edhr_cache, config=self.config)
     
     def write_to_file(self):
         fieldnames = [
@@ -135,7 +155,11 @@ class Collection:
             if deck.commander is not None:
                 output.append(deck.build_dict())
         
-        filename = self.args.csv_file if self.args.csv_file else "csv_out.csv"
+        filename = (
+            (self.config.csv_file if getattr(self, "config", None) else None)
+            or getattr(self.args, "csv_file", None)
+            or "csv_out.csv"
+        )
 
         try:
             with open(filename, 'w', newline='', encoding='utf-8') as csv_file:

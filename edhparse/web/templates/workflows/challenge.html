@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ meta.title }} · edh-parse</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <link rel="stylesheet" href="/static/challenge.css">
+</head>
+<body class="challenge-page">
+  <header class="ch-bar">
+    <a class="ch-back" href="/">← Home</a>
+    <h1 class="ch-brand">{{ meta.title }}</h1>
+    <span class="ch-status" id="ch-status" role="status"></span>
+    <div class="ch-bar-actions">
+      <button type="button" class="btn btn-ghost" id="btn-save">Save layout</button>
+      <select id="open-select" class="ch-open" aria-label="Open a saved layout"><option value="">Open saved…</option></select>
+      <button type="button" class="btn btn-ghost" id="btn-copy">Copy image</button>
+      <button type="button" class="btn" id="btn-export">Export PNG</button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-side" id="side-left">
+      <section class="ch-card">
+        <h2>Load commanders</h2>
+        <form id="load-form">
+          <label for="list-path">List file (EDHREC URLs or names, one per line)</label>
+          <div class="ch-inline">
+            <input type="text" id="list-path" value="{{ default_list }}">
+            <button type="submit" class="btn">Load</button>
+          </div>
+        </form>
+        <label for="add-text">…or paste more</label>
+        <textarea id="add-text" rows="3" placeholder="https://edhrec.com/commanders/atraxa-praetors-voice&#10;Giada, Font of Hope"></textarea>
+        <button type="button" class="btn btn-ghost" id="btn-add">Add to the board</button>
+        <p class="ch-hint" id="load-msg"></p>
+      </section>
+
+      <section class="ch-card">
+        <h2>Look &amp; layout</h2>
+        <label for="opt-title">Title</label>
+        <input type="text" id="opt-title">
+        <label for="opt-subtitle">Subtitle</label>
+        <input type="text" id="opt-subtitle" placeholder="e.g. your name / season">
+        <div class="ch-two">
+          <div>
+            <label for="opt-theme">Theme</label>
+            <select id="opt-theme">
+              <option value="midnight">Midnight</option>
+              <option value="parchment">Parchment</option>
+              <option value="ink">Ink (black)</option>
+            </select>
+          </div>
+          <div>
+            <label for="opt-accent">Accent</label>
+            <input type="color" id="opt-accent" value="#e0b252">
+          </div>
+        </div>
+        <div class="ch-two">
+          <div>
+            <label for="opt-width">Width (px)</label>
+            <select id="opt-width">
+              <option value="1600">1600</option>
+              <option value="2000">2000</option>
+              <option value="2400">2400</option>
+              <option value="3000">3000</option>
+            </select>
+          </div>
+          <div>
+            <label for="opt-scale">Export quality</label>
+            <select id="opt-scale">
+              <option value="1">1× (standard)</option>
+              <option value="2">2× (sharp)</option>
+              <option value="3">3× (huge)</option>
+            </select>
+          </div>
+        </div>
+        <div class="ch-two">
+          <div>
+            <label for="opt-style">Card image</label>
+            <select id="opt-style"><option value="card">Full card</option><option value="art">Art crop only</option></select>
+          </div>
+          <div>
+            <label for="opt-perrow">Cards per line</label>
+            <select id="opt-perrow">{% for n in (4,5,6,7,8,9,10) %}<option value="{{ n }}">{{ n }}</option>{% endfor %}</select>
+          </div>
+        </div>
+        <div class="ch-checks">
+          <label><input type="checkbox" id="opt-themes"> Show archetypes</label>
+          <label><input type="checkbox" id="opt-names"> Show names</label>
+          <label><input type="checkbox" id="opt-artist"> Artist credit</label>
+          <label><input type="checkbox" id="opt-hide-empty"> Hide empty identities</label>
+          <label><input type="checkbox" id="opt-credit"> Footer credits</label>
+        </div>
+      </section>
+    </aside>
+
+    <main class="ch-stage-wrap" id="stage-wrap">
+      <div class="ch-stage" id="stage"><div class="ch-scaler" id="scaler"><div id="infographic"></div></div></div>
+    </main>
+
+    <aside class="ch-side" id="side-right">
+      <section class="ch-card" id="inspector">
+        <h2>Selected commander</h2>
+        <p class="ch-hint">Click a commander on the board to choose its art and archetype.</p>
+      </section>
+    </aside>
+  </div>
+
+  <div class="ch-modal" id="art-modal" hidden>
+    <div class="ch-modal-card">
+      <div class="ch-modal-head">
+        <h2 id="art-title">Choose art</h2>
+        <button type="button" class="btn btn-ghost" id="art-close">Close</button>
+      </div>
+      <p class="ch-hint" id="art-msg"></p>
+      <div class="ch-prints" id="art-grid"></div>
+    </div>
+  </div>
+
+  <script>
+    window.CHALLENGE_GROUPS = {{ groups|tojson }};
+    window.CHALLENGE_ROW_LABELS = {{ row_labels|tojson }};
+  </script>
+  <script src="/static/vendor/html-to-image.js"></script>
+  <script src="/static/challenge.js"></script>
+</body>
+</html>

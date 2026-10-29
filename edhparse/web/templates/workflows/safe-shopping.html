@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <div class="panel">
+    <form method="post" action="/run/safe-shopping">
+      <div class="row">
+        <label for="commanders">Commander list</label>
+        <input type="text" id="commanders" name="commanders" value="{{ defaults.commanders }}" required>
+      </div>
+      <div class="row">
+        <label for="output">Output HTML</label>
+        <input type="text" id="output" name="output" value="outputs/safe_shopping.html">
+      </div>
+      <div class="row">
+        <label for="stock">Stock CSV (optional)</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}">
+      </div>
+      <div class="row">
+        <label for="binders">Binders</label>
+        <input type="text" id="binders" name="binders" value="{{ defaults.default_binders | join(', ') }}">
+      </div>
+      <div class="row">
+        <label for="min_inclusion">Min inclusion %</label>
+        <input type="number" step="0.1" id="min_inclusion" name="min_inclusion" value="20">
+      </div>
+      <div class="row">
+        <label for="min_synergy">Min synergy %</label>
+        <input type="number" step="0.1" id="min_synergy" name="min_synergy" value="20">
+      </div>
+      <div class="row">
+        <label for="min_price">Min price USD</label>
+        <input type="number" step="0.01" id="min_price" name="min_price" value="0">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

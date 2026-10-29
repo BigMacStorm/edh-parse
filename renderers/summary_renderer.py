@@ -17,6 +17,27 @@ from utils.html_render_utils import (
     _svg_pie,
 )
 
+# Guild/shard/wedge names keyed by canonical (WUBRG-ordered) color letters.
+# Dict order defines the sort order: by color count, then within each group.
+_GUILD_NAMES = {
+    "": "Colorless",
+    "W": "White", "U": "Blue", "B": "Black", "R": "Red", "G": "Green",
+    "WU": "Azorius", "UB": "Dimir", "BR": "Rakdos", "WR": "Boros", "UG": "Simic",
+    "WB": "Orzhov", "UR": "Izzet", "BG": "Golgari", "WG": "Selesnya", "RG": "Gruul",
+    "WUB": "Esper", "UBR": "Grixis", "BRG": "Jund", "WRG": "Naya", "WUG": "Bant",
+    "WBG": "Abzan", "WUR": "Jeskai", "UBG": "Sultai", "WBR": "Mardu", "URG": "Temur",
+    "WUBR": "Yore-Tiller", "UBRG": "Glint-Eye", "WBRG": "Dune-Brood",
+    "WURG": "Ink-Treader", "WUBG": "Witch-Maw",
+    "WUBRG": "Five-Color",
+}
+_GUILD_ORDER = {k: i for i, k in enumerate(_GUILD_NAMES)}
+
+
+def _guild_info(color_key):
+    """Return (name, sort_index) for a canonical color-identity string."""
+    return _GUILD_NAMES.get(color_key, color_key or "Colorless"), _GUILD_ORDER.get(color_key, len(_GUILD_ORDER))
+
+
 def _group_decks_by_commander(decks_with_commander):
     """Group decks by commander name, keeping at most one deck per variant."""
     by_commander = defaultdict(list)
@@ -295,6 +316,8 @@ h1 { font-size: 1.75rem; margin-bottom: 0.2rem; color: var(--text); font-weight:
 <option value="total-desc">Highest total cost</option>
 <option value="notowned-asc">Lowest not-owned cost</option>
 <option value="notowned-desc">Highest not-owned cost</option>
+<option value="guild-asc">Guild (colorless → 5-color)</option>
+<option value="guild-desc">Guild (5-color → colorless)</option>
 </select>
 </div>
 <div class="sort-controls-group">
@@ -334,6 +357,7 @@ h1 { font-size: 1.75rem; margin-bottom: 0.2rem; color: var(--text); font-weight:
         ci = str(getattr(d0.commander, "color_identity", "") or "")
         color_key = _canonical_color_identity(ci)
         color_attr = _escape(color_key) if color_key else ""
+        guild_name, guild_order = _guild_info(color_key)
         cmc_val = getattr(getattr(d0, "commander", None), "cmc", 0) or 0
         try:
             cmc_f = float(cmc_val)
@@ -354,6 +378,7 @@ h1 { font-size: 1.75rem; margin-bottom: 0.2rem; color: var(--text); font-weight:
             + (f' data-subtypes="{subtypes_attr}"' if subtypes_attr else "")
             + (f' data-color-identity="{color_attr}"' if color_attr else "")
             + f' data-cmc="{cmc_bucket}"'
+            + f' data-guild="{_escape(guild_name)}" data-guild-order="{guild_order}"'
             + f' data-search="{_escape(search_text)}"'
             + ">\n"
         )
@@ -547,6 +572,10 @@ sections.sort(function(a, b) {
   var at = parseFloat(a.dataset.total) || 0, bt = parseFloat(b.dataset.total) || 0;
   var ano = parseFloat(a.dataset.notowned) || 0, bno = parseFloat(b.dataset.notowned) || 0;
   var aow = parseInt(a.dataset.owned, 10) || 0, bow = parseInt(b.dataset.owned, 10) || 0;
+  var ag = parseInt(a.dataset.guildOrder, 10), bg = parseInt(b.dataset.guildOrder, 10);
+  if (isNaN(ag)) ag = 999; if (isNaN(bg)) bg = 999;
+  if (opt === 'guild-asc') return (ag - bg) || an.localeCompare(bn);
+  if (opt === 'guild-desc') return (bg - ag) || an.localeCompare(bn);
   if (opt === 'name-asc') return an.localeCompare(bn);
   if (opt === 'name-desc') return bn.localeCompare(an);
   if (opt === 'owned-desc') return bow - aow;

@@ -10,6 +10,7 @@ from typing import Dict, Optional, Tuple
 from urllib.parse import urlparse
 
 from core.deck import EDHREC_SLEEP, _edhrec_get_with_retry
+from edhparse.edhrec_util import inclusion_pct
 
 
 def parse_edhrec_commander_slug(raw: str) -> str:
@@ -81,36 +82,6 @@ def inclusion_stat_display(cv: dict) -> Optional[str]:
     """Like inclusion_label but None when inclusion cannot be derived (for optional UI)."""
     lab = inclusion_label(cv)
     return None if lab == "—" else lab
-
-
-def inclusion_pct(cv: dict) -> Optional[float]:
-    """Deck inclusion as a percentage 0-100, or None if not derivable from this cardview.
-
-    When ``num_decks`` / ``potential_decks`` are present, they are relative to the EDHREC
-    page that produced this cardview (average vs ``/budget`` vs ``/expensive`` cohorts),
-    not interchangeable across those pages.
-    """
-    nd = cv.get("num_decks")
-    pd = cv.get("potential_decks")
-    try:
-        nd_f = float(nd)
-        pd_f = float(pd)
-        if pd_f > 0:
-            return 100.0 * nd_f / pd_f
-    except (TypeError, ValueError):
-        pass
-
-    p = cv.get("p")
-    if p is not None:
-        try:
-            v = float(p)
-        except (TypeError, ValueError):
-            return None
-        if -2.0 <= v <= 2.0:
-            v *= 100.0
-        return v
-
-    return None
 
 
 def fetch_commander_cards_inclusions(session, slug: str) -> Tuple[Dict[str, Tuple[Optional[float], str]], Optional[str]]:

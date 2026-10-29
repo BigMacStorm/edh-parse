@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}edh-parse{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav">
+      <a href="/">Home</a>
+      <a href="/outputs/summary.html" target="_blank" rel="noopener">Latest summary</a>
+    </nav>
+    {% block body %}{% endblock %}
+  </div>
+
+  <div id="run-overlay" class="run-overlay" hidden aria-live="polite" aria-busy="true">
+    <div class="run-card">
+      <div class="run-spinner" aria-hidden="true"></div>
+      <p class="run-title" id="run-title">Running…</p>
+      <p class="run-count" id="run-count">0 / ?</p>
+      <p class="run-subtitle" id="run-subtitle">Starting…</p>
+      <div class="run-bar" aria-hidden="true">
+        <div class="run-bar-fill indeterminate" id="run-bar-fill"></div>
+      </div>
+      <p class="run-elapsed" id="run-elapsed">0s</p>
+      <pre class="run-log" id="run-log" hidden></pre>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

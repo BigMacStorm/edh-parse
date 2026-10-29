@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <div class="panel">
+    <form method="post" action="/run/artist-signings">
+      <div class="row">
+        <label for="stock">Stock CSV</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}" required>
+      </div>
+      <div class="row">
+        <label for="artists">Artists file</label>
+        <input type="text" id="artists" name="artists" value="{{ defaults.artists }}" required>
+      </div>
+      <div class="row">
+        <label for="binders">Binders</label>
+        <input type="text" id="binders" name="binders" value="{{ defaults.default_binders | join(', ') }}" required>
+        <p class="hint">Known: {{ defaults.binders | join(', ') or 'none' }}</p>
+      </div>
+      <div class="row">
+        <label for="output">Output HTML</label>
+        <input type="text" id="output" name="output" value="outputs/artist_signings.html">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

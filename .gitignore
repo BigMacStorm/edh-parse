@@ -5,3 +5,8 @@ cache/scryfall_bulk_cache/
 cache/card_cache.sqlite
 *.pyc
 diff/
+
+# generated / downloaded data (large, reproducible)
+cache/
+outputs/challenge/
+*.egg-info/

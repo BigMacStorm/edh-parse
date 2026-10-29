@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <div class="panel">
+    <form method="post" action="/run/convert">
+      <div class="row">
+        <label for="old_deck">Old decklist</label>
+        <input type="text" id="old_deck" name="old_deck" value="inputs/old" required>
+      </div>
+      <div class="row">
+        <label for="new_deck">New decklist</label>
+        <input type="text" id="new_deck" name="new_deck" value="inputs/new" required>
+      </div>
+      <div class="row">
+        <label for="stock">Stock CSV</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}" required>
+      </div>
+      <div class="row">
+        <label for="binders">Binders (comma-separated)</label>
+        <input type="text" id="binders" name="binders" value="{{ defaults.default_binders | join(', ') }}">
+        <p class="hint">Known binders: {{ defaults.binders | join(', ') or 'none found' }}</p>
+      </div>
+      <div class="row">
+        <label for="sort_by">Sort</label>
+        <select id="sort_by" name="sort_by">
+          <option value="price">price</option>
+          <option value="name">name</option>
+        </select>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

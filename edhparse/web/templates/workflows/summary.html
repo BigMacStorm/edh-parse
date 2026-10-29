@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <div class="panel">
+    <form method="post" action="/run/summary">
+      <div class="row">
+        <label for="commander">Single commander name</label>
+        <input type="text" id="commander" name="commander" placeholder="Atraxa, Praetors' Voice">
+      </div>
+      <div class="row">
+        <label for="commanders">Commander list file</label>
+        <input type="text" id="commanders" name="commanders" value="{{ defaults.commanders }}">
+      </div>
+      <div class="row">
+        <label for="decklist">Decklist file (-l)</label>
+        <input type="text" id="decklist" name="decklist" placeholder="inputs/mydeck">
+      </div>
+      <div class="row">
+        <label for="stock">Stock / ManaBox CSV</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="write_html" value="true" checked> Write summary HTML</label>
+        <label><input type="checkbox" name="write_csv" value="true"> Write CSV</label>
+        <label><input type="checkbox" name="latest_set" value="true"> Latest-set HTML</label>
+        <label><input type="checkbox" name="show_owned" value="true"> Print owned</label>
+        <label><input type="checkbox" name="need" value="true"> Print needed</label>
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

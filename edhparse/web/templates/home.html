@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">edh-parse</h1>
+  <p class="tagline">Local EDH toolkit — pick a workflow instead of remembering CLI flags. Reports land in <code>outputs/</code>.</p>
+  <div class="grid">
+    {% for w in workflows %}
+      <a class="card-link" href="/workflow/{{ w.id }}">
+        <h2>{{ w.title }}</h2>
+        <p>{{ w.blurb }}</p>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

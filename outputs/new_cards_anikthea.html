@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recent-Set Cards by Commander</title>
+<style>
+:root { --bg: #0f0f14; --surface: #1c1e26; --card: #252830; --text: #e4e4e7; --muted: #cbd5e1; --accent: #7c3aed; --green: #22c55e; --amber: #f59e0b; }
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 1.5rem 2rem; line-height: 1.55; font-size: 1.05rem; }
+h1 { font-size: 2rem; margin-bottom: 0.3rem; color: var(--text); font-weight: 600; }
+.subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; }
+.commander-section { background: var(--surface); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.commander-header { display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.commander-pic { width: 200px; height: 280px; object-fit: contain; border-radius: 8px; border: 1px solid var(--card); }
+.commander-meta { flex: 1; min-width: 180px; }
+.commander-meta h2 { margin: 0 0 0.4rem; font-size: 1.35rem; }
+.commander-meta p { margin: 0.15rem 0; font-size: 0.95rem; color: var(--muted); }
+.pane-count-line { font-size: 0.95rem; color: var(--muted); margin: 0.25rem 0 0.75rem; }
+.pane-count-line .pane-card-count { color: var(--text); font-weight: 600; }
+.pane-empty { color: var(--muted); font-size: 0.95rem; padding: 0.5rem 0; }
+.theme-filter-wrap { margin: 0.5rem 0 0.75rem; }
+.theme-filter-title { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin-bottom: 0.45rem; }
+.theme-checkboxes { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; }
+.theme-option { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.92rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 0.2rem 0.55rem; }
+.theme-option input { accent-color: var(--accent); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+.card-tile { background: var(--card); border-radius: 10px; padding: 0.6rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.card-title { font-size: 1.02rem; font-weight: 600; }
+.card-meta { font-size: 0.88rem; color: var(--muted); }
+.card-price { font-size: 0.92rem; margin-top: 0.2rem; color: var(--green); white-space: nowrap; }
+.card-image { width: 100%; border-radius: 6px; border: 1px solid #111; object-fit: contain; margin-top: 0.25rem; }
+.card-image-link { display: block; margin-top: 0.25rem; }
+.card-image-link:hover .card-image { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(124,58,237,0.45); }
+.card-oracle { font-size: 0.88rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.4; }
+.card-scryfall-link { font-size: 0.92rem; color: var(--accent); margin-top: 0.3rem; display: inline-block; }
+.card-link-row { margin-top: 0.3rem; display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: center; }
+.card-edhrec-link { font-size: 0.92rem; color: var(--amber); display: inline-block; }
+.badge { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 999px; font-size: 0.7rem; background: rgba(124,58,237,0.15); color: var(--accent); margin-left: 0.35rem; }
+.set-filter-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 0.75rem 1rem; margin: 0.5rem 0 1rem; }
+.set-filter-title { font-size: 1.05rem; font-weight: 600; color: var(--muted); margin-bottom: 0.5rem; }
+.set-checkboxes { display: flex; flex-wrap: wrap; gap: 0.6rem 0.9rem; }
+.set-option { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.95rem; color: var(--text); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 0.25rem 0.6rem; }
+.set-option input { accent-color: var(--accent); }
+.set-pill-meta { font-size: 0.9rem; color: var(--muted); }
+.card-tile.filtered-out { display: none !important; }
+@media print {
+  body { background: #fff; color: #111; padding: 0.5rem; }
+  :root { --bg: #fff; --surface: #f5f5f5; --card: #eee; --text: #111; --muted: #444; }
+  .set-filter-wrap, .theme-filter-wrap { display: none !important; }
+}
+</style>
+</head>
+<body>
+<h1>Recent-Set Cards by Commander</h1>
+<p class="subtitle">EDHREC recommendations across all price tiers and archetypes. Inclusion and synergy are from each commander&apos;s <strong>Average</strong> deck (same as edhrec.com&apos;s main page). Sorted by that inclusion rate. Filter by set and archetype below. Showing sets: <strong>Marvel Super Heroes (MSH) / Marvel Super Heroes Commander (MSC) / Secrets of Strixhaven (SOS) / Secrets of Strixhaven Commander (SOC)</strong>.</p>
+<div>
+<div class="set-filter-wrap">
+<div class="set-filter-title">Sets (last ~6 months + Secret Lair “sld”)</div>
+<div class="set-checkboxes">
+<label class="set-option" title="2026-06-26"><input type="checkbox" class="set-cb" value="msh" checked> Marvel Super Heroes (MSH) <span class="set-pill-meta">4</span></label>
+<label class="set-option" title="2026-06-26"><input type="checkbox" class="set-cb" value="msc" checked> Marvel Super Heroes Commander (MSC) <span class="set-pill-meta">5</span></label>
+<label class="set-option" title="2026-04-24"><input type="checkbox" class="set-cb" value="sos" checked> Secrets of Strixhaven (SOS) <span class="set-pill-meta">29</span></label>
+<label class="set-option" title="2026-04-24"><input type="checkbox" class="set-cb" value="soc" checked> Secrets of Strixhaven Commander (SOC) <span class="set-pill-meta">13</span></label>
+<label class="set-option" title="2026-01-23"><input type="checkbox" class="set-cb" value="ecl" > Lorwyn Eclipsed (ECL) <span class="set-pill-meta">1</span></label>
+
+</div>
+<div class="set-pill-meta" style="margin-top:0.5rem;">Tip: uncheck sets to hide cards instantly.</div>
+</div>
+<section class="commander-section" data-cmd-idx="0">
+<div class="commander-header">
+<img class="commander-pic" src="https://cards.scryfall.io/large/front/8/b/8b796a56-1611-4835-ac5b-48b4e9263685.jpg?1691500693" alt="Anikthea Hand Of Erebos" loading="lazy">
+<div class="commander-meta">
+<h2>Anikthea Hand Of Erebos</h2>
+<p>Legendary Enchantment Creature — Demigod</p>
+<p>Color identity: 🔲X⬛X🟩</p>
+</div>
+</div>
+<div class="theme-filter-wrap">
+<div class="theme-filter-title">Archetypes</div>
+<div class="theme-checkboxes">
+<label class="theme-option"><input type="checkbox" class="theme-cb" value="hub" checked> Average</label>
+<label class="theme-option"><input type="checkbox" class="theme-cb" value="enchantress" checked> Enchantress</label>
+<label class="theme-option"><input type="checkbox" class="theme-cb" value="reanimator" checked> Reanimator</label>
+</div>
+</div>
+<p class="pane-count-line">Visible in this view (after filters): <span class="pane-card-count">16</span></p>
+<div class="card-grid">
+<article class="card-tile" data-set-code="soc" data-inclusion="9.6000" data-themes="enchantress hub reanimator">
+<div class="card-title">Eiganjo Dynastorian // Replenish</div>
+<div class="card-meta">Creature — Fox Advisor // Sorcery · Rare · Secrets of Strixhaven Commander (SOC)</div>
+<div class="card-meta">Inclusion rate: 9.6% · Synergy: 8.5%</div>
+<div class="card-price">$2.09</div>
+<a href="https://cards.scryfall.io/png/front/0/9/09d1f048-f411-4677-a0dc-dbddd06fe694.jpg?1778165050" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/0/9/09d1f048-f411-4677-a0dc-dbddd06fe694.jpg?1778165050" alt="Eiganjo Dynastorian // Replenish" loading="lazy"></a>
+<div class="card-oracle">Vigilance<br>Whenever you attack with two or more creatures, this creature becomes prepared. (While it&#x27;s prepared, you may cast a copy of its spell. Doing so unprepares it.)<br><br>Return all enchantment cards from your graveyard to the battlefield.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Eiganjo%20Dynastorian%20//%20Replenish%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/eiganjo-dynastorian-replenish" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="6.0000" data-themes="enchantress hub reanimator">
+<div class="card-title">Primary Research</div>
+<div class="card-meta">Enchantment · Uncommon · Secrets of Strixhaven (SOS)</div>
+<div class="card-meta">Inclusion rate: 6.0% · Synergy: 5.6%</div>
+<div class="card-price">$0.21</div>
+<a href="https://cards.scryfall.io/png/front/f/6/f6fdb814-45c6-4d14-afff-7f5bd1bd10a1.jpg?1775937094" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/f/6/f6fdb814-45c6-4d14-afff-7f5bd1bd10a1.jpg?1775937094" alt="Primary Research" loading="lazy"></a>
+<div class="card-oracle">When this enchantment enters, return target nonland permanent card with mana value 3 or less from your graveyard to the battlefield.<br>At the beginning of your end step, if a card left your graveyard this turn, draw a card.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Primary%20Research%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/primary-research" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="msc" data-inclusion="2.3000" data-themes="enchantress hub reanimator">
+<div class="card-title">Return of the Mole Man</div>
+<div class="card-meta">Enchantment · Mythic · Marvel Super Heroes Commander (MSC)</div>
+<div class="card-meta">Inclusion rate: 2.3% · Synergy: 2.0%</div>
+<div class="card-price">$10.71</div>
+<a href="https://cards.scryfall.io/png/front/f/e/fe75cfa6-614a-43f7-9088-ec8ab00a8738.jpg?1780918474" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/f/e/fe75cfa6-614a-43f7-9088-ec8ab00a8738.jpg?1780918474" alt="Return of the Mole Man" loading="lazy"></a>
+<div class="card-oracle">Landfall — Whenever a land you control enters, you may mill two cards.<br>{5}{G}, Sacrifice this enchantment: Create X 1/1 green Minion creature tokens named Moloid, where X is the number of permanent cards in your graveyard. The tokens have &quot;Whenever this token attacks, you may mill a card.&quot; Activate only as a sorcery.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Return%20of%20the%20Mole%20Man%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/return-of-the-mole-man" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="2.0000" data-themes="enchantress hub reanimator">
+<div class="card-title">Dina's Guidance</div>
+<div class="card-meta">Instant · Rare · Secrets of Strixhaven (SOS)</div>
+<div class="card-meta">Inclusion rate: 2.0% · Synergy: -1.6%</div>
+<div class="card-price">$1.09</div>
+<a href="https://cards.scryfall.io/png/front/7/7/775c1e50-08a4-413f-ab0f-f1c2a79cfe94.jpg?1775938273" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/7/7/775c1e50-08a4-413f-ab0f-f1c2a79cfe94.jpg?1775938273" alt="Dina&#x27;s Guidance" loading="lazy"></a>
+<div class="card-oracle">Search your library for a creature card, reveal it, put it into your hand or graveyard, then shuffle.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Dina%27s%20Guidance%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/dinas-guidance" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="1.9000" data-themes="enchantress hub reanimator">
+<div class="card-title">Erode</div>
+<div class="card-meta">Instant · Rare · Secrets of Strixhaven (SOS)</div>
+<div class="card-meta">Inclusion rate: 1.9% · Synergy: -1.5%</div>
+<div class="card-price">$6.53</div>
+<a href="https://cards.scryfall.io/png/front/3/2/32e670da-7563-4f6a-a7db-4c126a440eb8.jpg?1775937013" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/3/2/32e670da-7563-4f6a-a7db-4c126a440eb8.jpg?1775937013" alt="Erode" loading="lazy"></a>
+<div class="card-oracle">Destroy target creature or planeswalker. Its controller may search their library for a basic land card, put it onto the battlefield tapped, then shuffle.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Erode%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/erode" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="1.5000" data-themes="enchantress hub reanimator">
+<div class="card-title">Grave Researcher // Reanimate</div>
+<div class="card-meta">Creature — Troll Warlock // Sorcery · Rare · Secrets of Strixhaven (SOS)</div>
+<div class="card-meta">Inclusion rate: 1.5% · Synergy: -3.7%</div>
+<div class="card-price">$2.60</div>
+<a href="https://cards.scryfall.io/png/front/8/b/8b1e10e8-ea14-4761-910b-4072e2a18456.jpg?1778165067" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/8/b/8b1e10e8-ea14-4761-910b-4072e2a18456.jpg?1778165067" alt="Grave Researcher // Reanimate" loading="lazy"></a>
+<div class="card-oracle">At the beginning of your upkeep, surveil 1. Then if there are three or more creature cards in your graveyard, this creature becomes prepared. (While it&#x27;s prepared, you may cast a copy of its spell. Doing so unprepares it.)<br><br>Put target creature card from a graveyard onto the battlefield under your control. You lose life equal to that card&#x27;s mana value.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Grave%20Researcher%20//%20Reanimate%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/grave-researcher-reanimate" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="soc" data-inclusion="-1.0000" data-themes="enchantress">
+<div class="card-title">Eclipsed Steppe</div>
+<div class="card-meta">Land — Plains Swamp · Rare · Secrets of Strixhaven Commander (SOC)</div>
+<div class="card-price">$2.53</div>
+<a href="https://cards.scryfall.io/png/front/d/8/d890999a-dcc7-479e-b0f0-60388c737043.jpg?1775939984" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/d/8/d890999a-dcc7-479e-b0f0-60388c737043.jpg?1775939984" alt="Eclipsed Steppe" loading="lazy"></a>
+<div class="card-oracle">({T}: Add {W} or {B}.)<br>This land enters tapped unless you control two or more basic lands.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Eclipsed%20Steppe%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/eclipsed-steppe" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="-1.0000" data-themes="hub">
+<div class="card-title">Forum of Amity</div>
+<div class="card-meta">Land · Common · Secrets of Strixhaven (SOS)</div>
+<div class="card-price">$0.18</div>
+<a href="https://cards.scryfall.io/png/front/1/d/1de6c6cc-0c55-4997-8623-d7f796bd9ab8.jpg?1775938787" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/1/d/1de6c6cc-0c55-4997-8623-d7f796bd9ab8.jpg?1775938787" alt="Forum of Amity" loading="lazy"></a>
+<div class="card-oracle">This land enters tapped.<br>{T}: Add {W} or {B}.<br>{2}{W}{B}, {T}: Surveil 1. (Look at the top card of your library. You may put it into your graveyard.)</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Forum%20of%20Amity%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/forum-of-amity" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="ecl" data-inclusion="-1.0000" data-themes="reanimator">
+<div class="card-title">Midnight Tilling</div>
+<div class="card-meta">Instant · Common · Lorwyn Eclipsed (ECL)</div>
+<div class="card-price">$0.21</div>
+<a href="https://cards.scryfall.io/png/front/c/5/c5112bbf-752c-41e7-9c61-4c81e6a77463.jpg?1767732843" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/c/5/c5112bbf-752c-41e7-9c61-4c81e6a77463.jpg?1767732843" alt="Midnight Tilling" loading="lazy"></a>
+<div class="card-oracle">Mill four cards, then you may return a permanent card from among them to your hand. (To mill four cards, put the top four cards of your library into your graveyard.)</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Midnight%20Tilling%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/midnight-tilling" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="-1.0000" data-themes="enchantress">
+<div class="card-title">Moment of Reckoning</div>
+<div class="card-meta">Sorcery · Rare · Secrets of Strixhaven (SOS)</div>
+<div class="card-price">$0.33</div>
+<a href="https://cards.scryfall.io/png/front/5/7/577d9dc8-7720-4dc9-b650-64b4729b309b.jpg?1775938423" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/5/7/577d9dc8-7720-4dc9-b650-64b4729b309b.jpg?1775938423" alt="Moment of Reckoning" loading="lazy"></a>
+<div class="card-oracle">Choose up to four. You may choose the same mode more than once.<br>• Destroy target nonland permanent.<br>• Return target nonland permanent card from your graveyard to the battlefield.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Moment%20of%20Reckoning%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/moment-of-reckoning" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="-1.0000" data-themes="hub">
+<div class="card-title">Restoration Seminar</div>
+<div class="card-meta">Sorcery — Lesson · Mythic · Secrets of Strixhaven (SOS)</div>
+<div class="card-price">$4.52</div>
+<a href="https://cards.scryfall.io/png/front/9/e/9ebc4ecf-2fa2-4ab8-afde-3b91cf5eadb6.jpg?1775937123" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/9/e/9ebc4ecf-2fa2-4ab8-afde-3b91cf5eadb6.jpg?1775937123" alt="Restoration Seminar" loading="lazy"></a>
+<div class="card-oracle">Return target nonland permanent card from your graveyard to the battlefield.<br>Paradigm (Then exile this spell. After you first resolve a spell with this name, you may cast a copy of it from exile without paying its mana cost at the beginning of each of your first main phases.)</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Restoration%20Seminar%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/restoration-seminar" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="msh" data-inclusion="-1.0000" data-themes="enchantress hub reanimator">
+<div class="card-title">The Mind Stone</div>
+<div class="card-meta">Legendary Artifact — Infinity Stone · Mythic · Marvel Super Heroes (MSH)</div>
+<div class="card-price">$62.37</div>
+<a href="https://cards.scryfall.io/png/front/8/7/87f1e69a-6d74-4982-afda-82613637799a.jpg?1780414743" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/8/7/87f1e69a-6d74-4982-afda-82613637799a.jpg?1780414743" alt="The Mind Stone" loading="lazy"></a>
+<div class="card-oracle">Indestructible<br>{T}: Add {W}.<br>{5}{W}, {T}: Harness The Mind Stone. (Once harnessed, its ∞ ability is active.)<br>∞ — At the beginning of your end step, exile up to one other target nonland permanent you control, then return that card to the battlefield under its owner&#x27;s control.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22The%20Mind%20Stone%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/the-mind-stone" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="-1.0000" data-themes="hub">
+<div class="card-title">Titan's Grave</div>
+<div class="card-meta">Land · Common · Secrets of Strixhaven (SOS)</div>
+<div class="card-price">$0.15</div>
+<a href="https://cards.scryfall.io/png/front/a/9/a9ab41c8-3ee2-4676-9b8b-20c34d9f5f21.jpg?1775938861" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/a/9/a9ab41c8-3ee2-4676-9b8b-20c34d9f5f21.jpg?1775938861" alt="Titan&#x27;s Grave" loading="lazy"></a>
+<div class="card-oracle">This land enters tapped.<br>{T}: Add {B} or {G}.<br>{2}{B}{G}, {T}: Surveil 1. (Look at the top card of your library. You may put it into your graveyard.)</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Titan%27s%20Grave%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/titans-grave" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="soc" data-inclusion="-1.0000" data-themes="enchantress reanimator">
+<div class="card-title">Turbulent Fen</div>
+<div class="card-meta">Land — Swamp Forest · Rare · Secrets of Strixhaven Commander (SOC)</div>
+<div class="card-price">$6.24</div>
+<a href="https://cards.scryfall.io/png/front/9/7/9737159b-256c-4004-ba5f-0417c35e1b30.jpg?1775939997" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/9/7/9737159b-256c-4004-ba5f-0417c35e1b30.jpg?1775939997" alt="Turbulent Fen" loading="lazy"></a>
+<div class="card-oracle">({T}: Add {B} or {G}.)<br>This land enters tapped unless your opponents control eight or more lands.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Turbulent%20Fen%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/turbulent-fen" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="soc" data-inclusion="-1.0000" data-themes="enchantress">
+<div class="card-title">Turbulent Moor</div>
+<div class="card-meta">Land — Plains Swamp · Rare · Secrets of Strixhaven Commander (SOC)</div>
+<div class="card-price">$4.63</div>
+<a href="https://cards.scryfall.io/png/front/d/a/da54562d-8c09-4728-bb2b-ae8d464106b8.jpg?1775940004" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/d/a/da54562d-8c09-4728-bb2b-ae8d464106b8.jpg?1775940004" alt="Turbulent Moor" loading="lazy"></a>
+<div class="card-oracle">({T}: Add {W} or {B}.)<br>This land enters tapped unless your opponents control eight or more lands.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Turbulent%20Moor%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/turbulent-moor" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+<article class="card-tile" data-set-code="sos" data-inclusion="-1.0000" data-themes="enchantress reanimator">
+<div class="card-title">Vicious Rivalry</div>
+<div class="card-meta">Sorcery · Rare · Secrets of Strixhaven (SOS)</div>
+<div class="card-price">$0.34</div>
+<a href="https://cards.scryfall.io/png/front/6/f/6fa9cd18-3181-4373-ab65-49bf9de9487f.jpg?1775938681" target="_blank" rel="noopener" class="card-image-link"><img class="card-image" src="https://cards.scryfall.io/normal/front/6/f/6fa9cd18-3181-4373-ab65-49bf9de9487f.jpg?1775938681" alt="Vicious Rivalry" loading="lazy"></a>
+<div class="card-oracle">As an additional cost to cast this spell, pay X life.<br>Destroy all artifacts and creatures with mana value X or less.</div>
+<div class="card-link-row">
+<a href="https://scryfall.com/search?q=%21%22Vicious%20Rivalry%22" class="card-scryfall-link" target="_blank" rel="noopener">Scryfall</a>
+<a href="https://edhrec.com/cards/vicious-rivalry" class="card-edhrec-link" target="_blank" rel="noopener">EDHREC</a>
+</div>
+</article>
+</div>
+</section>
+</div>
+<script>
+(function() {
+  var setCheckboxes = Array.prototype.slice.call(document.querySelectorAll('input.set-cb'));
+
+  function cardThemes(card) {
+    return (card.getAttribute('data-themes') || '').trim().split(/\s+/).filter(Boolean);
+  }
+
+  function applyFilters(sec) {
+    var selectedSets = new Set(
+      setCheckboxes.filter(function(cb) { return cb.checked; }).map(function(cb) {
+        return (cb.value || '').toLowerCase();
+      })
+    );
+    var themeBoxes = sec.querySelectorAll('input.theme-cb');
+    var selectedThemes = new Set(
+      Array.prototype.slice.call(themeBoxes).filter(function(cb) { return cb.checked; }).map(function(cb) {
+        return cb.value || '';
+      })
+    );
+    var filterThemes = themeBoxes.length > 0;
+
+    sec.querySelectorAll('.card-tile').forEach(function(card) {
+      var scode = (card.getAttribute('data-set-code') || '').toLowerCase();
+      var setOk = selectedSets.has(scode);
+      var themeOk = true;
+      if (filterThemes) {
+        if (selectedThemes.size === 0) {
+          themeOk = false;
+        } else {
+          themeOk = cardThemes(card).some(function(t) { return selectedThemes.has(t); });
+        }
+      }
+      card.classList.toggle('filtered-out', !(setOk && themeOk));
+    });
+
+    var visible = sec.querySelectorAll('.card-tile:not(.filtered-out)').length;
+    var cntEl = sec.querySelector('.pane-card-count');
+    if (cntEl) cntEl.textContent = String(visible);
+  }
+
+  function applyAllFilters() {
+    document.querySelectorAll('.commander-section').forEach(applyFilters);
+  }
+
+  setCheckboxes.forEach(function(cb) {
+    cb.addEventListener('change', applyAllFilters);
+  });
+  document.querySelectorAll('.commander-section').forEach(function(sec) {
+    sec.querySelectorAll('input.theme-cb').forEach(function(cb) {
+      cb.addEventListener('change', function() { applyFilters(sec); });
+    });
+    applyFilters(sec);
+  });
+})();
+</script>
+</body>
+</html>

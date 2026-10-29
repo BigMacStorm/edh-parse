@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <div class="panel">
+    <form method="post" action="/run/evaluate">
+      <div class="row">
+        <label for="decklist">Decklist file</label>
+        <input type="text" id="decklist" name="decklist" placeholder="inputs/my-deck.txt">
+      </div>
+      <div class="row">
+        <label for="deck_text">…or paste the decklist</label>
+        <textarea id="deck_text" name="deck_text" rows="8" placeholder="Commander&#10;1 Korvold, Fae-Cursed King&#10;&#10;Deck&#10;1x Sol Ring (CMM) 400&#10;1x Phyrexian Altar #!protect"></textarea>
+      </div>
+      <div class="row">
+        <label for="commander">Commander (optional)</label>
+        <input type="text" id="commander" name="commander" placeholder="Partners: Tymna the Weaver; Kraum, Ludevic's Opus">
+      </div>
+      <div class="row">
+        <label for="max_add_budget">Max USD per add</label>
+        <input type="number" step="0.01" id="max_add_budget" name="max_add_budget" value="25">
+      </div>
+      <div class="row">
+        <label for="tuples">Anchor tuples (S1)</label>
+        <input type="number" id="tuples" name="tuples" value="8" min="0" max="12">
+      </div>
+      <div class="row">
+        <label for="hubs">Engine hubs (S3)</label>
+        <input type="number" id="hubs" name="hubs" value="5" min="0" max="10">
+      </div>
+      <div class="row">
+        <label for="max_requests">Max EDHREC requests</label>
+        <input type="number" id="max_requests" name="max_requests" value="22" min="1">
+      </div>
+      <div class="row">
+        <label for="cache_ttl_days">Cache TTL (days)</label>
+        <input type="number" step="0.5" id="cache_ttl_days" name="cache_ttl_days" value="7">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="write_md" value="true"> Markdown report</label>
+        <label><input type="checkbox" name="write_csv" value="true"> Full score CSV</label>
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache</label>
+      </div>
+      <p class="tagline">Lines tagged <code>#!protect</code> are never suggested as cuts. A cold run makes up to ~22 polite EDHREC requests (about a minute); re-runs within the cache TTL make none.</p>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

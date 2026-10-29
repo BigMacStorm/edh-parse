@@ -1,5 +1,17 @@
+# Editable install from repo root (preferred)
+-e .
+
+# Or pin runtime deps manually:
 progressbar2
 requests
+requests-cache
 ijson
 weasyprint
 xhtml2pdf
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+typer
+numpy
+scipy

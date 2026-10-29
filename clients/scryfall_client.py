@@ -18,6 +18,7 @@ class ScryfallClient:
     def __init__(self, session: Any, sleep_seconds: float = 0.15):
         self.session = session
         self.sleep_seconds = sleep_seconds
+        scryfall_bulk.configure_scryfall_session(session)
 
     def _ensure_bulk(self) -> None:
         scryfall_bulk.ensure_loaded(self.session)
@@ -28,7 +29,7 @@ class ScryfallClient:
         if not card_name:
             return None, None
         self._ensure_bulk()
-        card_found = scryfall_bulk.get_card_by_name(card_name)
+        card_found = scryfall_bulk.get_card_by_name_or_face(card_name)
         if card_found is not None:
             return card_found, None
 

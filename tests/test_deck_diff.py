@@ -1,7 +1,37 @@
 import unittest
-from core.deck_diff import diff_decks, generate_shopping_list
+from core.deck_diff import (
+    deck_to_canonical,
+    diff_decks,
+    dfc_name_aliases,
+    generate_shopping_list,
+    register_canonical_name,
+)
+
 
 class TestDeckDiff(unittest.TestCase):
+
+    def test_dfc_name_aliases(self):
+        aliases = dfc_name_aliases("Blightstep Pathway // Searstep Pathway")
+        self.assertEqual(
+            aliases,
+            {"Blightstep Pathway // Searstep Pathway", "Blightstep Pathway", "Searstep Pathway"},
+        )
+
+    def test_diff_decks_matches_dfc_faces(self):
+        mapping = {}
+        register_canonical_name(
+            "Ojer Axonil, Deepest Might // Temple of Power",
+            "Ojer Axonil, Deepest Might // Temple of Power",
+            mapping,
+        )
+        old_deck = {"Ojer Axonil, Deepest Might // Temple of Power": 1}
+        new_deck = {"Ojer Axonil, Deepest Might": 1}
+        added, removed = diff_decks(
+            deck_to_canonical(old_deck, mapping),
+            deck_to_canonical(new_deck, mapping),
+        )
+        self.assertEqual(added, {})
+        self.assertEqual(removed, {})
 
     def test_diff_decks(self):
         old_deck = {"Card A": 1, "Card B": 2, "Card C": 1}

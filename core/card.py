@@ -19,7 +19,7 @@ def _get_with_retry(session, url, params=None, timeout=5, max_retries=5):
     )
 
 class Card:
-    def __init__(self, session, args, card_id=None, card_name=None, is_commander=False, is_thin=False):
+    def __init__(self, session, args=None, card_id=None, card_name=None, is_commander=False, is_thin=False, config=None):
         self.is_commander = is_commander
         self.card_id = card_id
         self.card_name = card_name  # when set (e.g. from EDHREC), bulk lookups use name for oracle_cards
@@ -43,6 +43,9 @@ class Card:
         self.released_at = None  # ISO date string from Scryfall, e.g. "2025-11-08"
         self.set_type = None  # e.g. 'expansion', 'core', 'commander', 'promo', 'secret_lair'
         self.is_reprint = False  # Scryfall 'reprint' flag for this printing
+        self.oracle_id = None
+        self.first_print_released_at = None
+        self.first_print_set_code = None
         # EDHREC metadata (optional; used by --new-cards-html)
         self.edh_inclusion = None  # string like "4.2%"
         self.edh_synergy = None    # string like "7.0%"
@@ -50,8 +53,10 @@ class Card:
         self.owned = False
         self.error = False
         self.args = args
+        self.config = config
         self.thin = is_thin
         self.game_changer = False
+        self.unpriced = False  # True when Scryfall has no USD price for this card (it is counted as $0)
         self.edhrec_rank = None
         self.alternate_names = set()
         self.scryfall_client = ScryfallClient(self.session, sleep_seconds=SCRYFALL_SLEEP)
@@ -128,6 +133,7 @@ class Card:
         # Common fields for all cards (not just commanders)
         self.name = data.get("name")
         self.price = self.get_price(data)
+        self.unpriced = not self._has_price(data)
         self.game_changer = data.get("game_changer")
         self.type_line = data.get("type_line")
         self.oracle_text = data.get("oracle_text")
@@ -141,6 +147,8 @@ class Card:
         self.released_at = data.get("released_at")
         self.set_type = data.get("set_type")
         self.is_reprint = bool(data.get("reprint", False))
+        self.oracle_id = data.get("oracle_id")
+        self._prints_search_uri = data.get("prints_search_uri")
         # MDFC / transform: use first face for image and combine oracle text
         if data.get("card_faces"):
             first = data["card_faces"][0]
@@ -179,6 +187,14 @@ class Card:
         else:
             return "X"
 
+
+    @staticmethod
+    def _has_price(data):
+        """False when the card has no USD/USD-foil price (basic lands are intentionally free)."""
+        if data.get("type_line") is not None and "Basic Land" in str(data["type_line"]):
+            return True
+        prices = data.get("prices") or {}
+        return prices.get("usd") is not None or prices.get("usd_foil") is not None
 
     def get_price(self, data):
         if data.get("type_line") is not None and "Basic Land" in str(data["type_line"]):

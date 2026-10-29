@@ -19,6 +19,9 @@ from typing import Dict, Any
 # Slightly longer delay after EDHREC requests to avoid rate limits
 EDHREC_SLEEP = 0.25
 
+# EDHREC names partner/background pairs "Commander A // Commander B"
+PAIR_SEP = " // "
+
 
 def _edhrec_get_with_retry(session, url, timeout=10, max_retries=5):
     """Backwards-compatible wrapper for EDHREC lookups."""
@@ -58,7 +61,9 @@ class Chart:
         return out_string
 
 class Deck:
-    def __init__(self, session, args, edhr_cache=None):
+    def __init__(self, session, args=None, edhr_cache=None, config=None):
+        from core.config import RunConfig, _ArgsShim
+
         self.mainboard = []
         self.sideboard = []
         self.commander = None
@@ -66,7 +71,21 @@ class Deck:
         self.chart = None
         self.title = None
         self.session = session
-        self.args = args
+        if config is not None:
+            self.config = config
+            self.args = args if args is not None else _ArgsShim(config)
+        elif args is not None:
+            self.args = args
+            self.config = RunConfig(
+                fresh_cache=bool(getattr(args, "fresh_cache", False)),
+                show_owned=bool(getattr(args, "show_owned", False)),
+                need=bool(getattr(args, "need", False)),
+                show_all=bool(getattr(args, "all", False)),
+                csv_file=getattr(args, "csv_file", None),
+            )
+        else:
+            self.config = RunConfig()
+            self.args = _ArgsShim(self.config)
         self.edhr_cache = edhr_cache if edhr_cache is not None else {}
         self.edhrec_client = EdhrecClient(self.session, sleep_seconds=EDHREC_SLEEP)
         self.scryfall_client = ScryfallClient(self.session, sleep_seconds=SCRYFALL_SLEEP)
@@ -95,6 +114,9 @@ class Deck:
         error_count = self.get_error_count()
         if error_count > 0:
             deck_info += f"Error count: {self.get_error_count()}\n"
+        unpriced_count = self.get_unpriced_count()
+        if unpriced_count > 0:
+            deck_info += f"Unpriced cards (counted as $0): {unpriced_count}\n"
         if self.chart:
             deck_info += str(self.chart)
             deck_info += "\n"
@@ -180,6 +202,16 @@ class Deck:
                 owned_count += 1
         return owned_count
     
+    def get_unpriced_count(self):
+        """Cards with no USD price on Scryfall; they are included in totals as $0."""
+        count = 0
+        if self.commander is not None and self.commander.unpriced:
+            count += 1
+        for card in chain(self.mainboard, self.sideboard):
+            if card.unpriced:
+                count += 1
+        return count
+
     def get_error_count(self):
         error_count = 0
         for card in chain(self.mainboard, self.sideboard):
@@ -298,10 +330,27 @@ class Deck:
                 if commander_id:
                     self.edhr_cache[commander_name + "_commander_id"] = commander_id
                     archidekt.insert(0, {"c": "c", "u": commander_id, "n": header})
+                elif PAIR_SEP in header:
+                    # Partner / Background pair ("A // B"): the pair isn't a card, so use the
+                    # first half as the commander and keep the second half as an extra card
+                    # (so it still counts toward cost and ownership).
+                    first, second = [part.strip() for part in header.split(PAIR_SEP, 1)]
+                    commander_id = self._scryfall_id_by_exact_name(first)
+                    if commander_id:
+                        entries = [{"c": "c", "u": commander_id, "n": first}]
+                        second_id = self._scryfall_id_by_exact_name(second)
+                        if second_id:
+                            entries.append({"c": "m", "q": 1, "u": second_id, "n": second})
+                        self.edhr_cache[commander_name + "_commander_id"] = commander_id
+                        self.edhr_cache[commander_name + "_pair_entries"] = entries
+                        archidekt[0:0] = [dict(e) for e in entries]
         elif commander_id and not commander_display_name and edhr_data:
             # Had commander_id from cache but it wasn't in this variant's list; insert it
+            pair_entries = self.edhr_cache.get(commander_name + "_pair_entries")
             header = self._normalize_commander_header(edhr_data.get("header") or "")
-            if header:
+            if pair_entries:
+                archidekt[0:0] = [dict(e) for e in pair_entries]
+            elif header:
                 archidekt.insert(0, {"c": "c", "u": commander_id, "n": header})
         if not commander_id:
             return None
@@ -356,12 +405,17 @@ class DeckBuilder:
             else:
                 edhr_data = deck.lookup_expensive(base_name)
 
-            # Commander page for header/panels; reuse cached Normal if Budget/Expensive 404
+            # Commander page for header/panels; reuse the Normal page if Budget/Expensive 404.
+            # Drop its average deck so this variant fetches its own list below instead of
+            # silently duplicating Normal.
             if edhr_data is None and base_name:
-                edhr_data = deck.edhr_cache.get(base_name) or deck.lookup_normal(base_name)
+                fallback = deck.edhr_cache.get(base_name) or deck.lookup_normal(base_name)
+                if fallback is not None:
+                    edhr_data = {k: v for k, v in fallback.items() if k != "archidekt"}
 
-        if base_name and edhr_data and not edhr_data.get("archidekt"):
-            deck.edhr_cache[base_name] = edhr_data
+        if base_name and edhr_data and cost == Cost.Normal and base_name not in deck.edhr_cache:
+            # Keep a pristine copy (no average deck attached) for the Budget/Expensive fallback.
+            deck.edhr_cache[base_name] = {k: v for k, v in edhr_data.items() if k != "archidekt"}
 
         # EDHREC has three average decks: normal, budget, expensive. Fetch the one for this cost.
         if edhr_data and "archidekt" not in edhr_data:

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ title }}</h1>
+  <p>
+    <span class="status {{ 'ok' if result.ok else 'err' }}">{{ 'OK' if result.ok else 'Failed' }}</span>
+    {{ result.message or '' }}
+  </p>
+  {% if result.outputs %}
+    <ul class="outputs">
+      {% for path in result.outputs %}
+        {% set name = path.replace('\\', '/').split('/')[-1] %}
+        <li>
+          {% if name.endswith('.html') %}
+            <a href="/outputs/{{ name }}" target="_blank" rel="noopener">{{ path }}</a>
+          {% else %}
+            <code>{{ path }}</code>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if result.log %}
+    <div class="log">{{ result.log }}</div>
+  {% endif %}
+  {% if result.traceback %}
+    <div class="log">{{ result.traceback }}</div>
+  {% endif %}
+  <p class="actions" style="margin-top:1.25rem">
+    <a class="btn btn-ghost" href="/">Back home</a>
+  </p>
+{% endblock %}

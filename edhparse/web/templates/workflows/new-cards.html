@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <p class="hint" style="margin-bottom:1rem">
+    Hits EDHREC for every commander × themes. A long list can take many minutes —
+    leave this tab open; you should see a progress overlay as soon as you hit Run.
+  </p>
+  <div class="panel">
+    <form method="post" action="/run/new-cards" data-run-label="New cards">
+      <div class="row">
+        <label for="commanders">Commander list</label>
+        <input type="text" id="commanders" name="commanders" value="inputs/ownedcoms" required>
+      </div>
+      <div class="row">
+        <label for="output">Output HTML</label>
+        <input type="text" id="output" name="output" value="outputs/new_cards.html">
+      </div>
+      <div class="row">
+        <label for="max_themes">Max themes</label>
+        <input type="number" id="max_themes" name="max_themes" value="5">
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" name="fresh_cache" value="true"> Fresh cache (HTTP + Scryfall bulk/debut indexes)</label>
+      </div>
+      <div class="actions">
+        <button type="submit">Run</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

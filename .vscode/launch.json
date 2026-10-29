@@ -1,14 +1,44 @@
 {
+    "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": "Python Debugger: Python File",
+            "name": "edhparse --help",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "module": "edhparse",
+            "args": ["--help"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "edhparse web",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "edhparse",
+            "args": ["web", "--no-open"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "edhparse summary (HTML)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "edhparse",
             "args": [
-                "--moxfield_deck_id=ZupfHu7aD0mMEntRnJe0Qw"
-            ]
+                "summary",
+                "--commanders",
+                "inputs/comlist",
+                "--stock",
+                "inputs/Stock.csv",
+                "--write-html"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Legacy argparse CLI",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "edhparse.cli",
+            "args": ["-cl", "inputs/comlist", "-mb", "inputs/Stock.csv", "-html"],
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

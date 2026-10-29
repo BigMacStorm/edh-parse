@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }} · edh-parse{% endblock %}
+{% block body %}
+  <h1 class="brand">{{ meta.title }}</h1>
+  <p class="tagline">{{ meta.blurb }}</p>
+  <p class="hint" style="margin-bottom:1rem">
+    Paste a list of card names (one per line, optional <code>1 Card Name</code> counts).
+    Looks up each card in <strong>Stock</strong>, <strong>Binder</strong>, and
+    <strong>secret binder</strong> only, then groups results by your storage layout:
+    rarity first, then color, with <code>need/have</code> counts.
+  </p>
+  <div class="panel">
+    <form method="post" action="/run/find-in-binders" data-run-label="Find in binders">
+      <div class="row">
+        <label for="card_list">Card list</label>
+        <textarea id="card_list" name="card_list" rows="14" placeholder="1 Sol Ring&#10;Lightning Bolt&#10;Counterspell" required></textarea>
+      </div>
+      <div class="row">
+        <label for="stock">Stock CSV</label>
+        <input type="text" id="stock" name="stock" value="{{ defaults.stock }}" required>
+      </div>
+      <div class="row">
+        <label for="output">Output HTML</label>
+        <input type="text" id="output" name="output" value="outputs/find_in_binders.html">
+      </div>
+      <div class="actions">
+        <button type="submit">Find cards</button>
+        <a class="btn btn-ghost" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
