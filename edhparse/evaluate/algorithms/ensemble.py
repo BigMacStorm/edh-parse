@@ -98,24 +98,26 @@ def apply_s5(cards: Sequence[CardScores], weights: Sequence[float], secret_weigh
 # --------------------------------------------------------------------------- swaps
 
 
-def cut_candidates(deck: Sequence[CardScores], n: int = C.CUT_POOL) -> List[CardScores]:
+def cut_candidates(deck: Sequence[CardScores], n: Optional[int] = None) -> List[CardScores]:
+    n = C.CUT_POOL if n is None else n
     pool = []
     for c in deck:
         if not c.in_deck or c.meta.is_land or c.protected or TAG_SECRET_TECH in c.tags:
             continue
-        if c.s5 >= 10.0:
+        if c.s5 >= C.CUT_MAX_S5:
             continue
-        if c.pool == "U" and c.s5 >= -30.0:
+        if c.pool == "U" and c.s5 >= C.STAPLE_CUT_MAX_S5:
             continue
         pool.append(c)
     pool.sort(key=lambda c: c.s5)
     return pool[:n]
 
 
-def add_candidates(external: Sequence[CardScores], budget: float, n: int = C.ADD_POOL) -> List[CardScores]:
+def add_candidates(external: Sequence[CardScores], budget: float, n: Optional[int] = None) -> List[CardScores]:
+    n = C.ADD_POOL if n is None else n
     pool = [
         c for c in external
-        if not c.in_deck and c.finalist and c.meta.within_budget(budget) and c.s5 > 15.0 and not c.meta.is_land
+        if not c.in_deck and c.finalist and c.meta.within_budget(budget) and c.s5 > C.ADD_MIN_S5 and not c.meta.is_land
     ]
     pool.sort(key=lambda c: c.s5, reverse=True)
     return pool[:n]
@@ -148,7 +150,14 @@ def swap_gain(cut: CardScores, add: CardScores) -> Tuple[float, str]:
     return delta + curve + type_bonus + role_adj, "; ".join(notes)
 
 
-def match_swaps(cuts: Sequence[CardScores], adds: Sequence[CardScores], max_swaps: int = C.MAX_SWAPS) -> List[SwapPair]:
+def swap_confidence(add_s5: float) -> str:
+    if add_s5 > C.SWAP_STRONG_ADD_S5:
+        return "strong"
+    return "moderate" if add_s5 > C.SWAP_MODERATE_ADD_S5 else "weak"
+
+
+def match_swaps(cuts: Sequence[CardScores], adds: Sequence[CardScores], max_swaps: Optional[int] = None) -> List[SwapPair]:
+    max_swaps = C.MAX_SWAPS if max_swaps is None else max_swaps
     if not cuts or not adds:
         return []
     gain = np.zeros((len(cuts), len(adds)))
@@ -169,7 +178,8 @@ def match_swaps(cuts: Sequence[CardScores], adds: Sequence[CardScores], max_swap
         if not valid[i, j]:
             continue
         pairs.append(SwapPair(cut=cuts[i], add=adds[j], gain=round(float(gain[i, j]), 1),
-                              delta=round(adds[j].s5 - cuts[i].s5, 1), rationale=notes[(i, j)]))
+                              delta=round(adds[j].s5 - cuts[i].s5, 1), rationale=notes[(i, j)],
+                              confidence=swap_confidence(adds[j].s5)))
     pairs.sort(key=lambda p: p.gain, reverse=True)
     return pairs[:max_swaps]
 

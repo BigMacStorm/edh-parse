@@ -266,6 +266,7 @@ class SwapPair:
     gain: float
     delta: float
     rationale: str
+    confidence: str = ""  # strong / moderate / weak, from the strength of the add
 
 
 @dataclass

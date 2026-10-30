@@ -68,6 +68,48 @@ cards reach the scoring stage, tail NDCG lift over a popularity ranker +0.003 (n
 cards), re-ranking the evaluator's own finalists by S5 is worse than by plain popularity on the mixed head+tail set
 (-0.079).
 
+## Why swaps used to be ~3, and the up-to-10 setting
+
+A swap needs one add, and the add had to score above +15; on a typical deck only ~3 outside cards clear that, so
+raising `MAX_SWAPS` alone could never help. The gain/delta bars and pool sizes made no measurable difference. The add bar
+(`ADD_MIN_S5`) is now -20 and every swap carries a confidence tier from the strength of its add. On the recorded corpus
+(chance level is ~8-10%: 6 target cards among ~75 candidates / ~63 deck cards), 8.7 swaps per deck (min 3, max 10):
+
+| Tier (add S5) | Swaps/deck | Add is a real held-out card | Cut is a real injected bad card |
+|---|---|---|---|
+| strong (> +15) | 3.0 | 56% | 43% |
+| moderate (0..+15) | 1.0 | 43% | 39% |
+| weak (-20..0) | 4.8 | 28% | 62% |
+
+Caveat: only the 6 injected bad cards count as "correct" cuts, so precision is a lower bound, and the backtest cannot
+verify the later swaps beyond that. Treat weak swaps as "worth a look", not as instructions. `ADD_MIN_S5` is the dial:
+at the shipped weights, -10 gives ~6.6 swaps/deck with higher precision, -30 gives ~10 with precision a little lower.
+
+## Signal weights
+
+Swept on the recorded corpus (means over trials; cluster-paired deltas are in `python -m tests.real_backtest --ablation`).
+Moving weight from S2 and S4 to S1 and S3 improves every metric, in 7 of 8 clusters, and the more is moved the better:
+
+| Weights S1/S2/S3/S4 | add NDCG@20 | tail lift vs popularity | trap AUROC | swaps/deck at bar -10 |
+|---|---|---|---|---|
+| 38/24/23/15 (old default) | 0.531 | +0.003 | 0.917 | 9.2 |
+| S4 halved | 0.575 | +0.061 | 0.929 | 8.0 |
+| S4 off | 0.603 | +0.101 | 0.937 | 7.1 |
+| S4 off, S2 halved | 0.623 | +0.115 | 0.952 | 5.9 |
+| **38/12/23/7.5 (new default: S2 and S4 halved)** | **0.594** | **+0.072** | **0.943** | **6.6** |
+| S1 only | 0.650 | +0.144 | 0.963 | 4.6 |
+
+The default is the moderate point: S2 and S4 halved, not removed. Reasons not to go further:
+
+* **The ground truth is EDHREC-derived** (theme pages), the same family of data S1 and S3 are built from, so this
+  benchmark naturally rewards them and cannot reward what S4 is for (a balanced curve, enough ramp and wipes) or what S2
+  captures about power level. "S4 hurts" here means "S4 hurts at recovering EDHREC theme cards".
+* The harm is not attributable to one half of S4: keeping only its role boost, or only its slot pressure, each changed
+  nothing measurable (+/-0.01 NDCG); only reducing S4's overall weight helped.
+* S2 is a budget-survivor signal; if you do not care about budget its premise matters less, which is consistent with the data.
+* 8 clusters and 8 variants tried: expect some selection optimism. The pattern (monotone, 7/8 clusters) is more
+  trustworthy than any single best row.
+
 ## Known limits
 
 * Ground truth is EDHREC-derived (theme pages), not win-rate or tournament derived. Eight clusters is small.

@@ -95,3 +95,9 @@ def test_real_backtest_matches_the_recorded_baseline(rows):
                 continue
             assert abs(current[who][key] - vals[key]) <= TOL, (
                 f"{who} {key}: {vals[key]} -> {current[who][key]}; if intended, refresh the baseline and justify it")
+
+
+def test_decks_get_close_to_ten_swaps_not_three(rows):
+    swaps = [r["n_swaps"] for r in rows]
+    assert min(swaps) >= 3 and max(swaps) <= C.MAX_SWAPS
+    assert sum(swaps) / len(swaps) >= 8.0, "the add-side bar is starving the swap matcher again"

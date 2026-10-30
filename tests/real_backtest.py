@@ -209,6 +209,10 @@ def evaluate_trial(res, trial: Trial, inputs: CommanderInputs, metas, budget: fl
         "trap_mrr": _mrr(cuts, trial.traps),
         "trap_recall15": _recall(cuts, trial.traps, 15),
         "n_swaps": float(len(swaps)),
+        # how many of the injected bad cards got cut / held-out cards got added, as a share of all of them
+        "swap_trap_coverage": len({p.cut.name for p in swaps} & set(trial.traps)) / len(trial.traps) if trial.traps else float("nan"),
+        "swap_holdout_coverage": len({p.add.name for p in swaps} & set(trial.holdout)) / len(trial.holdout) if trial.holdout else float("nan"),
+        "swap_genuine_cuts": float(sum(p.cut.name not in set(trial.traps) for p in swaps)),
         "swap_cut_precision": float(np.mean([p.cut.name in set(trial.traps) for p in swaps])) if swaps else float("nan"),
         "swap_add_precision": float(np.mean([p.add.name in set(trial.holdout) for p in swaps])) if swaps else float("nan"),
         "role_violations": float(sum(1 for p in swaps if p.cut.requires_same_role_replacement

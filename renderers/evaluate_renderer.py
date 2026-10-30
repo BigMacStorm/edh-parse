@@ -171,11 +171,11 @@ def _swaps(res: EvaluationResult) -> str:
     for i, p in enumerate(res.swaps, 1):
         cut, add = p.cut, p.add
         rows.append(
-            f"<tr><td class='num'>{i}</td><td>{_card_link(cut)} <span class='note'>MV {cut.meta.cmc:g} · {_e(_roles(cut) or '—')} · "
+            f"<tr><td class='num'>{i}</td><td class='note'>{_e(p.confidence)}</td><td>{_card_link(cut)} <span class='note'>MV {cut.meta.cmc:g} · {_e(_roles(cut) or '—')} · "
             f"S5 {cut.s5:+.1f}</span> {_tags(cut)}</td><td>→</td><td>{_card_link(add)} <span class='note'>MV {add.meta.cmc:g} · "
             f"{_e(_roles(add) or '—')} · {_price(add)} · S5 {add.s5:+.1f}</span> {_tags(add)}</td>"
             f"<td class='num pos'>{p.delta:+.1f}</td><td class='wrap note'>{_e(p.rationale)}</td></tr>")
-    return ("<table><thead><tr><th class='num'>#</th><th>Cut</th><th></th><th>Add</th><th class='num'>Net S5</th>"
+    return ("<table><thead><tr><th class='num'>#</th><th>Confidence</th><th>Cut</th><th></th><th>Add</th><th class='num'>Net S5</th>"
             "<th>Rationale</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>")
 
 
@@ -244,9 +244,9 @@ def render_markdown(res: EvaluationResult) -> str:
         out.append(f"| {r} | {s.role_counts.get(r, 0)} | | ≥ {s.role_floors[r]} | {'STARVED' if s.role_counts.get(r, 0) < s.role_floors[r] else 'OPTIMAL'} |")
     out += ["", "## 3. Top cuts", ""] + _md_cards(res.cuts, False)
     out += ["", "## 4. Top adds", ""] + _md_cards(res.adds, True)
-    out += ["", "## 5. Swaps", "", "| # | Cut | Add | Net S5 | Rationale |", "|---|---|---|---|---|"]
+    out += ["", "## 5. Swaps", "", "| # | Confidence | Cut | Add | Net S5 | Rationale |", "|---|---|---|---|---|---|"]
     for i, p in enumerate(res.swaps, 1):
-        out.append(f"| {i} | {p.cut.name} ({p.cut.s5:+.1f}) | {p.add.name} ({_price(p.add)}, {p.add.s5:+.1f}) | {p.delta:+.1f} | {p.rationale} |")
+        out.append(f"| {i} | {p.confidence} | {p.cut.name} ({p.cut.s5:+.1f}) | {p.add.name} ({_price(p.add)}, {p.add.s5:+.1f}) | {p.delta:+.1f} | {p.rationale} |")
     out += ["", "## 6. Utility lands", ""]
     out += [f"- {u.cut} ({u.cut_score:.3f}) → {u.add} ({u.add_score:.3f}, ${u.price:,.2f})" for u in res.land_upgrades] or ["- none"]
     return "\n".join(out) + "\n"
@@ -294,5 +294,5 @@ def console_summary(res: EvaluationResult) -> str:
     lines += ["", "Top adds:"]
     lines += [f"  {c.s5:+6.1f}  {c.name}  ({_price(c)})" for c in res.adds[:10]]
     lines += ["", "Swaps:"]
-    lines += [f"  {p.cut.name} -> {p.add.name}  (+{p.delta:.1f})" for p in res.swaps] or ["  none"]
+    lines += [f"  [{p.confidence}] {p.cut.name} -> {p.add.name}  (+{p.delta:.1f})" for p in res.swaps] or ["  none"]
     return "\n".join(lines)

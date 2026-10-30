@@ -121,7 +121,9 @@ ROLE_TAG_QUERIES: Dict[str, str] = {
 RAMP_MAX_CMC = 4
 
 # --------------------------------------------------------------------------- algorithm 5
-DEFAULT_WEIGHTS: Tuple[float, float, float, float] = (0.38, 0.24, 0.23, 0.15)
+# S1 (build-path bagging) and S3 (hub webbing) carry the signal on the recorded corpus; S2 (budget survivors) and
+# S4 (structure) were worth less than their old weights (0.24 / 0.15), so they are halved. Renormalised at run time.
+DEFAULT_WEIGHTS: Tuple[float, float, float, float] = (0.38, 0.12, 0.23, 0.075)
 SECRET_TECH_WEIGHTS: Tuple[float, float, float, float] = (0.48, 0.04, 0.38, 0.10)
 THEME_FALLBACK_S1_FACTOR = 0.5  # S1 weight multiplier when only theme pages were available
 TANH_GAIN = 0.55
@@ -140,6 +142,15 @@ FINALISTS = 75
 CUT_POOL = 15
 ADD_POOL = 30
 MAX_SWAPS = 10
+# Eligibility bars for the swap matcher: a deck card must score below CUT_MAX_S5 to be cut (format staples
+# only below STAPLE_CUT_MAX_S5), and an outside card above ADD_MIN_S5 to be added. The add bar used to be +15,
+# which left only ~3 swaps per deck on the recorded corpus; -20 (with the current weights) gives ~9. The weaker swaps are real but less
+# reliable (see meta/EVALUATE_BACKTEST.md), so each carries a confidence tier set by how strong the add is.
+CUT_MAX_S5 = 10.0
+STAPLE_CUT_MAX_S5 = -30.0
+ADD_MIN_S5 = -20.0
+SWAP_STRONG_ADD_S5 = 15.0  # add S5 above this: "strong"
+SWAP_MODERATE_ADD_S5 = 0.0  # above this: "moderate"; otherwise "weak"
 MIN_SWAP_GAIN = 15.0
 MIN_SWAP_DELTA = 12.0
 REPORT_CUTS = 15

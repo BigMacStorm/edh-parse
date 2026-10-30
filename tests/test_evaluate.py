@@ -1077,3 +1077,56 @@ def test_per_run_telemetry_flags_do_not_leak_between_runs():
     res = ev.run(parse_decklist_text(deck_text))
     assert res.telemetry.filter_parse_failed is False and res.telemetry.static_cdn_ignores_query_params is False
     assert not any("recogni" in w.lower() for w in res.warnings)
+
+
+# =========================================================================== up to 10 swaps, with confidence tiers
+
+
+def test_swaps_carry_a_confidence_tier_from_the_strength_of_the_add():
+    cuts = []
+    for i in range(3):
+        c = scores(f"cut{i}", True, meta(f"cut{i}", cmc=3))
+        c.s5 = -40.0
+        cuts.append(c)
+    adds = []
+    for name, s5 in (("strong add", 40.0), ("moderate add", 8.0), ("weak add", -5.0)):
+        a = scores(name, False, meta(name, cmc=2))
+        a.s5 = s5
+        adds.append(a)
+    swaps = A5.match_swaps(cuts, adds)
+    assert {p.add.name: p.confidence for p in swaps} == {"strong add": "strong", "moderate add": "moderate", "weak add": "weak"}
+
+
+def test_adds_down_to_the_configured_floor_are_eligible_for_swaps():
+    assert C.ADD_MIN_S5 == -20.0 and C.MAX_SWAPS == 10
+
+    def ext(name, s5):
+        c = scores(name, False, meta(name, price=1.0))
+        c.s5, c.finalist = s5, True
+        return c
+
+    pool = A5.add_candidates([ext("fine", -15.0), ext("too weak", -25.0), ext("strong", 30.0)], budget=25.0)
+    assert {c.name for c in pool} == {"fine", "strong"}
+
+
+def test_default_weights_lean_on_the_signals_that_recover_the_build_path():
+    """Real-corpus ablations (meta/EVALUATE_BACKTEST.md): S1 and S3 carry the signal; S2 (budget-survivor) and S4
+    (structure) were worth less than their old weights. Keep that ordering unless a new ablation says otherwise."""
+    w = A5.effective_weights(C.DEFAULT_WEIGHTS)
+    assert sum(w) == pytest.approx(1.0)
+    assert w[0] > w[2] > w[1] > w[3]  # S1 > S3 > S2 > S4
+    assert w[0] > 0.4 and w[3] < 0.1
+
+
+def test_reports_show_each_swaps_confidence(tmp_path):
+    from renderers.evaluate_renderer import console_summary, write_reports
+
+    session, tagger, deck_text, lookup = _world()
+    ev = Evaluator(session, C.EvaluateOptions(tuples=4, hubs=3), fetcher=make_fetcher(session),
+                   metas=CardMetaLookup(lookup), role_tagger=tagger, log=lambda m: None)
+    res = ev.run(parse_decklist_text(deck_text))
+    assert res.swaps and all(p.confidence in ("strong", "moderate", "weak") for p in res.swaps)
+    write_reports(res, str(tmp_path / "r.html"), str(tmp_path / "r.md"), "")
+    assert "Confidence" in (tmp_path / "r.html").read_text(encoding="utf-8")
+    assert "| Confidence |" in (tmp_path / "r.md").read_text(encoding="utf-8")
+    assert f"[{res.swaps[0].confidence}]" in console_summary(res)
