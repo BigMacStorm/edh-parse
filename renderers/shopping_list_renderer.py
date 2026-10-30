@@ -1,6 +1,8 @@
+from __future__ import annotations
+_TOOLTIP_CSS = '\n.card-link { color: var(--link); cursor: pointer; text-decoration: none; }\n.card-link:hover { text-decoration: underline; color: #bae6fd; }\n.card-tooltip { position: fixed; z-index: 99999; pointer-events: none; width: 240px; height: 335px; border-radius: 12px; box-shadow: 0 16px 36px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.12); background: var(--card); overflow: hidden; display: none; opacity: 0; transition: opacity 0.12s ease; }\n.card-tooltip.visible { display: block; opacity: 1; }\n.card-tooltip img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 12px; }\n.card-tooltip .card-tooltip-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1.2rem; text-align: center; font-size: 0.85rem; color: var(--muted); background: var(--surface); }\n'
+_TOOLTIP_JS = "<script>\n(function() {\n  const tooltip = document.createElement('div');\n  tooltip.className = 'card-tooltip';\n  const img = document.createElement('img');\n  img.alt = 'Card preview';\n  img.loading = 'eager';\n  const placeholder = document.createElement('div');\n  placeholder.className = 'card-tooltip-placeholder';\n  tooltip.appendChild(placeholder);\n  tooltip.appendChild(img);\n  document.body.appendChild(tooltip);\n\n  let activeEl = null;\n  let timer = null;\n\n  function positionTooltip(e) {\n    const pad = 16;\n    const w = 240;\n    const h = 335;\n    let x = e.clientX + pad;\n    let y = e.clientY + pad;\n\n    if (x + w > window.innerWidth - pad) {\n      x = Math.max(pad, e.clientX - w - pad);\n    }\n    if (y + h > window.innerHeight - pad) {\n      y = Math.max(pad, window.innerHeight - h - pad);\n    }\n\n    tooltip.style.left = x + 'px';\n    tooltip.style.top = y + 'px';\n  }\n\n  function resolveCardImageUrl(cardName) {\n    const clean = cardName.split(' // ')[0].trim();\n    return 'https://api.scryfall.com/cards/named?exact=' + encodeURIComponent(clean) + '&format=image&version=normal';\n  }\n\n  document.addEventListener('mouseover', (e) => {\n    const target = e.target.closest('.card-link, [data-card-name]');\n    if (!target) return;\n    const name = target.getAttribute('data-card-name') || target.textContent.trim();\n    if (!name || name.length < 2) return;\n\n    activeEl = target;\n    clearTimeout(timer);\n    timer = setTimeout(() => {\n      if (activeEl !== target) return;\n      placeholder.textContent = 'Loading ' + name + '…';\n      placeholder.style.display = 'flex';\n      img.style.display = 'none';\n\n      img.onload = () => {\n        if (activeEl === target) {\n          placeholder.style.display = 'none';\n          img.style.display = 'block';\n        }\n      };\n      img.onerror = () => {\n        if (!img.src.includes('&fuzzy=')) {\n          const clean = name.split(' // ')[0].trim();\n          img.src = 'https://api.scryfall.com/cards/named?fuzzy=' + encodeURIComponent(clean) + '&format=image&version=normal';\n        } else if (activeEl === target) {\n          placeholder.textContent = name;\n          placeholder.style.display = 'flex';\n          img.style.display = 'none';\n        }\n      };\n      img.src = resolveCardImageUrl(name);\n\n      positionTooltip(e);\n      tooltip.classList.add('visible');\n    }, 60);\n  });\n\n  document.addEventListener('mousemove', (e) => {\n    if (tooltip.classList.contains('visible')) {\n      positionTooltip(e);\n    }\n  });\n\n  document.addEventListener('mouseout', (e) => {\n    const target = e.target.closest('.card-link, [data-card-name]');\n    if (!target) return;\n    if (activeEl === target) {\n      activeEl = null;\n      clearTimeout(timer);\n      tooltip.classList.remove('visible');\n      img.src = '';\n    }\n  });\n})();\n</script>\n"
 """Simple owned / to-buy report with ManaPool paste list."""
 
-from __future__ import annotations
 
 import html
 from pathlib import Path
@@ -26,7 +28,7 @@ def write_shopping_list_html(
     buy_copies = sum(int(r.to_buy) for r in buy_rows)
 
     basics_bits = "".join(
-        f"<li>{_esc(name)} × {qty}</li>"
+        f"<li><span class='card-link' data-card-name='{_esc(name)}'>{_esc(name)}</span> × {qty}</li>"
         for name, qty in sorted(removed_basics.items(), key=lambda t: t[0].casefold())
     ) or "<li class='muted'>None</li>"
 
@@ -37,7 +39,7 @@ def write_shopping_list_html(
         ) or "—"
         owned_body.append(
             "<tr>"
-            f"<td>{_esc(r.name)}</td>"
+            f"<td><span class='card-link' data-card-name='{_esc(r.name)}'>{_esc(r.name)}</span></td>"
             f"<td class='num'>{r.needed}</td>"
             f"<td class='num'>{r.owned}</td>"
             f"<td>{binders_txt}</td>"
@@ -51,7 +53,7 @@ def write_shopping_list_html(
         ) or "—"
         buy_body.append(
             "<tr>"
-            f"<td>{_esc(r.name)}</td>"
+            f"<td><span class='card-link' data-card-name='{_esc(r.name)}'>{_esc(r.name)}</span></td>"
             f"<td class='num'>{r.needed}</td>"
             f"<td class='num'>{r.owned}</td>"
             f"<td class='num buy-qty'>{r.to_buy}</td>"
@@ -130,7 +132,7 @@ tr:last-child td {{ border-bottom: 0; }}
 .buy-qty {{ color: var(--warn); font-weight: 650; }}
 ul.basics {{ margin: .4rem 0 0; padding-left: 1.1rem; color: var(--muted); }}
 #copy-status {{ color: var(--muted); font-size: .85rem; }}
-</style>
+{_TOOLTIP_CSS}</style>
 </head>
 <body>
 <div class="wrap">
@@ -203,7 +205,7 @@ ul.basics {{ margin: .4rem 0 0; padding-left: 1.1rem; color: var(--muted); }}
   }});
 }})();
 </script>
-</body>
+{_TOOLTIP_JS}</body>
 </html>
 """
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)

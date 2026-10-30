@@ -38,7 +38,7 @@ def _type_roles(c: CardScores) -> str:
 
 def _card_link(c: CardScores) -> str:
     slug = edhrec_slug(edhrec_display_name(c.meta))
-    return f'<a href="https://edhrec.com/cards/{quote(slug)}" target="_blank" rel="noopener">{_e(c.name)}</a>'
+    return f'<a href="https://edhrec.com/cards/{quote(slug)}" target="_blank" rel="noopener" class="card-link" data-card-name="{_e(c.name)}">{_e(c.name)}</a>'
 
 
 def _score_cell(v: float) -> str:
@@ -69,6 +69,12 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
 td.pos { color:var(--green); } td.neg { color:var(--red); } td.mid { color:var(--text); }
 td.master { font-weight:700; }
 a { color:#c4b5fd; text-decoration:none; } a:hover { text-decoration:underline; }
+.card-link { color:#c4b5fd; text-decoration:none; cursor:pointer; }
+.card-link:hover { text-decoration:underline; color:#ddd6fe; }
+.card-tooltip { position:fixed; z-index:99999; pointer-events:none; width:240px; height:335px; border-radius:12px; box-shadow:0 16px 36px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.12); background:var(--surface); overflow:hidden; display:none; opacity:0; transition:opacity 0.12s ease; }
+.card-tooltip.visible { display:block; opacity:1; }
+.card-tooltip img { width:100%; height:100%; object-fit:cover; display:block; border-radius:12px; }
+.card-tooltip .card-tooltip-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:1.2rem; text-align:center; font-size:0.85rem; color:var(--muted); background:var(--surface); }
 .tag { display:inline-block; background:var(--card); border:1px solid var(--border); border-radius:999px; padding:0 .5rem; margin:0 .15rem .1rem 0; font-size:.75rem; color:var(--amber); }
 .BLOATED { color:var(--red); } .STARVED { color:var(--amber); } .OPTIMAL { color:var(--green); }
 .note { color:var(--muted); font-size:.85rem; }
@@ -84,6 +90,102 @@ document.querySelectorAll('table.sortable th').forEach((th, idx) => th.addEventL
   rows.sort((a, b) => { const x = val(a), y = val(b); return (x > y ? 1 : x < y ? -1 : 0) * (dir === 'asc' ? 1 : -1); });
   rows.forEach(r => tb.appendChild(r));
 }));
+"""
+
+
+_TOOLTIP_JS = """
+(function() {
+  const tooltip = document.createElement('div');
+  tooltip.className = 'card-tooltip';
+  const img = document.createElement('img');
+  img.alt = 'Card preview';
+  img.loading = 'eager';
+  const placeholder = document.createElement('div');
+  placeholder.className = 'card-tooltip-placeholder';
+  tooltip.appendChild(placeholder);
+  tooltip.appendChild(img);
+  document.body.appendChild(tooltip);
+
+  let activeEl = null;
+  let timer = null;
+
+  function positionTooltip(e) {
+    const pad = 16;
+    const w = 240;
+    const h = 335;
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+
+    if (x + w > window.innerWidth - pad) {
+      x = Math.max(pad, e.clientX - w - pad);
+    }
+    if (y + h > window.innerHeight - pad) {
+      y = Math.max(pad, window.innerHeight - h - pad);
+    }
+
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+  }
+
+  function resolveCardImageUrl(cardName) {
+    const clean = cardName.split(' // ')[0].trim();
+    return 'https://api.scryfall.com/cards/named?exact=' + encodeURIComponent(clean) + '&format=image&version=normal';
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target.closest('.card-link, [data-card-name]');
+    if (!target) return;
+    const name = target.getAttribute('data-card-name') || target.textContent.trim();
+    if (!name || name.length < 2) return;
+
+    activeEl = target;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (activeEl !== target) return;
+      placeholder.textContent = 'Loading ' + name + '…';
+      placeholder.style.display = 'flex';
+      img.style.display = 'none';
+
+      img.onload = () => {
+        if (activeEl === target) {
+          placeholder.style.display = 'none';
+          img.style.display = 'block';
+        }
+      };
+      img.onerror = () => {
+        if (!img.src.includes('&fuzzy=')) {
+          const clean = name.split(' // ')[0].trim();
+          img.src = 'https://api.scryfall.com/cards/named?fuzzy=' + encodeURIComponent(clean) + '&format=image&version=normal';
+        } else if (activeEl === target) {
+          placeholder.textContent = name;
+          placeholder.style.display = 'flex';
+          img.style.display = 'none';
+        }
+      };
+      img.src = resolveCardImageUrl(name);
+
+      positionTooltip(e);
+      tooltip.classList.add('visible');
+    }, 60);
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (tooltip.classList.contains('visible')) {
+      positionTooltip(e);
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    const target = e.target.closest('.card-link, [data-card-name]');
+    if (!target) return;
+    if (activeEl === target) {
+      activeEl = null;
+      clearTimeout(timer);
+      tooltip.classList.remove('visible');
+      img.src = '';
+    }
+  });
+})();
 """
 
 
@@ -104,14 +206,14 @@ def _telemetry(res: EvaluationResult) -> str:
         f'<div class="stat"><div class="t">{_e(k)}</div><div class="v">{_e(v)}</div></div>' for k, v in stats
     ] + ["</div>"]
     rows = "".join(
-        f"<tr><td>{i + 1}</td><td>{_e(' + '.join(tc.anchors))}</td><td>{'A · live filter' if tc.tier == 'A' else 'B · theme ' + _e(tc.theme)}</td>"
+        f"<tr><td>{i + 1}</td><td>{' + '.join(f'<span class=\"card-link\" data-card-name=\"{_e(a)}\">{_e(a)}</span>' for a in tc.anchors)}</td><td>{'A · live filter' if tc.tier == 'A' else 'B · theme ' + _e(tc.theme)}</td>"
         f'<td class="num">{tc.n_eff:,}</td><td class="num">{tc.weight:.2f}</td></tr>'
         for i, tc in enumerate(res.tuples)
     )
     out.append('<h3>Anchor tuples</h3><table><thead><tr><th>#</th><th>Anchors</th><th>Source</th><th class="num">Decks (Nᵢ)</th>'
                f'<th class="num">Weight</th></tr></thead><tbody>{rows or "<tr><td colspan=5>none</td></tr>"}</tbody></table>')
-    hubs = ", ".join(f"{_e(h)} ({n:,} decks)" for h, n in res.hubs) or "none"
-    excl = ", ".join(_e(x) for x in res.exclusions) or "none"
+    hubs = ", ".join(f'<span class="card-link" data-card-name="{_e(h)}">{_e(h)}</span> ({n:,} decks)' for h, n in res.hubs) or "none"
+    excl = ", ".join(f'<span class="card-link" data-card-name="{_e(x)}">{_e(x)}</span>' for x in res.exclusions) or "none"
     out.append(f'<p class="note"><strong>Engine hubs:</strong> {hubs}<br><strong>Precon-detox exclusions:</strong> {excl}</p>')
     notes = list(res.warnings) + list(t.log)
     if t.blocked:
@@ -183,7 +285,7 @@ def _lands(res: EvaluationResult) -> str:
     if not res.land_upgrades:
         return "<p class='note'>No utility-land upgrade within budget scored higher than your weakest non-basic lands.</p>"
     rows = "".join(
-        f"<tr><td>{_e(u.cut)}</td><td class='num'>{u.cut_score:.3f}</td><td>→</td><td>{_e(u.add)}</td>"
+        f"<tr><td><span class='card-link' data-card-name='{_e(u.cut)}'>{_e(u.cut)}</span></td><td class='num'>{u.cut_score:.3f}</td><td>→</td><td><span class='card-link' data-card-name='{_e(u.add)}'>{_e(u.add)}</span></td>"
         f"<td class='num'>{u.add_score:.3f}</td><td class='num'>${u.price:,.2f}</td></tr>"
         for u in res.land_upgrades
     )
@@ -211,7 +313,7 @@ def render_html(res: EvaluationResult) -> str:
         "<h2>6 · Utility land upgrades</h2><div class='panel'>", _lands(res), "</div>",
     ]
     return (f"<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
-            f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script></body></html>")
+            f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script><script>{_TOOLTIP_JS}</script></body></html>")
 
 
 # --------------------------------------------------------------------------- markdown
