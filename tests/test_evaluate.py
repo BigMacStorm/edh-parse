@@ -1130,3 +1130,57 @@ def test_reports_show_each_swaps_confidence(tmp_path):
     assert "Confidence" in (tmp_path / "r.html").read_text(encoding="utf-8")
     assert "| Confidence |" in (tmp_path / "r.md").read_text(encoding="utf-8")
     assert f"[{res.swaps[0].confidence}]" in console_summary(res)
+
+
+def test_within_budget_handles_unlimited_and_constrained():
+    cheap = meta("Cheap", price=5.0)
+    expensive = meta("Expensive", price=150.0)
+    unpriced = CardMeta(name="Unpriced", front="Unpriced", price_known=False)
+
+    # Budget <= 0 or None means unlimited
+    for b in (None, 0.0, -10.0):
+        assert cheap.within_budget(b) is True
+        assert expensive.within_budget(b) is True
+        assert unpriced.within_budget(b) is True
+
+    # Constrained budget
+    assert cheap.within_budget(25.0) is True
+    assert expensive.within_budget(25.0) is False
+    assert unpriced.within_budget(25.0) is False
+
+
+def test_role_tagger_backs_off_on_429():
+    from edhparse.evaluate.edhrec import Telemetry
+    class RetrySession(FakeSession):
+        def __init__(self):
+            super().__init__()
+            self.calls = 0
+
+        def get(self, *a, **k):
+            self.calls += 1
+            if self.calls == 1:
+                resp = FakeResp(429, "Too Many Requests")
+                resp.headers = {"Retry-After": "0.1"}
+                return resp
+            return FakeResp(200, json.dumps({"data": [{"name": "Cultivate"}]}))
+
+    slept = []
+    tel = Telemetry()
+    tagger = RoleTagger(RetrySession(), tel, cache=RoleTagCache(":memory:"), sleep=lambda s: slept.append(s))
+    res = tagger._search("Cultivate")
+    assert res == [{"name": "Cultivate"}]
+    assert any("backing off" in line for line in tel.log)
+    assert len(slept) >= 1
+
+
+def test_report_shows_unconstrained_budget_note(tmp_path):
+    from renderers.evaluate_renderer import write_reports
+
+    session, tagger, deck_text, lookup = _world()
+    ev = Evaluator(session, C.EvaluateOptions(tuples=4, hubs=3, max_add_budget=0), fetcher=make_fetcher(session),
+                   metas=CardMetaLookup(lookup), role_tagger=tagger, log=lambda m: None)
+    res = ev.run(parse_decklist_text(deck_text))
+    assert res.max_add_budget == 0
+    write_reports(res, str(tmp_path / "r.html"), "", "")
+    html = (tmp_path / "r.html").read_text(encoding="utf-8")
+    assert "Adds are unconstrained by budget (any price)." in html

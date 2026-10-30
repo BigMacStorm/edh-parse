@@ -490,7 +490,7 @@ async def run_evaluate_route(
     decklist: str = Form(""),
     deck_text: str = Form(""),
     commander: str = Form(""),
-    max_add_budget: float = Form(25.0),
+    max_add_budget: Optional[str] = Form("25.0"),
     tuples: int = Form(8),
     hubs: int = Form(5),
     max_requests: int = Form(22),
@@ -502,11 +502,15 @@ async def run_evaluate_route(
     from edhparse.services.evaluate import run_evaluate
 
     def work():
+        try:
+            budget_val = float(max_add_budget.strip()) if max_add_budget and max_add_budget.strip() else 0.0
+        except (ValueError, TypeError):
+            budget_val = 0.0
         return run_evaluate(
             _repo_path(decklist) if decklist.strip() else None,
             deck_text=deck_text or None,
             commander=commander.strip() or None,
-            max_add_budget=max_add_budget,
+            max_add_budget=budget_val,
             tuples=tuples,
             hubs=hubs,
             max_requests=max_requests,

@@ -354,7 +354,7 @@ def cmd_evaluate(
     commander: Optional[str] = typer.Option(
         None, "--commander", "-c", help="Commander name; separate partners with ';'. Defaults to the deck's Commander section."
     ),
-    max_add_budget: float = typer.Option(25.0, "--max-add-budget", help="Max USD per suggested add."),
+    max_add_budget: float = typer.Option(25.0, "--max-add-budget", help="Max USD per suggested add (0 for unlimited)."),
     tuples: int = typer.Option(8, "--tuples", help="Anchor-tuple cohorts (filtered EDHREC pages) for S1."),
     hubs: int = typer.Option(5, "--hubs", help="Engine hub card pages for S3."),
     max_requests: int = typer.Option(22, "--max-requests", help="Hard cap on uncached EDHREC requests."),

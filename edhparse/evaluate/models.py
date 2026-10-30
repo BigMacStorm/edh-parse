@@ -172,8 +172,11 @@ class CardMeta:
     found: bool = True
     roles: Set[str] = field(default_factory=set)
 
-    def within_budget(self, budget: float) -> bool:
-        """Only cards with a verified price can be recommended under a budget."""
+    def within_budget(self, budget: Optional[float]) -> bool:
+        """When budget is unset or <= 0, no budget constraint is enforced.
+        Otherwise only cards with a verified price within the budget pass."""
+        if budget is None or budget <= 0:
+            return True
         return self.price_known and self.price <= budget
 
     @property

@@ -268,18 +268,33 @@ class RoleTagger:
         params = {"q": query, "unique": "cards"}
         cards: List[dict] = []
         while url:
-            gap = time.monotonic() - self._last
-            if gap < C.SCRYFALL_MIN_INTERVAL:
-                self._sleep(C.SCRYFALL_MIN_INTERVAL - gap)
-            self._last = time.monotonic()
-            try:
-                resp = self.session.get(
-                    url, params=params, timeout=20, expire_after=self.ttl,
-                    headers={"User-Agent": C.USER_AGENT, "Accept": "application/json"},
-                )
-            except Exception as exc:
-                self.telemetry.note(f"Scryfall tag query failed: {exc}")
-                return None
+            attempt = 0
+            while True:
+                gap = time.monotonic() - self._last
+                if gap < C.SCRYFALL_MIN_INTERVAL:
+                    self._sleep(C.SCRYFALL_MIN_INTERVAL - gap)
+                self._last = time.monotonic()
+                try:
+                    resp = self.session.get(
+                        url, params=params, timeout=20, expire_after=self.ttl,
+                        headers={"User-Agent": C.USER_AGENT, "Accept": "application/json"},
+                    )
+                except Exception as exc:
+                    self.telemetry.note(f"Scryfall tag query failed: {exc}")
+                    return None
+                status = resp.status_code
+                if status in (429, 503) and attempt < len(C.BACKOFF_SCHEDULE):
+                    retry_after = getattr(resp, "headers", {}).get("Retry-After")
+                    try:
+                        wait = float(retry_after) if retry_after else C.BACKOFF_SCHEDULE[attempt]
+                    except (ValueError, TypeError):
+                        wait = C.BACKOFF_SCHEDULE[attempt]
+                    self.telemetry.note(f"HTTP {status} from Scryfall; backing off {wait:.0f}s (attempt {attempt + 1})")
+                    self._sleep(wait)
+                    attempt += 1
+                    continue
+                break
+
             if getattr(resp, "from_cache", False):
                 self.telemetry.scryfall_cache_hits += 1
             else:

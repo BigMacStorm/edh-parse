@@ -194,10 +194,15 @@ def _lands(res: EvaluationResult) -> str:
 
 def render_html(res: EvaluationResult) -> str:
     title = f"Deck evaluation · {' + '.join(res.commanders)}"
+    budget_note = (
+        f"Adds are limited to ${res.max_add_budget:,.2f} and to cards with a known price."
+        if (res.max_add_budget is not None and res.max_add_budget > 0)
+        else "Adds are unconstrained by budget (any price)."
+    )
     body = [
         f"<h1>{_e(title)}</h1>",
         f"<p class='subtitle'>Scores run from −100 to +100; 0 is the median non-land card already in your deck. "
-        f"Adds are limited to ${res.max_add_budget:,.2f} and to cards with a known price.</p>",
+        f"{budget_note}</p>",
         "<h2>1 · Telemetry &amp; cohorts</h2><div class='panel'>", _telemetry(res), "</div>",
         "<h2>2 · Structure, curve &amp; roles</h2><div class='panel'>", _structure(res), "</div>",
         f"<h2>3 · Top {len(res.cuts)} cuts</h2><div class='panel'>", _card_table(res.cuts, False), "</div>",

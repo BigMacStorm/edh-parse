@@ -59,9 +59,13 @@ def run_evaluate(
     if not ensure_scryfall_bulk(session):
         return err_result("Scryfall bulk data is unavailable; cannot look up card metadata.")
 
+    try:
+        b_val = float(max_add_budget) if max_add_budget is not None else 0.0
+    except (ValueError, TypeError):
+        b_val = 0.0
     opts = C.EvaluateOptions(
         commander=commander or "",
-        max_add_budget=float(max_add_budget),
+        max_add_budget=b_val if b_val > 0 else 0.0,
         tuples=int(tuples),
         hubs=int(hubs),
         max_requests=int(max_requests),
