@@ -1098,7 +1098,7 @@ def test_swaps_carry_a_confidence_tier_from_the_strength_of_the_add():
 
 
 def test_adds_down_to_the_configured_floor_are_eligible_for_swaps():
-    assert C.ADD_MIN_S5 == -20.0 and C.MAX_SWAPS == 10
+    assert C.ADD_MIN_S5 == -20.0 and C.MAX_SWAPS == 20
 
     def ext(name, s5):
         c = scores(name, False, meta(name, price=1.0))

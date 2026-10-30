@@ -10,12 +10,12 @@
   "lift_rerank_tail_mrr": 0.0459,
   "funnel_recall": 0.9653,
   "trap_auroc": 0.9429,
-  "trap_mrr": 0.3452,
-  "swap_cut_precision": 0.5664,
-  "swap_add_precision": 0.4201,
+  "trap_mrr": 0.3471,
+  "swap_cut_precision": 0.5112,
+  "swap_add_precision": 0.3992,
   "sat_mean": 0.0426,
   "role_violations": 0.0,
-  "n_swaps": 8.7083
+  "n_swaps": 12.2083
  },
  "Korvold, Fae-Cursed King": {
   "ndcg_adds20": 0.5036,
@@ -28,12 +28,12 @@
   "lift_rerank_tail_mrr": 0.0705,
   "funnel_recall": 0.9444,
   "trap_auroc": 0.8672,
-  "trap_mrr": 0.2899,
-  "swap_cut_precision": 0.3833,
-  "swap_add_precision": 0.2667,
+  "trap_mrr": 0.2961,
+  "swap_cut_precision": 0.2653,
+  "swap_add_precision": 0.2006,
   "sat_mean": 0.066,
   "role_violations": 0.0,
-  "n_swaps": 10.0
+  "n_swaps": 18.1667
  },
  "Amalia Benavides Aguirre": {
   "ndcg_adds20": 0.4887,
@@ -46,12 +46,12 @@
   "lift_rerank_tail_mrr": 0.0009,
   "funnel_recall": 0.9444,
   "trap_auroc": 0.9303,
-  "trap_mrr": 0.3097,
-  "swap_cut_precision": 0.4833,
-  "swap_add_precision": 0.2333,
+  "trap_mrr": 0.3113,
+  "swap_cut_precision": 0.3917,
+  "swap_add_precision": 0.225,
   "sat_mean": 0.0121,
   "role_violations": 0.0,
-  "n_swaps": 10.0
+  "n_swaps": 15.6667
  },
  "Gev, Scaled Scorch": {
   "ndcg_adds20": 0.7125,
@@ -83,11 +83,11 @@
   "funnel_recall": 1.0,
   "trap_auroc": 0.9905,
   "trap_mrr": 0.4013,
-  "swap_cut_precision": 0.7232,
-  "swap_add_precision": 0.546,
+  "swap_cut_precision": 0.7121,
+  "swap_add_precision": 0.5367,
   "sat_mean": 0.0229,
   "role_violations": 0.0,
-  "n_swaps": 7.1667
+  "n_swaps": 7.3333
  },
  "_trials": {
   "Korvold, Fae-Cursed King|sacrifice|1": "ada208b89d8f",

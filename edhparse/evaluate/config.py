@@ -139,9 +139,9 @@ SWAP_TYPE_BONUS = 8.0
 SWAP_ROLE_BONUS = 6.0
 SWAP_SCARCE_ROLE_PENALTY = 200.0  # effectively a veto
 FINALISTS = 75
-CUT_POOL = 15
-ADD_POOL = 30
-MAX_SWAPS = 10
+CUT_POOL = 30
+ADD_POOL = 40
+MAX_SWAPS = 20
 # Eligibility bars for the swap matcher: a deck card must score below CUT_MAX_S5 to be cut (format staples
 # only below STAPLE_CUT_MAX_S5), and an outside card above ADD_MIN_S5 to be added. The add bar used to be +15,
 # which left only ~3 swaps per deck on the recorded corpus; -20 (with the current weights) gives ~9. The weaker swaps are real but less
@@ -153,8 +153,8 @@ SWAP_STRONG_ADD_S5 = 15.0  # add S5 above this: "strong"
 SWAP_MODERATE_ADD_S5 = 0.0  # above this: "moderate"; otherwise "weak"
 MIN_SWAP_GAIN = 15.0
 MIN_SWAP_DELTA = 12.0
-REPORT_CUTS = 15
-REPORT_ADDS = 20
+REPORT_CUTS = 30
+REPORT_ADDS = 30
 LAND_UPGRADES = 3
 
 

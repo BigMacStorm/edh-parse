@@ -4,6 +4,6 @@
   "trap_cut_recall_at_6": 1.0,
   "trap_cut_mrr": 0.4083,
   "swap_trap_recall": 1.0,
-  "swap_holdout_recall": 0.4583,
+  "swap_holdout_recall": 0.7778,
   "requests": 13.0
 }
