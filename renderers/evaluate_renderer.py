@@ -93,7 +93,7 @@ document.querySelectorAll('table.sortable th').forEach((th, idx) => th.addEventL
 """
 
 
-_TOOLTIP_JS = """
+_TOOLTIP_JS = r"""
 (function() {
   const tooltip = document.createElement('div');
   tooltip.className = 'card-tooltip';
@@ -108,16 +108,17 @@ _TOOLTIP_JS = """
 
   let activeEl = null;
   let timer = null;
+  let lastX = 0, lastY = 0;
 
-  function positionTooltip(e) {
+  function positionTooltip(clientX, clientY) {
     const pad = 16;
     const w = 240;
     const h = 335;
-    let x = e.clientX + pad;
-    let y = e.clientY + pad;
+    let x = clientX + pad;
+    let y = clientY + pad;
 
     if (x + w > window.innerWidth - pad) {
-      x = Math.max(pad, e.clientX - w - pad);
+      x = Math.max(pad, clientX - w - pad);
     }
     if (y + h > window.innerHeight - pad) {
       y = Math.max(pad, window.innerHeight - h - pad);
@@ -132,13 +133,24 @@ _TOOLTIP_JS = """
     return 'https://api.scryfall.com/cards/named?exact=' + encodeURIComponent(clean) + '&format=image&version=normal';
   }
 
+  document.addEventListener('mousemove', (e) => {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (tooltip.classList.contains('visible')) {
+      positionTooltip(lastX, lastY);
+    }
+  });
+
   document.addEventListener('mouseover', (e) => {
-    const target = e.target.closest('.card-link, [data-card-name]');
+    const target = e.target.closest('.card-link, [data-card-name], a[href*="edhrec.com/cards/"]');
     if (!target) return;
-    const name = target.getAttribute('data-card-name') || target.textContent.trim();
+    const rawName = target.getAttribute('data-card-name') || target.textContent.trim();
+    const name = rawName.replace(/\s+/g, ' ').trim();
     if (!name || name.length < 2) return;
 
     activeEl = target;
+    lastX = e.clientX;
+    lastY = e.clientY;
     clearTimeout(timer);
     timer = setTimeout(() => {
       if (activeEl !== target) return;
@@ -164,24 +176,20 @@ _TOOLTIP_JS = """
       };
       img.src = resolveCardImageUrl(name);
 
-      positionTooltip(e);
+      positionTooltip(lastX, lastY);
+      tooltip.style.display = 'block';
       tooltip.classList.add('visible');
-    }, 60);
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (tooltip.classList.contains('visible')) {
-      positionTooltip(e);
-    }
+    }, 40);
   });
 
   document.addEventListener('mouseout', (e) => {
-    const target = e.target.closest('.card-link, [data-card-name]');
+    const target = e.target.closest('.card-link, [data-card-name], a[href*="edhrec.com/cards/"]');
     if (!target) return;
     if (activeEl === target) {
       activeEl = null;
       clearTimeout(timer);
       tooltip.classList.remove('visible');
+      tooltip.style.display = 'none';
       img.src = '';
     }
   });
