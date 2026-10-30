@@ -227,6 +227,10 @@ class Evaluator:
                 warnings.append(f"Not found in Scryfall data (ignored): {e.name}")
                 continue
             metas[name_key(e.name)] = meta
+            if name_key(meta.name) != name_key(e.name):
+                metas[name_key(meta.name)] = meta
+            if name_key(meta.front) != name_key(e.name):
+                metas[name_key(meta.front)] = meta
             deck_names.append(e.name)
             if meta.is_land:
                 land_metas.extend([meta] * max(1, e.quantity))
@@ -317,7 +321,7 @@ class Evaluator:
                         lift_d0=ctx.d0.lift(name), e_context=b.e_context, bag_lift=b.bag_lift, orr=s.orr,
                         k_hubs=h.k_hubs)
         cs.raw = [b.raw, s.raw, h.raw, 0.0]
-        cs.protected = name_key(name) in ctx.protected
+        cs.protected = name_key(name) in ctx.protected or name_key(meta.name) in ctx.protected
         is_sb = (not in_deck) and (name_key(name) in ctx.sideboard_keys or name_key(meta.name) in ctx.sideboard_keys)
         cs.from_sideboard = is_sb
         if is_sb and "SIDEBOARD" not in cs.tags:

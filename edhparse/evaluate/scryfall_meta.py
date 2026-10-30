@@ -111,10 +111,13 @@ def edhrec_display_name(meta: CardMeta) -> str:
 
 
 class CardMetaLookup:
-    """Name -> CardMeta via the local Scryfall bulk DB (memoised)."""
+    """Name -> CardMeta via the local Scryfall bulk DB (memoised), with live Scryfall API fallback."""
 
     def __init__(self, lookup: Optional[Callable[[str], Optional[dict]]] = None,
-                 price_lookup: Optional[Callable[[str], Optional[float]]] = None):
+                 price_lookup: Optional[Callable[[str], Optional[float]]] = None,
+                 session=None,
+                 enable_api_fallback: bool = True):
+        self._custom_lookup = lookup is not None
         if lookup is None:
             from clients import scryfall_bulk
 
@@ -124,6 +127,8 @@ class CardMetaLookup:
         # bulk picks one printing per card; for ~1,200 legal cards that printing is MTGO-only
         # and has no USD price at all.
         self._price_lookup = price_lookup
+        self._session = session
+        self._enable_api_fallback = enable_api_fallback and not self._custom_lookup
         self._memo: Dict[str, CardMeta] = {}
 
     def get(self, name: str) -> CardMeta:
@@ -137,6 +142,19 @@ class CardMetaLookup:
                 card = self._lookup(front_face(name))
         except Exception:
             card = None
+        if card is None and self._enable_api_fallback:
+            # Fallback for Universes Beyond / Secret Lair flavor names (e.g. "Lightning, Lone Commando" -> Isshin)
+            # or new printings not in the bulk dump.
+            try:
+                from clients.scryfall_client import ScryfallClient
+                from clients.session import create_cached_session
+                sess = self._session or create_cached_session()
+                client = ScryfallClient(sess)
+                card, _ = client.get_card_by_name_exact(name)
+                if not card and " // " in name:
+                    card, _ = client.get_card_by_name_exact(front_face(name))
+            except Exception:
+                card = None
         if card:
             meta = meta_from_scryfall(card)
             if self._price_lookup is not None and not meta.is_basic:
@@ -151,6 +169,9 @@ class CardMetaLookup:
         else:
             meta = CardMeta(name=name, front=front_face(name), found=False)
         self._memo[key] = meta
+        if meta.found:
+            self._memo[name_key(meta.name)] = meta
+            self._memo[name_key(meta.front)] = meta
         return meta
 
 
