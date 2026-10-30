@@ -436,3 +436,63 @@ def console_summary(res: EvaluationResult) -> str:
     lines += ["", "Swaps:"]
     lines += [f"  [{p.confidence}] {p.cut.name} -> {p.add.name}  (+{p.delta:.1f})" for p in res.swaps] or ["  none"]
     return "\n".join(lines)
+
+
+def render_batch_summary_html(summaries: Sequence[dict], folder: str = "inputs/moxfield") -> str:
+    from pathlib import Path
+
+    title = f"Batch Deck Evaluation · {len(summaries)} Decks"
+    successful = [s for s in summaries if s.get("status") == "ok"]
+    total_swaps = sum(s.get("swaps", 0) for s in successful)
+
+    stat_cards = f"""
+    <div class="stats">
+      <div class="stat"><div class="t">Total Decks</div><div class="v">{len(summaries)}</div></div>
+      <div class="stat"><div class="t">Evaluated OK</div><div class="v" style="color:var(--green)">{len(successful)}</div></div>
+      <div class="stat"><div class="t">Total Swaps Found</div><div class="v" style="color:var(--accent)">{total_swaps}</div></div>
+      <div class="stat"><div class="t">Source Folder</div><div class="v" style="font-size:0.9rem">{_e(folder)}</div></div>
+    </div>
+    """
+
+    rows = []
+    for i, s in enumerate(summaries, 1):
+        is_ok = s.get("status") == "ok"
+        cmdrs = ", ".join(s.get("commanders") or []) or s.get("title") or s.get("file")
+        status_html = '<span style="color:var(--green); font-weight:600;">OK</span>' if is_ok else f'<span style="color:var(--red); font-weight:600;" title="{_e(str(s.get("status", "")))}">{_e(str(s.get("status", "")))}</span>'
+        swaps_html = str(s.get("swaps", 0)) if is_ok else "—"
+        cuts_html = str(s.get("cuts", 0)) if is_ok else "—"
+        adds_html = str(s.get("adds", 0)) if is_ok else "—"
+        html_file = Path(s.get("html_path", "")).name
+        if is_ok and html_file:
+            report_link = f'<a href="{_e(html_file)}" target="_blank" rel="noopener" class="card-link" style="font-weight:600; text-decoration:underline;">View Report ↗</a>'
+        else:
+            report_link = '<span style="color:var(--muted)">—</span>'
+
+        rows.append(
+            f"<tr>"
+            f"<td class='num'>{i}</td>"
+            f"<td><strong>{_e(s.get('title') or s.get('file'))}</strong> <span class='note'>({_e(s.get('file'))})</span></td>"
+            f"<td>{_e(cmdrs)}</td>"
+            f"<td>{status_html}</td>"
+            f"<td class='num' style='color:var(--green); font-weight:600;'>{swaps_html}</td>"
+            f"<td class='num'>{cuts_html}</td>"
+            f"<td class='num'>{adds_html}</td>"
+            f"<td>{report_link}</td>"
+            f"</tr>"
+        )
+
+    body = [
+        f"<h1>{_e(title)}</h1>",
+        f"<p class='subtitle'>Evaluated {len(summaries)} decks from <code>{_e(folder)}</code> with five-score EDHREC analysis.</p>",
+        "<div class='panel'>", stat_cards, "</div>",
+        "<h2>Evaluated Decklists</h2><div class='panel'>",
+        f'<table class="sortable"><thead><tr>'
+        f'<th class="num">#</th><th>Deck</th><th>Commander(s)</th><th>Status</th>'
+        f'<th class="num">Swaps</th><th class="num">Cuts</th><th class="num">Adds</th><th>Report</th>'
+        f'</tr></thead><tbody>{"".join(rows)}</tbody></table>',
+        "</div>",
+    ]
+    return (
+        f"<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
+        f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script></body></html>"
+    )

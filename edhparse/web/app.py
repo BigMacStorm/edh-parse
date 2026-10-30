@@ -504,15 +504,29 @@ async def run_evaluate_route(
     write_csv: Optional[str] = Form(None),
     fresh_cache: Optional[str] = Form(None),
 ):
-    from edhparse.services.evaluate import run_evaluate
+    from edhparse.services.evaluate import run_evaluate, run_evaluate_batch
 
     def work():
         try:
             budget_val = float(max_add_budget.strip()) if max_add_budget and max_add_budget.strip() else 0.0
         except (ValueError, TypeError):
             budget_val = 0.0
+        target = _repo_path(decklist) if decklist.strip() else None
+        if target and Path(target).is_dir():
+            return run_evaluate_batch(
+                folder=target,
+                max_add_budget=budget_val,
+                tuples=tuples,
+                hubs=hubs,
+                max_requests=max_requests,
+                cache_ttl_days=cache_ttl_days,
+                fresh_cache=_flag(fresh_cache),
+                write_md=_flag(write_md),
+                write_csv=_flag(write_csv),
+                out_dir=str(_outputs),
+            )
         return run_evaluate(
-            _repo_path(decklist) if decklist.strip() else None,
+            target,
             deck_text=deck_text or None,
             commander=commander.strip() or None,
             max_add_budget=budget_val,
@@ -527,6 +541,45 @@ async def run_evaluate_route(
         )
 
     return _dispatch_run(request, "Evaluate deck", work)
+
+
+@app.post("/run/evaluate/batch", response_class=HTMLResponse)
+async def run_evaluate_batch_route(
+    request: Request,
+    batch_dir: str = Form("inputs/moxfield"),
+    decklist: str = Form(""),
+    max_add_budget: Optional[str] = Form("25.0"),
+    tuples: int = Form(8),
+    hubs: int = Form(5),
+    max_requests: int = Form(22),
+    cache_ttl_days: float = Form(7.0),
+    write_md: Optional[str] = Form(None),
+    write_csv: Optional[str] = Form(None),
+    fresh_cache: Optional[str] = Form(None),
+):
+    from edhparse.services.evaluate import run_evaluate_batch
+
+    def work():
+        try:
+            budget_val = float(max_add_budget.strip()) if max_add_budget and max_add_budget.strip() else 0.0
+        except (ValueError, TypeError):
+            budget_val = 0.0
+        raw_target = batch_dir.strip() or decklist.strip() or "inputs/moxfield"
+        folder_path = _repo_path(raw_target)
+        return run_evaluate_batch(
+            folder=folder_path,
+            max_add_budget=budget_val,
+            tuples=tuples,
+            hubs=hubs,
+            max_requests=max_requests,
+            cache_ttl_days=cache_ttl_days,
+            fresh_cache=_flag(fresh_cache),
+            write_md=_flag(write_md),
+            write_csv=_flag(write_csv),
+            out_dir=str(_outputs),
+        )
+
+    return _dispatch_run(request, "Batch Evaluate Moxfield Favorites", work)
 
 
 @app.get("/api/moxfield/decks")

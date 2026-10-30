@@ -4,7 +4,7 @@
   <h1 class="brand">{{ meta.title }}</h1>
   <p class="tagline">{{ meta.blurb }}</p>
   <div class="panel">
-    <form method="post" action="/run/evaluate">
+    <form id="evaluate-form" method="post" action="/run/evaluate">
       
       <div class="row" style="background: var(--bg2); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 1.25rem;">
         <label for="moxfield_dropdown" style="font-weight: 600; color: var(--ink); font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between;">
@@ -20,6 +20,9 @@
           </select>
           <button type="button" id="btn-sync-moxfield" class="btn" style="white-space: nowrap; font-size: 0.88rem; padding: 0.55rem 0.95rem;" onclick="syncMoxfield()">
             🔄 Grab Favorites
+          </button>
+          <button type="button" id="btn-batch-eval" class="btn" style="white-space: nowrap; font-size: 0.88rem; padding: 0.55rem 0.95rem; background: var(--accent); color: #fff;" onclick="submitBatchEvaluate()">
+            ⚡ Batch Evaluate All Favorites ({{ grabbed_decks|length }})
           </button>
         </div>
         <div id="moxfield-status" style="font-size: 0.82rem; color: var(--muted); margin-top: 0.45rem; display: none;"></div>
@@ -64,7 +67,10 @@
       </div>
       <p class="tagline">Lines tagged <code>#!protect</code> are never suggested as cuts. A cold run makes up to ~22 polite EDHREC requests (about a minute); re-runs within the cache TTL make none.</p>
       <div class="actions">
-        <button type="submit">Run</button>
+        <button type="submit" onclick="document.getElementById('evaluate-form').action='/run/evaluate'">Run Single</button>
+        <button type="button" id="btn-batch-eval-bottom" class="btn" style="background: var(--accent); color: #fff;" onclick="submitBatchEvaluate()">
+          ⚡ Batch Evaluate All Favorites ({{ grabbed_decks|length }})
+        </button>
         <a class="btn btn-ghost" href="/">Cancel</a>
       </div>
     </form>
@@ -108,6 +114,18 @@
       });
       const counter = document.getElementById('deck-counter');
       if (counter) counter.textContent = `${decks.length} decks available`;
+      const btnBatch = document.getElementById('btn-batch-eval');
+      if (btnBatch) btnBatch.textContent = `⚡ Batch Evaluate All Favorites (${decks.length})`;
+      const btnBatchBottom = document.getElementById('btn-batch-eval-bottom');
+      if (btnBatchBottom) btnBatchBottom.textContent = `⚡ Batch Evaluate All Favorites (${decks.length})`;
+    }
+
+    function submitBatchEvaluate() {
+      const form = document.getElementById('evaluate-form');
+      if (!form) return;
+      form.action = '/run/evaluate/batch';
+      form.setAttribute('data-run-label', 'Batch Evaluating Moxfield Favorites');
+      form.requestSubmit();
     }
 
     async function syncMoxfield() {

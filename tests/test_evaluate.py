@@ -1245,3 +1245,38 @@ def test_sideboard_cards_evaluated_and_rendered(tmp_path):
     html = (tmp_path / "sb.html").read_text(encoding="utf-8")
     assert "Sideboard &amp; considering evaluation" in html
     assert "tag-sb" in html
+
+
+
+def test_web_evaluate_batch_route():
+    from unittest.mock import patch
+    from fastapi.testclient import TestClient
+    from edhparse.web.app import app
+
+    client = TestClient(app)
+    with patch("edhparse.services.evaluate.run_evaluate_batch") as mock_batch:
+        mock_batch.return_value = {
+            "ok": True,
+            "message": "Batch evaluated 5/5 decks",
+            "outputs": ["outputs/evaluate_batch_summary.html"],
+        }
+        r = client.post("/run/evaluate/batch", data={"batch_dir": "inputs/moxfield"})
+        assert r.status_code == 200
+        assert "Batch evaluated 5/5 decks" in r.text
+        mock_batch.assert_called_once()
+
+
+def test_run_evaluate_batch_validation(tmp_path):
+    from edhparse.services.evaluate import run_evaluate_batch
+
+    # Nonexistent folder
+    res = run_evaluate_batch(tmp_path / "nonexistent")
+    assert not res["ok"]
+    assert "Directory not found" in res["error"]
+
+    # Empty folder
+    empty_dir = tmp_path / "empty"
+    empty_dir.mkdir()
+    res2 = run_evaluate_batch(empty_dir)
+    assert not res2["ok"]
+    assert "No .txt deck files found" in res2["error"]

@@ -352,9 +352,17 @@ def cmd_compare(
 @app.command("evaluate")
 def cmd_evaluate(
     ctx: typer.Context,
-    deck: Path = typer.Argument(..., help="Decklist (Moxfield / Archidekt / MTGO / Arena text export)."),
+    deck: Optional[Path] = typer.Argument(
+        None, help="Decklist file or directory of decklists (defaults to inputs/moxfield in batch mode)."
+    ),
     commander: Optional[str] = typer.Option(
         None, "--commander", "-c", help="Commander name; separate partners with ';'. Defaults to the deck's Commander section."
+    ),
+    batch: bool = typer.Option(
+        False, "--batch", "-b", help="Batch evaluate all decks in inputs/moxfield or specified directory."
+    ),
+    batch_dir: Optional[Path] = typer.Option(
+        None, "--batch-dir", help="Directory of decklists to batch evaluate (e.g. inputs/moxfield)."
     ),
     max_add_budget: float = typer.Option(25.0, "--max-add-budget", help="Max USD per suggested add (0 for unlimited)."),
     tuples: int = typer.Option(8, "--tuples", help="Anchor-tuple cohorts (filtered EDHREC pages) for S1."),
@@ -365,7 +373,29 @@ def cmd_evaluate(
     export_md: Optional[Path] = typer.Option(None, "--export-md", help="Also write a Markdown report."),
     export_csv: Optional[Path] = typer.Option(None, "--export-csv", help="Also write every score to CSV."),
 ):
-    """Score every card (S1-S5) against EDHREC and suggest cuts, adds and 1-for-1 swaps."""
+    """Score cards against EDHREC and suggest cuts, adds and swaps (single deck or batch folder)."""
+    if batch or batch_dir or (deck and deck.is_dir()):
+        target_dir = batch_dir or (deck if (deck and deck.is_dir()) else Path("inputs/moxfield"))
+        from edhparse.services.evaluate import run_evaluate_batch
+
+        result = run_evaluate_batch(
+            str(target_dir),
+            max_add_budget=max_add_budget,
+            tuples=tuples,
+            hubs=hubs,
+            max_requests=max_requests,
+            cache_ttl_days=cache_ttl_days,
+            fresh_cache=ctx.obj.get("fresh_cache", False),
+            write_md=bool(export_md),
+            write_csv=bool(export_csv),
+        )
+        _finish(result)
+        return
+
+    if not deck:
+        typer.echo("Error: Please provide a decklist file path, or pass --batch / --batch-dir.")
+        raise typer.Exit(code=1)
+
     from edhparse.services.evaluate import run_evaluate
 
     result = run_evaluate(
