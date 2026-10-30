@@ -47,7 +47,11 @@ def _score_cell(v: float) -> str:
 
 
 def _tags(c: CardScores) -> str:
-    return " ".join(f'<span class="tag">{_e(t)}</span>' for t in c.tags)
+    parts = []
+    for t in c.tags:
+        cls = "tag tag-sb" if t.upper() == "SIDEBOARD" else "tag"
+        parts.append(f'<span class="{cls}">{_e(t)}</span>')
+    return " ".join(parts)
 
 
 _CSS = """
@@ -76,6 +80,7 @@ a { color:#c4b5fd; text-decoration:none; } a:hover { text-decoration:underline; 
 .card-tooltip img { width:100%; height:100%; object-fit:cover; display:block; border-radius:12px; }
 .card-tooltip .card-tooltip-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:1.2rem; text-align:center; font-size:0.85rem; color:var(--muted); background:var(--surface); }
 .tag { display:inline-block; background:var(--card); border:1px solid var(--border); border-radius:999px; padding:0 .5rem; margin:0 .15rem .1rem 0; font-size:.75rem; color:var(--amber); }
+.tag-sb { background:rgba(56,189,248,0.15) !important; border-color:#38bdf8 !important; color:#7dd3fc !important; font-weight:600; }
 .BLOATED { color:var(--red); } .STARVED { color:var(--amber); } .OPTIMAL { color:var(--green); }
 .note { color:var(--muted); font-size:.85rem; }
 ul.compact { margin:.3rem 0; padding-left:1.2rem; }
@@ -309,17 +314,37 @@ def render_html(res: EvaluationResult) -> str:
         if (res.max_add_budget is not None and res.max_add_budget > 0)
         else "Adds are unconstrained by budget (any price)."
     )
+    deck_total = getattr(res, "deck_total", 100)
+    deck_size_note = ""
+    if deck_total > 100:
+        deck_size_note = (
+            f" <strong>Note: Deck has {deck_total} cards ({deck_total - 100} over 100). "
+            f"The top {len(res.cuts)} cuts below are ranked to help trim your deck down to 100 cards.</strong>"
+        )
     body = [
         f"<h1>{_e(title)}</h1>",
         f"<p class='subtitle'>Scores run from −100 to +100; 0 is the median non-land card already in your deck. "
-        f"{budget_note}</p>",
+        f"{budget_note}{deck_size_note}</p>",
         "<h2>1 · Telemetry &amp; cohorts</h2><div class='panel'>", _telemetry(res), "</div>",
         "<h2>2 · Structure, curve &amp; roles</h2><div class='panel'>", _structure(res), "</div>",
         f"<h2>3 · Top {len(res.cuts)} cuts</h2><div class='panel'>", _card_table(res.cuts, False), "</div>",
         f"<h2>4 · Top {len(res.adds)} adds</h2><div class='panel'>", _card_table(res.adds, True), "</div>",
-        "<h2>5 · Best 1-for-1 swaps</h2><div class='panel'>", _swaps(res), "</div>",
-        "<h2>6 · Utility land upgrades</h2><div class='panel'>", _lands(res), "</div>",
     ]
+    sb_scores = getattr(res, "sideboard_scores", [])
+    if sb_scores:
+        body.extend([
+            f"<h2>5 · Sideboard &amp; considering evaluation ({len(sb_scores)} cards)</h2><div class='panel'>",
+            _card_table(sb_scores, True),
+            "<p class='note'>All cards from your sideboard / considering list scored against your deck context. "
+            "Cards with positive S5 score above your deck median (+0.0) are strong additions.</p></div>",
+            "<h2>6 · Best 1-for-1 swaps</h2><div class='panel'>", _swaps(res), "</div>",
+            "<h2>7 · Utility land upgrades</h2><div class='panel'>", _lands(res), "</div>",
+        ])
+    else:
+        body.extend([
+            "<h2>5 · Best 1-for-1 swaps</h2><div class='panel'>", _swaps(res), "</div>",
+            "<h2>6 · Utility land upgrades</h2><div class='panel'>", _lands(res), "</div>",
+        ])
     return (f"<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script><script>{_TOOLTIP_JS}</script></body></html>")
 

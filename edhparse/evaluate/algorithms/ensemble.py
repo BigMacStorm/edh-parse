@@ -71,7 +71,9 @@ def weighted(s: Sequence[float], w: Sequence[float]) -> float:
 def apply_s5(cards: Sequence[CardScores], weights: Sequence[float], secret_weights: Sequence[float] = C.SECRET_TECH_WEIGHTS) -> None:
     for c in cards:
         c.s5 = weighted(c.s, weights)
-        c.tags = []
+        c.tags = [t for t in c.tags if t == "SIDEBOARD"]
+        if getattr(c, "from_sideboard", False) and "SIDEBOARD" not in c.tags:
+            c.tags.append("SIDEBOARD")
         if c.in_deck:
             if c.protected:
                 c.tags.append(TAG_PROTECTED)

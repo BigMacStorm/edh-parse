@@ -23,8 +23,10 @@ _CARET_RE = re.compile(r"\s+\^[^^]*\^")  # Archidekt ^Have,#37d67a^
 
 _COMMANDER_HEADERS = {"commander", "commanders", "commander:", "commanders:"}
 _MAIN_HEADERS = {"deck", "deck:", "mainboard", "mainboard:", "main", "main:", "companion", "companion:"}
-_SKIP_HEADERS = {
+_SIDEBOARD_HEADERS = {
     "sideboard", "sideboard:", "maybeboard", "maybeboard:", "considering", "considering:",
+}
+_SKIP_HEADERS = {
     "tokens", "tokens:", "about", "about:",
 }
 
@@ -75,33 +77,47 @@ def parse_decklist_lines(lines: Iterable[str], commander_option: Optional[str] =
     commanders = split_commander_option(commander_option)
     section = "main"
     entries: List[DeckEntry] = []
+    sideboard_entries: List[DeckEntry] = []
     section_commanders: List[str] = []
     blocks: List[List[DeckEntry]] = [[]]
     warnings: List[str] = []
 
     for line in lines:
         stripped = line.strip()
-        if not stripped or stripped.startswith("//"):
+        if not stripped:
             if blocks[-1]:
                 blocks.append([])
             continue
-        low = stripped.lower()
-        if low.startswith("commander:") and stripped[len("commander:"):].strip():
+
+        # Check for section headers (optionally preceded by comment slashes or followed by counts)
+        head_check = re.sub(r"^//+\s*", "", stripped).strip().lower()
+        head_check = re.sub(r"\s*\(\d+\):?$", "", head_check).strip()
+
+        if head_check.startswith("commander:") and stripped[len("commander:"):].strip():
             remainder = stripped[len("commander:"):].strip()
             parsed_rem = clean_card_line(remainder)
             section_commanders.append(parsed_rem[1] if parsed_rem else remainder)
             continue
-        if low in _COMMANDER_HEADERS:
+        if head_check in _COMMANDER_HEADERS:
             section = "commander"
             continue
-        if low in _MAIN_HEADERS:
+        if head_check in _MAIN_HEADERS:
             section = "main"
             continue
-        if low in _SKIP_HEADERS:
+        if head_check in _SIDEBOARD_HEADERS:
+            section = "sideboard"
+            continue
+        if head_check in _SKIP_HEADERS:
             section = "skip"
             continue
+        if stripped.startswith("//"):
+            if blocks[-1]:
+                blocks.append([])
+            continue
+
         parsed = clean_card_line(stripped)
         if parsed is None:
+            low = stripped.lower()
             if low.startswith("name ") or low.startswith("#"):
                 continue
             warnings.append(f"Could not parse line: {stripped}")
@@ -113,21 +129,26 @@ def parse_decklist_lines(lines: Iterable[str], commander_option: Optional[str] =
             section_commanders.append(name)
             continue
         entry = DeckEntry(name=name, quantity=qty, protected=protected, tags=tags)
-        entries.append(entry)
+        if section == "sideboard":
+            sideboard_entries.append(entry)
+        else:
+            entries.append(entry)
         blocks[-1].append(entry)
 
     if not commanders:
         commanders = section_commanders
     if not commanders:
-        # MTGO-style exports put the commander(s) in a final block after a blank line.
+        # MTGO-style and Moxfield exports put the commander(s) in a final block after a blank line.
         tail = [b for b in blocks if b]
         if len(tail) >= 2 and 1 <= len(tail[-1]) <= 2:
             commanders = [e.name for e in tail[-1]]
             tail_ids = {id(e) for e in tail[-1]}
             entries = [e for e in entries if id(e) not in tail_ids]
+            sideboard_entries = [e for e in sideboard_entries if id(e) not in tail_ids]
 
     cmd_keys = {name_key(c) for c in commanders}
     entries = [e for e in entries if name_key(e.name) not in cmd_keys]
+    sideboard_entries = [e for e in sideboard_entries if name_key(e.name) not in cmd_keys]
 
     merged: dict = {}
     for e in entries:
@@ -138,7 +159,23 @@ def parse_decklist_lines(lines: Iterable[str], commander_option: Optional[str] =
             merged[key].tags.extend(e.tags)
         else:
             merged[key] = e
-    deck = Decklist(commanders=commanders, cards=list(merged.values()), warnings=warnings)
+
+    merged_sb: dict = {}
+    for e in sideboard_entries:
+        key = name_key(e.name)
+        if key in merged_sb:
+            merged_sb[key].quantity += e.quantity
+            merged_sb[key].protected = merged_sb[key].protected or e.protected
+            merged_sb[key].tags.extend(e.tags)
+        else:
+            merged_sb[key] = e
+
+    deck = Decklist(
+        commanders=commanders,
+        cards=list(merged.values()),
+        sideboard=list(merged_sb.values()),
+        warnings=warnings,
+    )
 
     if not deck.commanders:
         deck.warnings.append(
@@ -151,7 +188,12 @@ def parse_decklist_lines(lines: Iterable[str], commander_option: Optional[str] =
     for e in deck.cards:
         if e.quantity > 1 and name_key(e.name) not in _BASICS:
             deck.warnings.append(f"{e.name} appears {e.quantity} times (allowed only for some cards).")
-    if deck.total != 100:
+    if deck.total > 100:
+        deck.warnings.append(
+            f"Deck has {deck.total} cards ({deck.total - 100} over 100, expected 100). "
+            f"Evaluating all cards to help find the best {deck.total - 100} cuts."
+        )
+    elif deck.total < 100:
         deck.warnings.append(f"Deck has {deck.total} cards including commander(s), expected 100.")
     return deck
 

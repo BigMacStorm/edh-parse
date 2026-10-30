@@ -1184,3 +1184,64 @@ def test_report_shows_unconstrained_budget_note(tmp_path):
     write_reports(res, str(tmp_path / "r.html"), "", "")
     html = (tmp_path / "r.html").read_text(encoding="utf-8")
     assert "Adds are unconstrained by budget (any price)." in html
+
+
+
+def test_parse_moxfield_default_format_with_sideboard_and_trailing_commander():
+    raw = """1 Aesi, Tyrant of Gyre Strait
+1 Aetherize
+1 Aggressive Biomancy
+1 Arcane Signet
+1 Ashaya, Soul of the Wild
+1 Sol Ring
+40 Forest
+50 Island
+
+SIDEBOARD:
+1 Beanstalk Giant
+1 Cultivate
+1 Rampant Growth
+1 Tireless Tracker
+
+1 Bonny Pall, Clearcutter
+"""
+    deck = parse_decklist_text(raw)
+    assert deck.commanders == ["Bonny Pall, Clearcutter"]
+    assert len(deck.sideboard) == 4
+    assert {e.name for e in deck.sideboard} == {"Beanstalk Giant", "Cultivate", "Rampant Growth", "Tireless Tracker"}
+    assert deck.total == 97
+    assert "Bonny Pall, Clearcutter" not in {e.name for e in deck.sideboard}
+
+
+def test_deck_over_100_cards_supported_and_scales_cuts():
+    raw = """Commander
+1 Test Commander
+
+Deck
+""" + "".join(f"1 Card {i}\n" for i in range(109))
+    deck = parse_decklist_text(raw)
+    assert deck.total == 110
+    assert any("10 over 100" in w for w in deck.warnings)
+    assert any("expected 100" in w for w in deck.warnings)
+
+
+def test_sideboard_cards_evaluated_and_rendered(tmp_path):
+    from renderers.evaluate_renderer import write_reports
+
+    session, tagger, deck_text, base_lookup = _world()
+    # Add a sideboard card
+    deck_with_sb = deck_text + "\nSIDEBOARD:\n1 Budget Gem\n"
+    deck = parse_decklist_text(deck_with_sb)
+    assert len(deck.sideboard) == 1
+    assert deck.sideboard[0].name == "Budget Gem"
+
+    ev = Evaluator(session, C.EvaluateOptions(tuples=4, hubs=3), fetcher=make_fetcher(session),
+                   metas=CardMetaLookup(base_lookup), role_tagger=tagger, log=lambda m: None)
+    res = ev.run(deck)
+    assert len(res.sideboard_scores) == 1
+    assert res.sideboard_scores[0].name == "Budget Gem"
+    assert "SIDEBOARD" in res.sideboard_scores[0].tags
+    write_reports(res, str(tmp_path / "sb.html"), "", "")
+    html = (tmp_path / "sb.html").read_text(encoding="utf-8")
+    assert "Sideboard &amp; considering evaluation" in html
+    assert "tag-sb" in html

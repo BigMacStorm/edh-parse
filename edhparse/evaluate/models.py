@@ -227,6 +227,7 @@ class DeckEntry:
 class Decklist:
     commanders: List[str]
     cards: List[DeckEntry]
+    sideboard: List[DeckEntry] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
 
     @property
@@ -235,6 +236,9 @@ class Decklist:
 
     def protected_names(self) -> Set[str]:
         return {name_key(e.name) for e in self.cards if e.protected}
+
+    def sideboard_names(self) -> Set[str]:
+        return {name_key(e.name) for e in self.sideboard}
 
 
 @dataclass
@@ -260,6 +264,7 @@ class CardScores:
     scarce_roles: Set[str] = field(default_factory=set)
     finalist: bool = True
     prelim_score: float = 0.0  # S1-S3 pre-screen score used to pick finalists
+    from_sideboard: bool = False
 
 
 @dataclass

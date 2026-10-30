@@ -55,6 +55,8 @@ class EvaluationResult:
     land_upgrades: List[LandUpgrade]
     warnings: List[str] = field(default_factory=list)
     max_add_budget: float = C.DEFAULT_MAX_ADD_BUDGET
+    deck_total: int = 100
+    sideboard_scores: List[CardScores] = field(default_factory=list)
 
 
 def _ci_subset(meta: CardMeta, ci: Sequence[str]) -> bool:
@@ -267,8 +269,8 @@ class Evaluator:
         if not ctx.hubs:
             warnings.append("No engine hub pages available; S3 is disabled.")
 
-    def _candidate_pool(self, ctx: "_Ctx", cmd_keys: set, ci: Sequence[str]):
-        """Cards seen on any fetched page that could legally join the deck: (non-lands, [(land, price)])."""
+    def _candidate_pool(self, ctx: "_Ctx", cmd_keys: set, ci: Sequence[str], sideboard: Sequence[DeckEntry] = ()):
+        """Cards seen on any fetched page or in sideboard that could legally join the deck: (non-lands, [(land, price)])."""
         d0, d_high, d_low = ctx.d0, ctx.d_high, ctx.d_low
         deck_keys = set(ctx.metas.keys()) | cmd_keys
         sources: List[Cohort] = [c for c in (d0, d_high, d_low) if c is not None]
@@ -280,8 +282,14 @@ class Evaluator:
                 if k in deck_keys or k in cand_names:
                     continue
                 cand_names[k] = n
+        for e in sideboard:
+            k = name_key(e.name)
+            if k not in deck_keys and k not in cand_names:
+                cand_names[k] = e.name
+
         candidates: List[str] = []
         land_candidates: List[Tuple[str, float]] = []
+        sb_keys = {name_key(e.name) for e in sideboard}
         for k, n in cand_names.items():
             meta = self.metas.get(n)
             if not meta.found or not meta.legal or not _ci_subset(meta, ci):
@@ -290,7 +298,7 @@ class Evaluator:
                 continue
             ctx.metas[k] = meta
             if meta.is_land:
-                if not meta.is_basic and meta.within_budget(self.opts.max_add_budget) and (d0.present(n) or (d_high and d_high.present(n))):
+                if not meta.is_basic and (k in sb_keys or (meta.within_budget(self.opts.max_add_budget) and (d0.present(n) or (d_high and d_high.present(n))))):
                     land_candidates.append((n, meta.price))
                 continue
             candidates.append(n)
@@ -310,6 +318,10 @@ class Evaluator:
                         k_hubs=h.k_hubs)
         cs.raw = [b.raw, s.raw, h.raw, 0.0]
         cs.protected = name_key(name) in ctx.protected
+        is_sb = (not in_deck) and (name_key(name) in ctx.sideboard_keys or name_key(meta.name) in ctx.sideboard_keys)
+        cs.from_sideboard = is_sb
+        if is_sb and "SIDEBOARD" not in cs.tags:
+            cs.tags.append("SIDEBOARD")
         return cs
 
     @staticmethod
@@ -324,9 +336,13 @@ class Evaluator:
         for c in ext_scores:
             c.finalist = False
             c.prelim_score = sum(weights[k] * A5.project(c.raw[k], *frames[k]) for k in range(3))
-        affordable = [c for c in ext_scores if c.meta.within_budget(budget)]
+        sb_finalists = [c for c in ext_scores if c.from_sideboard or "SIDEBOARD" in c.tags]
+        for c in sb_finalists:
+            c.finalist = True
+        affordable = [c for c in ext_scores if c.meta.within_budget(budget) and not (c.from_sideboard or "SIDEBOARD" in c.tags)]
         affordable.sort(key=lambda c: c.prelim_score, reverse=True)
-        finalists = affordable[: C.FINALISTS]
+        rem = max(0, C.FINALISTS - len(sb_finalists))
+        finalists = sb_finalists + affordable[:rem]
         for c in finalists:
             c.finalist = True
         return finalists
@@ -366,11 +382,12 @@ class Evaluator:
 
         d0, d_high, d_low, avg_raw = self._fetch_base(slug, cmd_metas, warnings)
         metas, land_metas, tri = self._triage(deck, d0, cmd_keys, warnings)
-        ctx = _Ctx(d0=d0, d_high=d_high, d_low=d_low, metas=metas, tri=tri, protected=deck.protected_names())
+        ctx = _Ctx(d0=d0, d_high=d_high, d_low=d_low, metas=metas, tri=tri,
+                   protected=deck.protected_names(), sideboard_keys=deck.sideboard_names())
 
         exclusions, s1_factor = self._build_s1(slug, ctx, cmd_keys, warnings)
         self._build_s3(ctx, warnings)
-        candidates, land_candidates = self._candidate_pool(ctx, cmd_keys, ci)
+        candidates, land_candidates = self._candidate_pool(ctx, cmd_keys, ci, deck.sideboard)
 
         deck_scores = [self._score_card(ctx, n, True) for n in tri.nonland]
         ext_scores = [self._score_card(ctx, n, False) for n in candidates]
@@ -384,9 +401,13 @@ class Evaluator:
         A5.normalise_scores(deck_scores + finalists)
         A5.apply_s5(deck_scores + finalists, effective)
         swaps = A5.match_swaps(A5.cut_candidates(deck_scores), A5.add_candidates(finalists, opts.max_add_budget))
-        report_cuts = sorted([c for c in deck_scores if not c.protected], key=lambda c: c.s5)[: C.REPORT_CUTS]
+        cut_count = C.REPORT_CUTS
+        if deck.total > 100:
+            cut_count = max(C.REPORT_CUTS, (deck.total - 100) + 5)
+        report_cuts = sorted([c for c in deck_scores if not c.protected], key=lambda c: c.s5)[: cut_count]
         report_adds = sorted([c for c in finalists if c.meta.within_budget(opts.max_add_budget)], key=lambda c: c.s5,
                              reverse=True)[: C.REPORT_ADDS]
+        sideboard_scores = sorted([c for c in finalists if c.from_sideboard or "SIDEBOARD" in c.tags], key=lambda c: c.s5, reverse=True)
         lands = A5.land_upgrades(tri.utility_lands, land_candidates, d0, d_high)
 
         sizes = {"D0": d0.num_decks}
@@ -403,6 +424,8 @@ class Evaluator:
             weights=effective, deck_scores=deck_scores, candidate_scores=finalists, cuts=report_cuts,
             adds=report_adds, swaps=swaps, land_upgrades=lands, warnings=warnings,
             max_add_budget=opts.max_add_budget,
+            deck_total=deck.total,
+            sideboard_scores=sideboard_scores,
         )
 
 
@@ -416,6 +439,7 @@ class _Ctx:
     metas: Dict[str, CardMeta]
     tri: Triage
     protected: set
+    sideboard_keys: set = field(default_factory=set)
     tuples: List[A1.TupleCohort] = field(default_factory=list)
     hubs: List[Tuple[str, Cohort]] = field(default_factory=list)
 
