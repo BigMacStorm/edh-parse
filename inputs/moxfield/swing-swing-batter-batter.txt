@@ -89,10 +89,3 @@ Deck
 1 Sundown Pass
 1 Sunscorched Divide
 5 Swamp
-1 Vandalblast
-1 Path to Exile
-1 Swords to Plowshares
-1 Skullclamp
-1 Sol Ring
-1 Curse of Opulence
-1 Reconnaissance

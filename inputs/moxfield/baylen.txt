@@ -89,12 +89,3 @@ Deck
 1 Stomping Ground
 1 Sunpetal Grove
 1 Temple Garden
-1 Gilded Goose
-1 Zuko, Redeemed
-1 Pest Infestation
-1 Song of Totentanz
-1 Path to Exile
-1 Secure the Wastes
-1 Swords to Plowshares
-1 Skullclamp
-1 Sol Ring

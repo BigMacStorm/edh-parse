@@ -169,16 +169,3 @@ Deck
 1 Unclaimed Territory
 1 Windswept Heath
 1 Wooded Foothills
-1 Avacyn's Pilgrim
-1 Birds of Paradise
-1 Elvish Mystic
-1 Fyndhorn Elves
-1 Ixalli's Lorekeeper
-1 Kinjalli's Caller
-1 Llanowar Elves
-1 Cloudshift
-1 Ephemerate
-1 Path to Exile
-1 Swords to Plowshares
-1 Worldly Tutor
-1 Sol Ring

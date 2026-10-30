@@ -76,6 +76,7 @@ class Job:
                 "ok": self.result.get("ok"),
                 "message": self.result.get("message"),
                 "outputs": self.result.get("outputs") or [],
+                "decks": self.result.get("decks") or [],
             }
             if self.result
             else None,

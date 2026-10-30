@@ -92,4 +92,3 @@ Deck
 1 Viridescent Bog
 1 Woodland Cemetery
 1 Yavimaya, Cradle of Growth
-1 Stonecoil Serpent

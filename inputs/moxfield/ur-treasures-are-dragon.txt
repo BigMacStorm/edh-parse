@@ -88,10 +88,3 @@ Deck
 1 Terramorphic Expanse
 1 Treasure Vault
 1 Twisted Landscape
-1 Birds of Paradise
-1 Goldvein Hydra
-1 Ignoble Hierarch
-1 Impulsive Pilferer
-1 Ragavan, Nimble Pilferer
-1 Hell to Pay
-1 Sol Ring

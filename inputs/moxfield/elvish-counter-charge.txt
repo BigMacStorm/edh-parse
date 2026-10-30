@@ -86,12 +86,3 @@ Deck
 1 Viridescent Bog
 1 Wirewood Lodge
 1 Woodland Cemetery
-1 Elves of Deep Shadow
-1 Elvish Mystic
-1 Fyndhorn Elves
-1 Joraga Warcaller
-1 Llanowar Elves
-1 Vitalize
-1 Wirewood Pride
-1 Sol Ring
-1 Hardened Scales

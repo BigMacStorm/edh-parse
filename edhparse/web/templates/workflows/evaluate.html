@@ -96,6 +96,20 @@
       status.textContent = `Selected: "${selectedOpt.textContent.trim()}". Path and commander filled!`;
     }
 
+    function populateMoxfieldSelect(decks) {
+      const select = document.getElementById('moxfield_dropdown');
+      select.innerHTML = '<option value="">-- Choose from your grabbed decks --</option>';
+      decks.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.path;
+        opt.setAttribute('data-commander', d.commander);
+        opt.textContent = d.display;
+        select.appendChild(opt);
+      });
+      const counter = document.getElementById('deck-counter');
+      if (counter) counter.textContent = `${decks.length} decks available`;
+    }
+
     async function syncMoxfield() {
       const btn = document.getElementById('btn-sync-moxfield');
       const status = document.getElementById('moxfield-status');
@@ -118,24 +132,34 @@
           body: formData
         });
         const data = await resp.json();
-        if (data.ok) {
+        if (!data.ok) {
+          throw new Error(data.error || "Failed to start sync job.");
+        }
+
+        if (data.job_id) {
+          while (true) {
+            await new Promise(r => setTimeout(r, 600));
+            const jResp = await fetch(`/api/jobs/${data.job_id}`);
+            if (!jResp.ok) throw new Error("Could not check sync status");
+            const job = await jResp.json();
+            if (job.status === "running") {
+              const progress = (job.total > 0) ? ` (${job.current}/${job.total})` : "";
+              status.textContent = (job.message || "Working...") + progress;
+            } else if (job.status === "done") {
+              const decks = (job.result && job.result.decks) || [];
+              const finalDecks = decks.length ? decks : (await (await fetch("/api/moxfield/decks")).json()).decks || [];
+              populateMoxfieldSelect(finalDecks);
+              status.style.color = 'var(--accent)';
+              status.textContent = (job.result && job.result.message) || `Successfully grabbed ${finalDecks.length} decks!`;
+              break;
+            } else if (job.status === "error") {
+              throw new Error(job.error || "Failed to grab decks.");
+            }
+          }
+        } else if (data.decks) {
+          populateMoxfieldSelect(data.decks);
           status.style.color = 'var(--accent)';
           status.textContent = data.message || "Decks grabbed successfully!";
-          
-          const select = document.getElementById('moxfield_dropdown');
-          select.innerHTML = '<option value="">-- Choose from your grabbed decks --</option>';
-          data.decks.forEach(d => {
-            const opt = document.createElement('option');
-            opt.value = d.path;
-            opt.setAttribute('data-commander', d.commander);
-            opt.textContent = d.display;
-            select.appendChild(opt);
-          });
-          const counter = document.getElementById('deck-counter');
-          if (counter) counter.textContent = `${data.decks.length} decks available`;
-        } else {
-          status.style.color = 'var(--danger)';
-          status.textContent = "Error: " + (data.error || "Failed to grab decks.");
         }
       } catch (err) {
         status.style.color = 'var(--danger)';

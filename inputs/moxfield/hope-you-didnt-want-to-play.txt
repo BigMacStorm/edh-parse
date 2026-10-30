@@ -83,11 +83,3 @@ Deck
 1 Prairie Stream
 1 Reliquary Tower
 1 Skycloud Expanse
-1 Aang, Ascendant Airbender
-1 Esper Sentinel
-1 Ruin Crab
-1 Path to Exile
-1 Swords to Plowshares
-1 Sol Ring
-1 Authority of the Consuls
-1 Cleric Class

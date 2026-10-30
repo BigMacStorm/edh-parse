@@ -12,6 +12,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+from utils.progress_utils import notify_progress
+
 
 def _slugify(text: str) -> str:
     s = text.lower().strip()
@@ -34,7 +36,12 @@ def parse_deck_html(html: str) -> str:
     commanders: List[Tuple[int, str]] = []
     mainboard: List[Tuple[int, str]] = []
 
-    for li in soup.find_all("li"):
+    # Restrict to <section class="deckview"> so charts and the Hypergeometric
+    # Calculator widget below the decklist aren't scraped as duplicate cards.
+    deckview = soup.find("section", class_="deckview")
+    root = deckview if deckview else (soup.find("main") or soup)
+
+    for li in root.find_all("li"):
         a = li.find("a", href=lambda h: h and "/cards/" in h)
         if not a:
             continue
@@ -50,7 +57,7 @@ def parse_deck_html(html: str) -> str:
 
         if "commander" in h_text:
             commanders.append((qty, name))
-        elif "sideboard" in h_text or "considering" in h_text or "maybe" in h_text:
+        elif "sideboard" in h_text or "considering" in h_text or "maybe" in h_text or "wishlist" in h_text:
             continue
         else:
             mainboard.append((qty, name))
@@ -103,12 +110,12 @@ def fetch_deck_url(url: str, out_dir: str = "inputs/moxfield", driver: Optional[
 
     try:
         driver.get(url)
-        for _ in range(12):
-            body = driver.find_element(By.TAG_NAME, "body").text
-            if "Commander (" in body or "Mainboard" in body or "Creatures (" in body or "Lands (" in body:
+        for _ in range(40):
+            card_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='/cards/']")
+            if len(card_links) >= 10:
                 break
-            time.sleep(1)
-        time.sleep(1.5)
+            time.sleep(0.25)
+        time.sleep(0.5)
         html = driver.page_source
         deck_text = parse_deck_html(html)
         soup = BeautifulSoup(html, "html.parser")
@@ -130,26 +137,32 @@ def fetch_user_favorites(
 ) -> List[Tuple[str, Path, int]]:
     """Fetch all favorited decks for a Moxfield user into out_dir."""
     profile_url = f"https://moxfield.com/users/{username}"
+    notify_progress(0, 0, f"Connecting to Moxfield for @{username}...")
     driver = _create_driver()
     results: List[Tuple[str, Path, int]] = []
     try:
         driver.get(profile_url)
-        for _ in range(15):
-            body = driver.find_element(By.TAG_NAME, "body").text
-            if "Loading Moxfield" not in body and len(body.strip()) > 50:
+        favorites = []
+        for _ in range(30):
+            favorites = parse_user_favorites(driver.page_source)
+            if favorites:
                 break
-            time.sleep(1)
-        time.sleep(2)
-        favorites = parse_user_favorites(driver.page_source)
+            time.sleep(0.5)
+
         if not favorites:
             raise RuntimeError(f"No favorited decks found on {profile_url}")
 
-        for title, deck_url in favorites:
+        total_decks = len(favorites)
+        notify_progress(0, total_decks, f"Found {total_decks} favorited decks. Starting download...")
+
+        for idx, (title, deck_url) in enumerate(favorites, 1):
+            notify_progress(idx - 1, total_decks, f"Grabbing [{idx}/{total_decks}] {title}...")
             t, path = fetch_deck_url(deck_url, out_dir=out_dir, driver=driver)
             text = path.read_text(encoding="utf-8")
             count = sum(int(l.split()[0]) for l in text.splitlines() if re.match(r"^\d+\s+", l))
             results.append((t, path, count))
-            time.sleep(1)
+            notify_progress(idx, total_decks, f"Saved [{idx}/{total_decks}] {title} ({count} cards)")
+            time.sleep(0.3)
     finally:
         driver.quit()
     return results

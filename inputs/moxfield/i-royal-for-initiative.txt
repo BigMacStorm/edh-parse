@@ -87,9 +87,3 @@ Deck
 1 Sunken Hollow
 5 Swamp
 1 Underground River
-1 Dragonmaster Outcast
-1 Reckless Charge
-1 An Offer You Can't Refuse
-1 Lavaspur Boots
-1 Sol Ring
-1 Aqueous Form

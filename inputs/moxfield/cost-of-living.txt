@@ -91,4 +91,3 @@ Deck
 1 Urborg, Tomb of Yawgmoth
 1 Vault of Champions
 1 Vault of the Archangel
-1 Mox Amber

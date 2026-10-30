@@ -536,18 +536,27 @@ def api_moxfield_decks():
 
 
 @app.post("/api/moxfield/sync")
-def api_moxfield_sync(username: str = Form("bigmacstorm")):
+def api_moxfield_sync(username: str = Form("bigmacstorm"), sync: bool = Form(False)):
     from edhparse.services.moxfield import fetch_user_favorites, list_grabbed_decks
+    user = username.strip() or "bigmacstorm"
     out_dir = str(PACKAGE_ROOT / "inputs" / "moxfield")
-    try:
-        results = fetch_user_favorites(username=username.strip() or "bigmacstorm", out_dir=out_dir)
+
+    def work():
+        results = fetch_user_favorites(username=user, out_dir=out_dir)
         return {
             "ok": True,
-            "message": f"Successfully grabbed {len(results)} favorited decks for @{username}!",
+            "message": f"Successfully grabbed {len(results)} favorited decks for @{user}!",
             "decks": list_grabbed_decks(PACKAGE_ROOT / "inputs" / "moxfield"),
         }
-    except Exception as exc:
-        return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+
+    if sync:
+        try:
+            return work()
+        except Exception as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+
+    job_id = job_store.start_job(f"Moxfield Sync (@{user})", work, render_html=lambda res: "")
+    return {"ok": True, "job_id": job_id}
 
 
 @app.post("/api/moxfield/get")

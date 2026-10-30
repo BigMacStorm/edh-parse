@@ -31,3 +31,25 @@ def test_parse_user_favorites():
     titles = [t for t, _ in favorites]
     assert "Astoria Greengrass" in titles
     assert "Cost of Living" in titles
+
+
+def test_parse_deck_html_ignores_curve_widgets():
+    html = """
+    <html>
+      <body>
+        <section class="deckview">
+          <a class="table-deck-row-link">Commander (1)</a>
+          <ul><li>1 <a href="/cards/123-amalia">Amalia Benavides Aguirre</a></li></ul>
+          <a class="table-deck-row-link">Artifacts (1)</a>
+          <ul><li>1 <a href="/cards/456-mox-amber">Mox Amber</a></li></ul>
+        </section>
+        <div class="row">
+          <div class="calculator">Hypergeometric Calculator</div>
+          <a class="table-deck-row-link">Artifacts (1)</a>
+          <ul><li>1 <a href="/cards/456-mox-amber">Mox Amber</a></li></ul>
+        </div>
+      </body>
+    </html>
+    """
+    text = parse_deck_html(html)
+    assert text.count("Mox Amber") == 1

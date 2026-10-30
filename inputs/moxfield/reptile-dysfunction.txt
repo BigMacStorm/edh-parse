@@ -93,11 +93,3 @@ Deck
 1 Sulfurous Springs
 4 Swamp
 1 Temple of Malice
-1 Spear Spewer
-1 End the Festivities
-1 Song of Totentanz
-1 Tectonic Hazard
-1 Tempt with Vengeance
-1 Animation Module
-1 Sol Ring
-1 The Ozolith
