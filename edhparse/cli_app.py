@@ -19,6 +19,8 @@ app = typer.Typer(
 )
 wipcoms_app = typer.Typer(help="WIP commander pipeline (fetch EDHREC dumps + singletonize).")
 app.add_typer(wipcoms_app, name="wipcoms")
+moxfield_app = typer.Typer(help="Import and sync decks from Moxfield.")
+app.add_typer(moxfield_app, name="moxfield")
 
 
 def _fail(result: dict) -> None:
@@ -433,6 +435,33 @@ def cmd_wipcoms_singleton(
         quiet=quiet,
     )
     _finish(result)
+
+
+@moxfield_app.command("sync")
+def cmd_moxfield_sync(
+    username: str = typer.Option("bigmacstorm", "--user", "-u", help="Moxfield username."),
+    out_dir: Path = typer.Option(Path("inputs/moxfield"), "--out-dir", "-o"),
+):
+    """Fetch all favorited decks for a Moxfield user."""
+    from edhparse.services.moxfield import fetch_user_favorites
+
+    typer.echo(f"Fetching favorited decks for @{username} ...")
+    decks = fetch_user_favorites(username=username, out_dir=str(out_dir))
+    for title, path, count in decks:
+        typer.echo(f"  * {title} ({count} cards) -> {path}")
+
+
+@moxfield_app.command("get")
+def cmd_moxfield_get(
+    url: str = typer.Argument(..., help="Moxfield deck URL (e.g. https://moxfield.com/decks/...)"),
+    out_dir: Path = typer.Option(Path("inputs/moxfield"), "--out-dir", "-o"),
+):
+    """Fetch a single Moxfield deck by URL."""
+    from edhparse.services.moxfield import fetch_deck_url
+
+    typer.echo(f"Fetching {url} ...")
+    title, path = fetch_deck_url(url, out_dir=str(out_dir))
+    typer.echo(f"Saved '{title}' to {path}")
 
 
 @app.command("web")
