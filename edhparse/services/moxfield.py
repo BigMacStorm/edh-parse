@@ -153,3 +153,48 @@ def fetch_user_favorites(
     finally:
         driver.quit()
     return results
+
+
+def list_grabbed_decks(moxfield_dir: Optional[Path] = None) -> List[dict]:
+    """Return all grabbed Moxfield deck text files with parsed commander and display metadata."""
+    if moxfield_dir is None:
+        moxfield_dir = Path("inputs/moxfield")
+    decks: List[dict] = []
+    if not moxfield_dir.is_dir():
+        return decks
+
+    for p in sorted(moxfield_dir.glob("*.txt")):
+        commander = ""
+        card_count = 0
+        try:
+            lines = p.read_text(encoding="utf-8").splitlines()
+            in_cmd = False
+            for l in lines:
+                s = l.strip()
+                if not s:
+                    continue
+                if s.lower() == "commander":
+                    in_cmd = True
+                    continue
+                if in_cmd:
+                    m = re.match(r"^\d+\s+(.*)", s)
+                    commander = m.group(1) if m else s
+                    in_cmd = False
+                elif s.lower() == "deck":
+                    continue
+                m_qty = re.match(r"^(\d+)\s+", s)
+                if m_qty:
+                    card_count += int(m_qty.group(1))
+        except Exception:
+            pass
+        title = p.stem.replace("-", " ").title()
+        display = f"{title} ({commander})" if commander else title
+        decks.append({
+            "path": f"inputs/moxfield/{p.name}",
+            "filename": p.name,
+            "title": title,
+            "commander": commander,
+            "display": display,
+            "card_count": card_count,
+        })
+    return decks

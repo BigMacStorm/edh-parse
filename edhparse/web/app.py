@@ -268,10 +268,15 @@ async def workflow_form(request: Request, workflow_id: str):
     meta = next(w for w in WORKFLOWS if w["id"] == workflow_id)
     stock_default = "inputs/Stock.csv"
     binders = StockCollection.list_binder_names(_repo_path(stock_default))
+    grabbed_decks = []
+    if workflow_id == "evaluate":
+        from edhparse.services.moxfield import list_grabbed_decks
+        grabbed_decks = list_grabbed_decks(PACKAGE_ROOT / "inputs" / "moxfield")
     return _page(
         request,
         f"workflows/{workflow_id}.html",
         meta=meta,
+        grabbed_decks=grabbed_decks,
         defaults={
             "stock": stock_default,
             "commanders": "inputs/comlist" if Path(_repo_path("inputs/comlist")).is_file() else "inputs/wantcoms",
@@ -522,6 +527,43 @@ async def run_evaluate_route(
         )
 
     return _dispatch_run(request, "Evaluate deck", work)
+
+
+@app.get("/api/moxfield/decks")
+def api_moxfield_decks():
+    from edhparse.services.moxfield import list_grabbed_decks
+    return {"ok": True, "decks": list_grabbed_decks(PACKAGE_ROOT / "inputs" / "moxfield")}
+
+
+@app.post("/api/moxfield/sync")
+def api_moxfield_sync(username: str = Form("bigmacstorm")):
+    from edhparse.services.moxfield import fetch_user_favorites, list_grabbed_decks
+    out_dir = str(PACKAGE_ROOT / "inputs" / "moxfield")
+    try:
+        results = fetch_user_favorites(username=username.strip() or "bigmacstorm", out_dir=out_dir)
+        return {
+            "ok": True,
+            "message": f"Successfully grabbed {len(results)} favorited decks for @{username}!",
+            "decks": list_grabbed_decks(PACKAGE_ROOT / "inputs" / "moxfield"),
+        }
+    except Exception as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+
+
+@app.post("/api/moxfield/get")
+def api_moxfield_get(url: str = Form(...)):
+    from edhparse.services.moxfield import fetch_deck_url, list_grabbed_decks
+    out_dir = str(PACKAGE_ROOT / "inputs" / "moxfield")
+    try:
+        title, path = fetch_deck_url(url.strip(), out_dir=out_dir)
+        return {
+            "ok": True,
+            "message": f"Grabbed '{title}' into {path.name}!",
+            "path": f"inputs/moxfield/{path.name}",
+            "decks": list_grabbed_decks(PACKAGE_ROOT / "inputs" / "moxfield"),
+        }
+    except Exception as exc:
+        return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
 
 
 @app.post("/run/locate", response_class=HTMLResponse)

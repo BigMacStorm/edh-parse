@@ -5,6 +5,26 @@
   <p class="tagline">{{ meta.blurb }}</p>
   <div class="panel">
     <form method="post" action="/run/evaluate">
+      
+      <div class="row" style="background: var(--bg2); padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 1.25rem;">
+        <label for="moxfield_dropdown" style="font-weight: 600; color: var(--ink); font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between;">
+          <span>⚡ Select a Grabbed Moxfield Deck</span>
+          <span style="font-size: 0.8rem; font-weight: normal; color: var(--muted);" id="deck-counter">{{ grabbed_decks|length }} decks available</span>
+        </label>
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.25rem; flex-wrap: wrap;">
+          <select id="moxfield_dropdown" style="flex: 1; min-width: 240px;" onchange="selectMoxfieldDeck(this.value)">
+            <option value="">-- Choose from your grabbed decks --</option>
+            {% for d in grabbed_decks %}
+              <option value="{{ d.path }}" data-commander="{{ d.commander }}">{{ d.display }}</option>
+            {% endfor %}
+          </select>
+          <button type="button" id="btn-sync-moxfield" class="btn" style="white-space: nowrap; font-size: 0.88rem; padding: 0.55rem 0.95rem;" onclick="syncMoxfield()">
+            🔄 Grab Favorites
+          </button>
+        </div>
+        <div id="moxfield-status" style="font-size: 0.82rem; color: var(--muted); margin-top: 0.45rem; display: none;"></div>
+      </div>
+
       <div class="row">
         <label for="decklist">Decklist file</label>
         <input type="text" id="decklist" name="decklist" placeholder="inputs/my-deck.txt">
@@ -49,4 +69,81 @@
       </div>
     </form>
   </div>
+
+  <script>
+    function selectMoxfieldDeck(path) {
+      if (!path) return;
+      const select = document.getElementById('moxfield_dropdown');
+      const selectedOpt = select.options[select.selectedIndex];
+      const commander = selectedOpt ? selectedOpt.getAttribute('data-commander') : '';
+      
+      const decklistInput = document.getElementById('decklist');
+      if (decklistInput) {
+        decklistInput.value = path;
+      }
+      const deckTextInput = document.getElementById('deck_text');
+      if (deckTextInput) {
+        deckTextInput.value = '';
+      }
+      const commanderInput = document.getElementById('commander');
+      if (commanderInput && commander) {
+        commanderInput.value = commander;
+      }
+      
+      const status = document.getElementById('moxfield-status');
+      status.style.display = 'block';
+      status.style.color = 'var(--accent)';
+      status.textContent = `Selected: "${selectedOpt.textContent.trim()}". Path and commander filled!`;
+    }
+
+    async function syncMoxfield() {
+      const btn = document.getElementById('btn-sync-moxfield');
+      const status = document.getElementById('moxfield-status');
+      const originalText = btn.textContent;
+      
+      const user = prompt("Enter Moxfield username to grab favorites from:", "bigmacstorm");
+      if (!user) return;
+      
+      btn.disabled = true;
+      btn.textContent = "⏳ Grabbing...";
+      status.style.display = 'block';
+      status.style.color = 'var(--warn)';
+      status.textContent = `Connecting to Moxfield and grabbing favorites for @${user}... Please wait.`;
+      
+      try {
+        const formData = new FormData();
+        formData.append("username", user);
+        const resp = await fetch("/api/moxfield/sync", {
+          method: "POST",
+          body: formData
+        });
+        const data = await resp.json();
+        if (data.ok) {
+          status.style.color = 'var(--accent)';
+          status.textContent = data.message || "Decks grabbed successfully!";
+          
+          const select = document.getElementById('moxfield_dropdown');
+          select.innerHTML = '<option value="">-- Choose from your grabbed decks --</option>';
+          data.decks.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.path;
+            opt.setAttribute('data-commander', d.commander);
+            opt.textContent = d.display;
+            select.appendChild(opt);
+          });
+          const counter = document.getElementById('deck-counter');
+          if (counter) counter.textContent = `${data.decks.length} decks available`;
+        } else {
+          status.style.color = 'var(--danger)';
+          status.textContent = "Error: " + (data.error || "Failed to grab decks.");
+        }
+      } catch (err) {
+        status.style.color = 'var(--danger)';
+        status.textContent = "Error: " + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+  </script>
 {% endblock %}
