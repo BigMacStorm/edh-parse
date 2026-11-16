@@ -171,6 +171,8 @@ class CardMeta:
     legal: bool = True
     found: bool = True
     roles: Set[str] = field(default_factory=set)
+    scryfall_id: str = ""
+    scryfall_uri: str = ""
 
     def within_budget(self, budget: Optional[float]) -> bool:
         """When budget is unset or <= 0, no budget constraint is enforced.

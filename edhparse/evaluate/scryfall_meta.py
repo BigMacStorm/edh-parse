@@ -70,6 +70,8 @@ def meta_from_scryfall(card: dict) -> CardMeta:
     )
     price, known = _price(card)
     legal = (card.get("legalities") or {}).get("commander", "legal") == "legal"
+    scryfall_id = str(card.get("id") or "")
+    scryfall_uri = str(card.get("scryfall_uri") or "")
     return CardMeta(
         name=name,
         front=front_face(name),
@@ -83,6 +85,8 @@ def meta_from_scryfall(card: dict) -> CardMeta:
         is_land=is_land,
         is_mdfc_land=is_mdfc_land,
         legal=legal,
+        scryfall_id=scryfall_id,
+        scryfall_uri=scryfall_uri,
     )
 
 

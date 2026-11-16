@@ -36,9 +36,36 @@ def _type_roles(c: CardScores) -> str:
     return c.meta.primary_type + (f" · {r}" if r else "")
 
 
+def _lookup_scryfall_id(name: str) -> str:
+    try:
+        from clients import scryfall_bulk
+        if scryfall_bulk.is_available():
+            card = scryfall_bulk.get_card_by_name_or_face(name)
+            if card:
+                return str(card.get("id") or "")
+    except Exception:
+        pass
+    return ""
+
+
 def _card_link(c: CardScores) -> str:
     slug = edhrec_slug(edhrec_display_name(c.meta))
-    return f'<a href="https://edhrec.com/cards/{quote(slug)}" target="_blank" rel="noopener" class="card-link" data-card-name="{_e(c.name)}">{_e(c.name)}</a>'
+    sid = getattr(c.meta, "scryfall_id", "") or _lookup_scryfall_id(c.name)
+    s_attr = f' data-scryfall-id="{_e(sid)}"' if sid else ""
+    return (
+        f'<a href="https://edhrec.com/cards/{quote(slug)}" target="_blank" rel="noopener" '
+        f'class="card-link" draggable="true" data-card-name="{_e(c.name)}"{s_attr}>{_e(c.name)}</a>'
+    )
+
+
+def _card_span(name: str) -> str:
+    slug = edhrec_slug(name)
+    sid = _lookup_scryfall_id(name)
+    s_attr = f' data-scryfall-id="{_e(sid)}"' if sid else ""
+    return (
+        f'<a href="https://edhrec.com/cards/{quote(slug)}" target="_blank" rel="noopener" '
+        f'class="card-link" draggable="true" data-card-name="{_e(name)}"{s_attr}>{_e(name)}</a>'
+    )
 
 
 def _score_cell(v: float) -> str:
@@ -73,9 +100,11 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
 td.pos { color:var(--green); } td.neg { color:var(--red); } td.mid { color:var(--text); }
 td.master { font-weight:700; }
 a { color:#c4b5fd; text-decoration:none; } a:hover { text-decoration:underline; }
-.card-link { color:#c4b5fd; text-decoration:none; cursor:pointer; }
+.card-link { color:#c4b5fd; text-decoration:none; cursor:grab; }
 .card-link:hover { text-decoration:underline; color:#ddd6fe; }
+.card-link:active { cursor:grabbing; }
 .card-tooltip { position:fixed; z-index:99999; pointer-events:none; width:240px; height:335px; border-radius:12px; box-shadow:0 16px 36px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.12); background:var(--surface); overflow:hidden; display:none; opacity:0; transition:opacity 0.12s ease; }
+.card-tooltip, .card-tooltip * { pointer-events:none !important; }
 .card-tooltip.visible { display:block; opacity:1; }
 .card-tooltip img { width:100%; height:100%; object-fit:cover; display:block; border-radius:12px; }
 .card-tooltip .card-tooltip-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:1.2rem; text-align:center; font-size:0.85rem; color:var(--muted); background:var(--surface); }
@@ -126,14 +155,18 @@ _TOOLTIP_JS = r"""
       x = Math.max(pad, clientX - w - pad);
     }
     if (y + h > window.innerHeight - pad) {
-      y = Math.max(pad, window.innerHeight - h - pad);
+      y = Math.max(pad, clientY - h - pad);
     }
 
     tooltip.style.left = x + 'px';
     tooltip.style.top = y + 'px';
   }
 
-  function resolveCardImageUrl(cardName) {
+  function resolveCardImageUrl(target, cardName) {
+    const sid = target ? (target.getAttribute('data-scryfall-id') || (target.dataset && target.dataset.scryfallId) || '') : '';
+    if (sid && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sid)) {
+      return 'https://cards.scryfall.io/normal/front/' + sid[0] + '/' + sid[1] + '/' + sid + '.jpg';
+    }
     const clean = cardName.split(' // ')[0].trim();
     return 'https://api.scryfall.com/cards/named?exact=' + encodeURIComponent(clean) + '&format=image&version=normal';
   }
@@ -167,6 +200,12 @@ _TOOLTIP_JS = r"""
         if (activeEl === target) {
           placeholder.style.display = 'none';
           img.style.display = 'block';
+          try {
+            const m = (img.currentSrc || img.src).match(/\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.(?:jpg|png|webp)/i);
+            if (m && target) {
+              target.setAttribute('data-scryfall-id', m[1]);
+            }
+          } catch (err) {}
         }
       };
       img.onerror = () => {
@@ -179,7 +218,7 @@ _TOOLTIP_JS = r"""
           img.style.display = 'none';
         }
       };
-      img.src = resolveCardImageUrl(name);
+      img.src = resolveCardImageUrl(target, name);
 
       positionTooltip(lastX, lastY);
       tooltip.style.display = 'block';
@@ -188,14 +227,61 @@ _TOOLTIP_JS = r"""
   });
 
   document.addEventListener('mouseout', (e) => {
+    if (!activeEl) return;
+    if (e.relatedTarget && activeEl.contains(e.relatedTarget)) return;
     const target = e.target.closest('.card-link, [data-card-name], a[href*="edhrec.com/cards/"]');
-    if (!target) return;
-    if (activeEl === target) {
+    if (target === activeEl || !target) {
       activeEl = null;
       clearTimeout(timer);
       tooltip.classList.remove('visible');
       tooltip.style.display = 'none';
       img.src = '';
+    }
+  });
+
+  document.addEventListener('dragstart', (e) => {
+    const target = e.target.closest('.card-link, [data-card-name], a[href*="edhrec.com/cards/"]');
+    if (!target) return;
+
+    if (activeEl) {
+      activeEl = null;
+      clearTimeout(timer);
+      tooltip.classList.remove('visible');
+      tooltip.style.display = 'none';
+      img.src = '';
+    }
+
+    const rawName = target.getAttribute('data-card-name') || target.textContent.trim();
+    const name = rawName.replace(/\s+/g, ' ').trim();
+    const scryfallId = target.getAttribute('data-scryfall-id') || (target.dataset ? target.dataset.scryfallId : '');
+
+    if (scryfallId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(scryfallId)) {
+      const c1 = scryfallId[0];
+      const c2 = scryfallId[1];
+      const edhrecImgUrl = `https://card-images.edhrec.com/grid/front/${c1}/${c2}/${scryfallId}.webp`;
+      const scryfallImgUrl = `https://cards.scryfall.io/normal/front/${c1}/${c2}/${scryfallId}.jpg`;
+
+      try {
+        e.dataTransfer.setData('application/x-moxfield-card', JSON.stringify({ id: scryfallId }));
+      } catch (err) {}
+      try {
+        e.dataTransfer.setData('text/uri-list', edhrecImgUrl);
+      } catch (err) {}
+      try {
+        e.dataTransfer.setData('text/html', `<img src="${edhrecImgUrl}" alt="${name}">`);
+      } catch (err) {}
+      try {
+        e.dataTransfer.setData('text/plain', edhrecImgUrl);
+      } catch (err) {}
+      e.dataTransfer.effectAllowed = 'copyMove';
+    } else {
+      const clean = name.split(' // ')[0].trim();
+      const fallbackUrl = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(clean)}&format=image&version=normal`;
+      try {
+        e.dataTransfer.setData('text/plain', fallbackUrl);
+        e.dataTransfer.setData('text/uri-list', fallbackUrl);
+        e.dataTransfer.setData('text/html', `<img src="${fallbackUrl}" alt="${name}">`);
+      } catch (err) {}
     }
   });
 })();
@@ -205,7 +291,7 @@ _TOOLTIP_JS = r"""
 def _telemetry(res: EvaluationResult) -> str:
     t = res.telemetry
     stats = [
-        ("Commander", " + ".join(res.commanders)),
+        ("Commander", " + ".join(_card_span(c) for c in res.commanders)),
         ("EDHREC slug", res.slug),
         ("Colour identity", "".join(res.color_identity) or "C"),
         ("Baseline decks (N₀)", f"{res.n0:,}"),
@@ -216,17 +302,17 @@ def _telemetry(res: EvaluationResult) -> str:
         ("Weights S1–S4", " / ".join(f"{w:.2f}" for w in res.weights)),
     ]
     out = ['<div class="stats">'] + [
-        f'<div class="stat"><div class="t">{_e(k)}</div><div class="v">{_e(v)}</div></div>' for k, v in stats
+        f'<div class="stat"><div class="t">{_e(k)}</div><div class="v">{v if k == "Commander" else _e(v)}</div></div>' for k, v in stats
     ] + ["</div>"]
     rows = "".join(
-        f"<tr><td>{i + 1}</td><td>{' + '.join(f'<span class=\"card-link\" data-card-name=\"{_e(a)}\">{_e(a)}</span>' for a in tc.anchors)}</td><td>{'A · live filter' if tc.tier == 'A' else 'B · theme ' + _e(tc.theme)}</td>"
+        f"<tr><td>{i + 1}</td><td>{' + '.join(_card_span(a) for a in tc.anchors)}</td><td>{'A · live filter' if tc.tier == 'A' else 'B · theme ' + _e(tc.theme)}</td>"
         f'<td class="num">{tc.n_eff:,}</td><td class="num">{tc.weight:.2f}</td></tr>'
         for i, tc in enumerate(res.tuples)
     )
     out.append('<h3>Anchor tuples</h3><table><thead><tr><th>#</th><th>Anchors</th><th>Source</th><th class="num">Decks (Nᵢ)</th>'
                f'<th class="num">Weight</th></tr></thead><tbody>{rows or "<tr><td colspan=5>none</td></tr>"}</tbody></table>')
-    hubs = ", ".join(f'<span class="card-link" data-card-name="{_e(h)}">{_e(h)}</span> ({n:,} decks)' for h, n in res.hubs) or "none"
-    excl = ", ".join(f'<span class="card-link" data-card-name="{_e(x)}">{_e(x)}</span>' for x in res.exclusions) or "none"
+    hubs = ", ".join(f"{_card_span(h)} ({n:,} decks)" for h, n in res.hubs) or "none"
+    excl = ", ".join(_card_span(x) for x in res.exclusions) or "none"
     out.append(f'<p class="note"><strong>Engine hubs:</strong> {hubs}<br><strong>Precon-detox exclusions:</strong> {excl}</p>')
     notes = list(res.warnings) + list(t.log)
     if t.blocked:
@@ -298,7 +384,7 @@ def _lands(res: EvaluationResult) -> str:
     if not res.land_upgrades:
         return "<p class='note'>No utility-land upgrade within budget scored higher than your weakest non-basic lands.</p>"
     rows = "".join(
-        f"<tr><td><span class='card-link' data-card-name='{_e(u.cut)}'>{_e(u.cut)}</span></td><td class='num'>{u.cut_score:.3f}</td><td>→</td><td><span class='card-link' data-card-name='{_e(u.add)}'>{_e(u.add)}</span></td>"
+        f"<tr><td>{_card_span(u.cut)}</td><td class='num'>{u.cut_score:.3f}</td><td>&rarr;</td><td>{_card_span(u.add)}</td>"
         f"<td class='num'>{u.add_score:.3f}</td><td class='num'>${u.price:,.2f}</td></tr>"
         for u in res.land_upgrades
     )
@@ -494,5 +580,5 @@ def render_batch_summary_html(summaries: Sequence[dict], folder: str = "inputs/m
     ]
     return (
         f"<!DOCTYPE html><html lang='en'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1'>"
-        f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script></body></html>"
+        f"<title>{_e(title)}</title><style>{_CSS}</style></head><body>{''.join(body)}<script>{_SORT_JS}</script><script>{_TOOLTIP_JS}</script></body></html>"
     )
