@@ -8,5 +8,27 @@ diff/
 
 # generated / downloaded data (large, reproducible)
 cache/
-outputs/challenge/
 *.egg-info/
+
+# generated reports and exports live in outputs/ (the folder itself is kept so writers can rely on it)
+outputs/*
+!outputs/.gitkeep
+
+# throwaway one-off scripts
+scratch/
+
+# generated pipeline output (regenerate with: edhparse wipcoms fetch)
+wipcoms/
+
+# OS / editor junk and backups
+.DS_Store
+*.bak
+
+# local AI-assistant state and scratch plans
+.claude/
+.gemini/
+.antigravity/
+.cursor/
+.windsurf/
+.aider*
+implementation_plan.md
