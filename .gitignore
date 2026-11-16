@@ -32,3 +32,6 @@ wipcoms/
 .windsurf/
 .aider*
 implementation_plan.md
+
+# local virtual environment
+.venv/

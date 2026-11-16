@@ -22,10 +22,12 @@ dependencies = [
     "typer",
     "numpy",
     "scipy",
+    "beautifulsoup4",  # Moxfield deck pages (edhparse/services/moxfield.py)
+    "selenium",  # Moxfield is rendered client-side, so it needs a real browser
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "httpx2"]  # httpx2: required by fastapi/starlette's TestClient
 
 [project.scripts]
 edhparse = "edhparse.cli_app:main"

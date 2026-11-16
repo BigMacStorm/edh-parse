@@ -15,3 +15,5 @@ python-multipart
 typer
 numpy
 scipy
+beautifulsoup4
+selenium
